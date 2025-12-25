@@ -1,0 +1,89 @@
+\documentclass{beamer}
+\usetheme{metropolis}
+
+\defbeamertemplate*{title page}{customized}[1][]
+{
+  \usebeamerfont{title}\inserttitle\par
+  \usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par
+  \bigskip
+  \usebeamerfont{author}\insertauthor\par
+  \usebeamerfont{institute}\insertinstitute\par
+  \usebeamerfont{date}\insertdate\par
+  \usebeamercolor[fg]{titlegraphic}\inserttitlegraphic
+}
+% CASTEL PACKAGES
+\usepackage{import}
+\usepackage{xifthen}
+\usepackage{transparent}
+% END CASTEL PACKAGES
+\newcommand{\castelincfig}[2][1.0]{%
+  \def\svgwidth{#1\columnwidth}
+  \import{./figures/}{#2.pdf_tex}
+}
+
+\title{Computational strategies for time-accurate simulation of part-scale LPBF}
+\subtitle{Time scale disparity in moving heat source problems}
+\author{Mehdi Slimani}
+\date{January 9, 2026}
+
+\begin{document}
+
+  \maketitle
+
+  \begin{frame}
+    \frametitle{Application}
+    \begin{figure}
+      \def\svgwidth{0.7\columnwidth}
+      \import{./figures/ded_schematic}{intro_schem.pdf_tex}
+    \end{figure}
+    \begin{figure}
+      \def\svgwidth{0.7\columnwidth}
+      \import{./figures/lpbf_schematic}{intro_schematic.pdf_tex}
+    \end{figure}
+  \end{frame}
+  \begin{frame}
+    \frametitle{Problem statement}
+  \end{frame}
+  \begin{frame}
+    \frametitle{Problem statement}
+    \begin{equation}
+      \label{eq:extended_temp}
+      T_e(\mathbf{x}, t) =
+      \begin{cases}
+        T(\mathbf{x}, t) & \mathbf{x} \in \overline{\Omega}(t)\\
+        T_{dep} & \mathbf{x} \in \overline{\Omega}(t_{final}) \setminus \overline{\Omega}(t)
+      \end{cases}
+      \qquad
+      f_{l,\; e}(\mathbf{x}, t) = f_l(T_e(\mathbf{x}, t))
+    \end{equation}
+    \begin{align}
+      \label{eq:original_pde}
+      \rho c_p \partial_t T_e + \rho L \partial_t f_{l,\; e} - k \Delta T
+      &= r(\mathbf{x}, t) &&\forall \mathbf{x} \in \Omega(t)\\
+      - k \partial_n T &= h_{conv} (T - T_{\text{env}}) + \varepsilon \sigma (T^4 - T_{\text{env}}^4) &&\forall \mathbf{x} \in \partial \Omega(t)\\
+      \label{eq:initial_condition}
+      T(\mathbf{x}, 0) &= T_0 \qquad &&\forall \mathbf{x} \in \Omega(0)
+    \end{align}
+  \end{frame}
+  \begin{frame}
+    \frametitle{}
+    
+  \end{frame}
+  \begin{frame}
+    \frametitle{Advected subdomain}
+    Hi!
+  \end{frame}
+  \begin{frame}
+    \frametitle{Substepping}
+    Eh!
+  \end{frame}
+  \begin{frame}
+    \frametitle{Parallel scalings}
+    
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Is Celentano's method source-based or enthalpy-based}
+      It's just based.
+  \end{frame}
+\end{document}
