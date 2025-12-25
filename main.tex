@@ -11,6 +11,7 @@
   \usebeamerfont{date}\insertdate\par
   \usebeamercolor[fg]{titlegraphic}\inserttitlegraphic
 }
+
 % CASTEL PACKAGES
 \usepackage{import}
 \usepackage{xifthen}
@@ -19,6 +20,26 @@
 \newcommand{\castelincfig}[2][1.0]{%
   \def\svgwidth{#1\columnwidth}
   \import{./figures/}{#2.pdf_tex}
+}
+
+\usepackage{calc}
+\usepackage{tikz}
+\usetikzlibrary{calc,positioning}
+\tikzset{
+  annotate box/.style={
+    fill=white,
+    fill opacity=.4,
+    text opacity=1,
+    rounded corners=2pt,
+    inner xsep=4pt,
+    inner ysep=3pt,
+    draw=black,
+    line width=.4pt,
+  },
+}
+\DeclareRobustCommand{\labelbox}[2][]{%
+  % Inline TikZ node; safe in text, math, tabular, makebox, etc.
+  \tikz[baseline=(X.base)]\node[annotate box,#1] (X) {#2};%
 }
 
 \title{Computational strategies for time-accurate simulation of part-scale LPBF}
@@ -34,7 +55,7 @@
     \frametitle{Application}
     \begin{figure}
       \def\svgwidth{0.7\columnwidth}
-      \import{./figures/ded_schematic}{intro_schem.pdf_tex}
+      \import{./figures/ded_schematic}{intro_schematic.pdf_tex}
     \end{figure}
     \begin{figure}
       \def\svgwidth{0.7\columnwidth}
