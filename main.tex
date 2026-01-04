@@ -1,3 +1,4 @@
+%! TeX program = lualatex
 \documentclass{beamer}
 \usetheme{metropolis}
 
@@ -11,6 +12,28 @@
   \usebeamerfont{date}\insertdate\par
   \usebeamercolor[fg]{titlegraphic}\inserttitlegraphic
 }
+\makeatletter
+  \setbeamertemplate{frametitle}{%
+    \begin{beamercolorbox}[%
+      wd=\paperwidth,%
+      sep=0pt,%
+      leftskip=\metropolis@frametitle@padding,%
+      rightskip=\metropolis@frametitle@padding,%
+      ]{frametitle}%
+      \metropolis@frametitlestrut@start%
+      \insertframetitle%
+      \ifx\insertframesubtitle\@empty%
+      \else%
+        \hfill%
+        {\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}\insertframesubtitle}%
+      \fi%
+      \nolinebreak%
+      \metropolis@frametitlestrut@end%
+    \end{beamercolorbox}%
+  }
+\makeatother
+
+\usepackage{subcaption}
 
 % CASTEL PACKAGES
 \usepackage{import}
@@ -45,29 +68,44 @@
 \title{Computational strategies for time-accurate simulation of part-scale LPBF}
 \subtitle{Time scale disparity in moving heat source problems}
 \author{Mehdi Slimani}
-\date{January 9, 2026}
+\date{January 23, 2026}
+
+\graphicspath{{figures/}}
+
 
 \begin{document}
 
   \maketitle
 
   \begin{frame}
-    \frametitle{Application}
-    \begin{tabular}{cc}
-      DED &
-      \begin{minipage}[c]{0.7\columnwidth}
-        \def\svgwidth{\columnwidth}
-        \import{./figures/ded_schematic}{intro_schematic.pdf_tex}
-      \end{minipage}
-      \\
-      \\
-      LPBF &
-      \begin{minipage}[c]{0.7\columnwidth}
-        \def\svgwidth{\columnwidth}
-        \import{./figures/lpbf_schematic}{intro_schematic.pdf_tex}
-      \end{minipage}
-    \end{tabular}
+    \frametitle{{LPBF}}
+    \framesubtitle{MAM technology}
+    Also known as PBF-LB/M (ISO nomenclature), one of the
+    main Metal Additive Manufacturing (MAM) technologies
+
+    \begin{figure}
+      \begin{subfigure}[t]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{waam.jpg}
+        \textbf{Wire Arc Additive Manufacturing
+        \raisebox{5pt}{(}\includegraphics[height=16pt]{waam-comic-effect.png}\raisebox{5pt}{)}}
+      \end{subfigure}%
+      \hfill
+      \begin{subfigure}[t]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{ded.jpg}
+        \textbf{Directed Energy Deposition (DED)}
+      \end{subfigure}%
+      \hfill
+      \begin{subfigure}[t]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{lpbf.png}
+        \textbf{Laser Powder Bed Fusion (LPBF)}
+      \end{subfigure}
+    \end{figure}
+
   \end{frame}
+
   \begin{frame}
     \frametitle{Problem statement}
   \end{frame}
