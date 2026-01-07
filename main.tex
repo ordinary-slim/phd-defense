@@ -2,6 +2,32 @@
 \documentclass{beamer}
 \usetheme{metropolis}
 
+\setbeamerfont{page number in head/foot}{size=\tiny}
+\setbeamercolor{footline}{fg=gray!70}
+
+% Footline highlight
+\colorlet{footlineHlColor}{black!60}
+\newcommand{\footlineHl}[1]{
+  \textbf{\textcolor{footlineHlColor}{#1}}
+}
+
+\newif\ifisdraft
+\isdrafttrue
+\newcommand{\todo}[1]{
+  \ifisdraft {
+    \Large
+    $\color{black}\star$\color{red}~\textit{#1}\color{black}~$\star$
+  } \fi
+}
+
+\definecolor{powderColor}{rgb}{0.878,0.859,0.811}
+\definecolor{metalColor}{rgb}{0.420,0.408,0.384}
+\newcommand{\legendpowderbulk}{%
+  \begin{tabular}{rlrl}
+     ({\color{powderColor} \rule[-1.5 pt]{8 pt}{8 pt}}) & Powder & ({\color{metalColor} \rule[-1.5 pt]{8 pt}{8 pt}})  & Bulk
+  \end{tabular}
+}
+
 \defbeamertemplate*{title page}{customized}[1][]
 {
   \usebeamerfont{title}\inserttitle\par
@@ -44,6 +70,13 @@
 \usepackage{multirow}
 \usepackage{booktabs}
 
+\usepackage{cleveref}
+
+\usepackage{natbib}
+
+\usepackage{multimedia}
+
+
 % CASTEL PACKAGES
 \usepackage{import}
 \usepackage{xifthen}
@@ -52,6 +85,11 @@
 \newcommand{\castelincfig}[2][1.0]{%
   \def\svgwidth{#1\columnwidth}
   \import{./figures/}{#2.pdf_tex}
+}
+
+% Math commands
+\newcommand{\dependson}[1]{
+  {\scriptstyle(#1)}
 }
 
 \usepackage{calc}
@@ -73,6 +111,20 @@
   % Inline TikZ node; safe in text, math, tabular, makebox, etc.
   \tikz[baseline=(X.base)]\node[annotate box,#1] (X) {#2};%
 }
+\newcommand{\playthumb}[2][]{%
+  \begin{tikzpicture}
+    % Thumbnail image
+    \node[inner sep=0] (img) {\includegraphics[#1]{#2}};
+    % Dark circle
+    \draw[fill=black!60, draw=white, line width=0.8pt]
+      (img.center) circle[radius=0.6cm];
+    % Triangle
+    \draw[fill=white, draw=none, rounded corners=1.5pt]
+      ([xshift=0.34cm]img.center) --
+      ([xshift=-0.19cm,yshift=0.3cm]img.center) --
+      ([xshift=-0.19cm,yshift=-0.3cm]img.center) -- cycle;
+  \end{tikzpicture}%
+}
 
 \title{Computational strategies for time-accurate simulation of part-scale LPBF}
 \subtitle{Time scale disparity in moving heat source problems}
@@ -85,6 +137,8 @@
 \begin{document}
 
   \maketitle
+
+  \setbeamertemplate{frame footer}{Computational strategies for time-accurate simulation of part-scale \footlineHl{LPBF}}
 
   \begin{frame}
     \frametitle{{LPBF}}
@@ -115,8 +169,14 @@
   \end{frame}
 
   \begin{frame}
+    \frametitle{LPBF}
+    \framesubtitle{How does it work?}
+    \todo{Add schematic of LPBF process here.}
+  \end{frame}
+
+  \begin{frame}
     \frametitle{{LPBF}}
-    \framesubtitle{Fast and small}
+    \framesubtitle{Fast, small, precise}
 
     \begin{table}
       \centering
@@ -146,9 +206,9 @@
       \caption{Characteristic heat source parameters for the main MAM technologies.}
     \end{table}
 
+    \vspace{-3mm}
     % LPBF offers a finer resolution and smoother surface finish,
     % but it is limited to smaller parts.
-
     \begin{figure}
       \centering
       \begin{subfigure}[t]{0.48\textwidth}
@@ -166,46 +226,289 @@
 
   \end{frame}
 
+  \setbeamertemplate{frame footer}{Computational strategies for time-accurate \footlineHl{simulation} of \footlineHl{part-scale} LPBF}
+
+  \begin{frame}
+    \frametitle{LPBF}
+    \framesubtitle{Extremely multiscale}
+    LPBF is an \textit{extremely multiscale} application \citep{hodge2021}.\\
+    Let's quantify this statement:
+    \begin{itemize}
+      \item The \textbf{smallest} spatial and temporal \textbf{scales} are governed by the
+        \textbf{heat source}, characterized by its radius $\mathbf{R}$ and by
+        the time it takes to travel one radius,
+        \[
+          \mathbf{T_{hs}} := \frac{R}{V}.
+        \]
+      \item The \textbf{largest} spatial and temporal \textbf{scales} are set
+        by the \textbf{part} and the printer.
+        We choose here the characteristic part length $\mathbf{L_{part}}$ and
+        the net printing time $\mathbf{T_{print}}$, i.e. the cumulative
+        laser-on time.
+    \end{itemize}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{LPBF}
+    \framesubtitle{Extremely multiscale}
+    \centering
+    \begin{minipage}{0.59\textwidth}
+      \begin{figure}[ht]
+        \def\svgwidth{\columnwidth}
+        \import{./figures/cube-example}{cube-scan-schematic.pdf_tex}
+        \caption{Cube scan path of \textbf{side length} $L$, \textbf{layer thickness} $t$
+        and \textbf{hatch spacing} $h$.}
+      \end{figure}
+    \end{minipage}%
+    \hfill%
+    \begin{minipage}{0.38\textwidth}
+      Consider printing a cube of side length $L$.
+      The ratio of volume scales is
+      $$
+      \frac{L^3}{R^3}
+      $$
+      Let's compute the time scale ratio.
+      Assume $t~=~h~=~R$ for simplicity, so that
+      $$N_{layers} = N_{hatches\\/layer} = \frac{L}{R}$$
+    \end{minipage}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{LPBF}
+    \framesubtitle{Extremely multiscale}
+    For this simple geometry, the net print time is
+    \begin{gather*}
+      T_{print} = N_{hatches} \cdot T_{hatch} = N_{layers} \cdot N_{hatches/layer} \cdot T_{hatch}\\
+      T_{hatch} = \frac{L}{V}\\
+      \implies
+      T_{print} = \frac{L}{R} \cdot \frac{L}{R} \cdot \frac{L}{V} = \frac{L^2}{R^2} \cdot \frac{L}{V} = \frac{L^3}{R^2 V}
+    \end{gather*}
+    Therefore, the time scale disparity is
+    $$
+    \frac{T_{print}}{T_{hs}} = \frac{L^3}{R^2 V} \cdot \frac{V}{R} = \left(\frac{L}{R}\right)^3
+    $$
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Part-scale simulation}
+    \framesubtitle{Why?}
+
+    We've established that LPBF is extremely multiscale.
+    In a few slides, we'll see why this is a problem for
+    part-scale simulation.
+
+    Why part-scale simulation?
+    \begin{itemize}
+      \item Avoid costly experimental trial-and-error
+      \item Predict residual stresses and distortions
+      \item Predict microstructure features
+      \item Optimize process parameters
+      \item Save time and costs in the design cycle
+    \end{itemize}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Multiphysics \todo{Better title}}
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[height=0.8\textheight]{bayat2021.png}
+      \caption{Relevant physics at melt-pool and part scales \citep{bayat2021}.}
+      \label{fig:bayat2021}
+    \end{figure}
+  \end{frame}
+
   \begin{frame}
     \frametitle{Problem statement}
-    \begin{equation}
-      \label{eq:extended_temp}
-      T_e(\mathbf{x}, t) =
+    \framesubtitle{Domain}
+    \begin{figure}[ht]
+      \def\svgwidth{\columnwidth}
+      \hspace{-6mm}
+      \import{./figures/lpbf_schematic}{schematic.pdf_tex}
+      \caption{Schematic of the LPBF computational domain 
+      $\Omega(t)$, encompassing the bulk (part and substrate) and powder bed regions,
+      together with the applied heat source and convective/radiative heat losses.
+    }
+    \end{figure}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Problem statement}
+    \framesubtitle{PDE system}
+    {\small
+    Define the extended temperature and liquid fraction fields
+    \begin{equation*}
+      T_e\dependson{\mathbf{x}, t} =
       \begin{cases}
-        T(\mathbf{x}, t) & \mathbf{x} \in \overline{\Omega}(t)\\
+        T\dependson{\mathbf{x}, t} & \mathbf{x} \in \overline{\Omega}(t)\\
         T_{dep} & \mathbf{x} \in \overline{\Omega}(t_{final}) \setminus \overline{\Omega}(t)
       \end{cases}
       \qquad
-      f_{l,\; e}(\mathbf{x}, t) = f_l(T_e(\mathbf{x}, t))
-    \end{equation}
-    \begin{align}
-      \label{eq:original_pde}
+      f_{l,\; e}\dependson{\mathbf{x}, t} = f_l(T_e\dependson{\mathbf{x}, t})
+    \end{equation*}
+    where $T_{dep}$ is the deposition temperature.\\
+    Find $T : \Omega(t) \times [0, T_{\text{final}}] \to \mathbb{R}$ such that
+    \begin{align*}
       \rho c_p \partial_t T_e + \rho L \partial_t f_{l,\; e} - k \Delta T
-      &= r(\mathbf{x}, t) &&\forall \mathbf{x} \in \Omega(t)\\
+      &= r\dependson{\mathbf{x}, t} &&\forall \mathbf{x} \in \Omega(t)\\
       - k \partial_n T &= h_{conv} (T - T_{\text{env}}) + \varepsilon \sigma (T^4 - T_{\text{env}}^4) &&\forall \mathbf{x} \in \partial \Omega(t)\\
-      \label{eq:initial_condition}
-      T(\mathbf{x}, 0) &= T_0 \qquad &&\forall \mathbf{x} \in \Omega(0)
-    \end{align}
+      T\dependson{\mathbf{x}, 0} &= T_0 \qquad &&\forall \mathbf{x} \in \Omega(0)
+    \end{align*}
+    }
+      \todo{Comment on phase change treatment here}
   \end{frame}
+
   \begin{frame}
-    \frametitle{}
-    
+    \frametitle{Discretization}
+      \todo{Add discretization details here (FEM, BDF1)}
   \end{frame}
+
+  \begin{frame}
+    \frametitle{Discretization}
+    \framesubtitle{Element activation}
+    \begin{figure}
+      \begin{subfigure}[t]{0.30\textwidth}
+        \includegraphics[width=\textwidth]{schematic_melting/0.png}
+        \caption{Bare substrate below an inactive powder layer.}
+        \label{fig:refModelBareSubstrate}
+      \end{subfigure}\hfill%
+      \begin{subfigure}[t]{0.30\textwidth}
+        \includegraphics[width=\textwidth]{schematic_melting/1.png}
+        \caption{A powder layer is activated during a recoating step.}
+        \label{fig:powderLayer}
+      \end{subfigure}\hfill%
+      \begin{subfigure}[t]{0.30\textwidth}
+        \includegraphics[width=\textwidth]{schematic_melting/2.png}
+        \caption{After a heating step, elements whose average temperature
+        surpasses $T_m$ are set to bulk.}
+        \label{fig:activPhaseChange3}
+      \end{subfigure}\hfill%
+      \caption{Illustration of deposition and melting processes.\qquad
+        \legendpowderbulk{}
+      }
+      \label{fig:activPhaseChange}.
+    \end{figure}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Discretization}
+    \begin{figure}
+      \movie[externalviewer]{\playthumb[width=0.8\textwidth]{thumbnail-2dlpbf_2d_lpbf_ref.png}}{../videos/2dlpbf_2d_lpbf_ref.mp4}
+      \caption{Demo simulation of 2D LPBF with element activation. Wireframe elements correspond to powder region.}
+    \end{figure}
+    \todo{Merge with previous slide?}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Part-scale simulation}
+    \framesubtitle{Impossible}
+    Previous slide: ``uniform'' mesh in part and powder region.
+    Recall the volume scale ratio;
+    In 3D, we would need
+    \begin{equation}
+      \label{eq:num_elements_uniform_mesh}
+      \text{\# elements} = \mathcal{O}\left(\frac{L^3}{R^3}\right)
+    \end{equation}
+    to resolve the heat source throughout the print.
+
+    In practice, no one uses uniform meshes for LPBF simulation;
+    \textbf{AMR} is regarded as the \textbf{de facto standard}.
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Part-scale simulation}
+    \framesubtitle{Impossible}
+    But what about time-steps?
+    The interval of interest is $]0, T_{final}[$ with
+    $$
+    T_{final} = T_{print} + T_{cool}
+    $$
+    i.e. the net printing time plus cooling.
+    The time scale disparity requires again \cref{eq:num_elements_uniform_mesh} time-steps
+    \begin{gather*}
+      \text{\# time-steps} > \frac{T_{print}}{T_{hs}} = \mathcal{O}\left(\frac{L^3}{R^3}\right)\\
+    \end{gather*}
+    when discretizing with \textbf{uniform time-steps}.
+
+    Surely people aren't employing uniform time-steps for LPBF simulation?
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Part-scale simulation}
+    \framesubtitle{Impossible}
+    \textbf{Uniform time-stepping} is the \textbf{de facto standard} in LPBF simulation.
+    \todo{Actual examples}
+    \todo{Comment on ressources needed and examples from literature}
+    Decimeter-scale parts are currently unfeasible.
+  \end{frame}
+
+  \setbeamertemplate{frame footer}{Computational strategies for \footlineHl{time-accurate} simulation part-scale LPBF}
+
+  \begin{frame}
+    \frametitle{Part-scale simulation}
+    \framesubtitle{Lumped heat source}
+    What do you do if you don't have a cluster or a nice GPU ?
+    You simplify the model.
+    \todo{Explain it as thermal history simplification}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Part-scale simulation}
+    \framesubtitle{Lumped heat source}
+    \todo{Comment on Van Elsen}
+  \end{frame}
+
+  \setbeamertemplate{frame footer}{\footlineHl{Computational strategies for time-accurate simulation part-scale LPBF}}
+
+  \begin{frame}
+    \frametitle{Objectives of this work}
+    \begin{itemize}
+      % \item Investigate practical MAM cases, assess the
+      %   feasibility of high-fidelity simulations and quantify
+      %   time-stepping bottlenecks in simulations of DED and LPBF at the part scale.
+      \item
+        Review existing methods for addressing time-stepping
+        challenges in MAM.
+      \item
+        Explore novel methods for reducing the number of time-steps
+        required in LPBF modeling.
+      \item
+        Validate the proposed methods on realistic
+        test cases.
+      \item
+        Validate the underlying physical models
+        and numerical methods against experimental data.
+      \item
+        Provide realistic speedup estimates and practical implementation guidelines
+        for the proposed methods.
+      \item Ensure open science and reproducibility.
+    \end{itemize}
+  \end{frame}
+
   \begin{frame}
     \frametitle{Advected subdomain}
-    Hi!
+    Key idea:
+     We need small time-steps to resolve the motion of the heat source ->
+     get rid of it!
   \end{frame}
+
   \begin{frame}
     \frametitle{Substepping}
-    Eh!
+    Key idea:
+    We don't need small time-steps everywhere
   \end{frame}
+
   \begin{frame}
     \frametitle{Parallel scalings}
-    
+    (Support slide)
   \end{frame}
 
   \begin{frame}
     \frametitle{Is Celentano's method source-based or enthalpy-based}
-      It's just based.
+    (Support slide)
+      \todo{Add discussion on Celentano's method here}
   \end{frame}
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+
 \end{document}

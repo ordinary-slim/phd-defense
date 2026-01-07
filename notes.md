@@ -16,6 +16,9 @@ in all of these we're melting metal in-situ to build a part
 **DED**: we're melting blown powder
 **LPBF**: we place a whole powder layer above the build and then we melt it
 
+-- Consider including this video schematic:
+https://commons.wikimedia.org/wiki/File:Build_chamber_process_animation.webm
+
 ## What's special about LPBF
 
 | Parameter      | WAAM                        | DED                         | LPBF                        |
@@ -25,6 +28,25 @@ in all of these we're melting metal in-situ to build a part
 
 
 So LPBF is small and fast
+
+## Part scale simulation, why
+
+Many reasons to do simulation. Many things can go wrong and many things can be improved upon
+- Part failure
+- Desirable microstructure
+- Process parameter optimization
+
+(image of build failure)
+
+Simulation can help on these things
+
+## Part scale simulation, why not
+
+Simulation is too slow, because the process is extremely ``multiscale'' (Hodge, 2021)
+
+## LPBF: extremely multiscale 1
+
+<!-- todo -->
 
 ## Modelling challenge
 
@@ -43,10 +65,13 @@ The contrast of spatial scales can be upwards of 10⁶.
 It is similarly large in time: T_{hs} = O(10⁻⁴ s) while
 T_{print} = O(tens of minutes), so the contrast of time scales is upwards of 10⁸
 
-## How do these things come up
+## Next slide
 
-We want to cover something large/slow (spatial or temporal domain i.e part and build interval)
-while resolving something small/fast (laser radius / motion).
+### Option 1:
+Talk about challenges when modelling now 
+
+### Option 2:
+Introduce modelling first
 
 ## Cube example
 
