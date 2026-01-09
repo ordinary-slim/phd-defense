@@ -27,6 +27,21 @@
      ({\color{powderColor} \rule[-1.5 pt]{8 pt}{8 pt}}) & Powder & ({\color{metalColor} \rule[-1.5 pt]{8 pt}{8 pt}})  & Bulk
   \end{tabular}
 }
+\newcommand{\wireframeTriangle}{%
+    \begin{tikzpicture}[scale=0.2] % adjust scale as needed
+      % Bottom triangle
+      \draw[]
+        (0,0) coordinate (A)
+        -- (0,1) coordinate (B)
+        -- (1,0) coordinate (C)
+        -- cycle;
+      % Upper triangle
+      \draw[]
+        (0,1) coordinate (D)
+        -- (1,1) coordinate (E)
+        -- (1,0) coordinate (F);
+    \end{tikzpicture}
+}
 
 \defbeamertemplate*{title page}{customized}[1][]
 {
@@ -76,6 +91,7 @@
 
 \usepackage{multimedia}
 
+\usepackage{pifont}
 
 % CASTEL PACKAGES
 \usepackage{import}
@@ -83,8 +99,7 @@
 \usepackage{transparent}
 % END CASTEL PACKAGES
 \newcommand{\castelincfig}[2][1.0]{%
-  \def\svgwidth{#1\columnwidth}
-  \import{./figures/}{#2.pdf_tex}
+  \def\svgwidth{#1\columnwidth} \import{./figures/}{#2.pdf_tex}
 }
 
 % Math commands
@@ -347,19 +362,35 @@
     \end{equation*}
     where $T_{dep}$ is the deposition temperature.\\
     Find $T : \Omega(t) \times [0, T_{\text{final}}] \to \mathbb{R}$ such that
-    \begin{align*}
+    \begin{align}
+      \label{eq:original_pde}
       \rho c_p \partial_t T_e + \rho L \partial_t f_{l,\; e} - k \Delta T
       &= r\dependson{\mathbf{x}, t} &&\forall \mathbf{x} \in \Omega(t)\\
+      \notag
       - k \partial_n T &= h_{conv} (T - T_{\text{env}}) + \varepsilon \sigma (T^4 - T_{\text{env}}^4) &&\forall \mathbf{x} \in \partial \Omega(t)\\
+      \notag
       T\dependson{\mathbf{x}, 0} &= T_0 \qquad &&\forall \mathbf{x} \in \Omega(0)
-    \end{align*}
+    \end{align}
     }
       \todo{Comment on phase change treatment here}
   \end{frame}
 
   \begin{frame}
     \frametitle{Discretization}
-      \todo{Add discretization details here (FEM, BDF1)}
+      Multiply \cref{eq:original_pde}
+      by $\phi \in V_T(t) = H^{1}\left(\Omega(t)\right)$;
+      integrate over $\Omega\dependson{t}$;
+      apply integration by parts on the diffusion term; insert BCs:
+      \begin{gather*}
+        \label{eq:weak_heat}
+        \int_{\Omega} \phi \rho \left({c_p \partial_t T + L \partial_t f_l}\right)
+        + \int_{\Omega} \nabla \phi \cdot \left(k \nabla T\right)
+        \;=\; \int_{\Omega} \phi r\\
+        \notag
+        \forall \phi \in V_T(t) \hspace{1cm}
+        + \int_{\partial \Omega} \phi \left({h_{\text{conv}} \left( T - T_{\text{env}} \right)
+        + \varepsilon \sigma \left( {T}^4 - T_{\text{env}}^4 \right)}\right)
+      \end{gather*}
   \end{frame}
 
   \begin{frame}
@@ -387,13 +418,17 @@
       }
       \label{fig:activPhaseChange}.
     \end{figure}
+    Same treatment of phase change as in \citep{kollmannsberger2018}
+    \todo{Maybe remove this slide, contradicting legend on next slide?}
   \end{frame}
 
   \begin{frame}
     \frametitle{Discretization}
     \begin{figure}
       \movie[externalviewer]{\playthumb[width=0.8\textwidth]{thumbnail-2dlpbf_2d_lpbf_ref.png}}{../videos/2dlpbf_2d_lpbf_ref.mp4}
-      \caption{Demo simulation of 2D LPBF with element activation. Wireframe elements correspond to powder region.}
+      \caption{Demo simulation of 2D LPBF with element activation.\\
+        Wireframe elements (\;\wireframeTriangle{}) correspond to powder region.
+      }
     \end{figure}
     \todo{Merge with previous slide?}
   \end{frame}
@@ -424,21 +459,60 @@
     $$
     i.e. the net printing time plus cooling.
     The time scale disparity requires again \cref{eq:num_elements_uniform_mesh} time-steps
-    \begin{gather*}
+    \begin{gather}
+      \label{eq:num_timesteps_uniform_mesh}
       \text{\# time-steps} > \frac{T_{print}}{T_{hs}} = \mathcal{O}\left(\frac{L^3}{R^3}\right)\\
-    \end{gather*}
+    \end{gather}
     when discretizing with \textbf{uniform time-steps}.
-
-    Surely people aren't employing uniform time-steps for LPBF simulation?
   \end{frame}
 
   \begin{frame}
     \frametitle{Part-scale simulation}
     \framesubtitle{Impossible}
-    \textbf{Uniform time-stepping} is the \textbf{de facto standard} in LPBF simulation.
-    \todo{Actual examples}
-    \todo{Comment on ressources needed and examples from literature}
+    Intuitively, if we don't respect the constraint
+    \begin{equation}
+      \label{eq:origconstraint}
+      \Delta t \leq T_{hs}
+    \end{equation}
+    , we won't resolve the motion of the heat source.\\
+    In practice, that's indeed what happens:
+    if the time-step is larger than $T_{hs}$ i.e. the heat source
+    travels more than $1 R$ per time-step,
+    it skips over parts of the domain,
+    and generates artificial temperature spikes.
+    \begin{figure}
+      \begin{subfigure}[t]{0.49\textwidth}
+        \includegraphics[width=\textwidth]{timestep-2ths/1R.png}
+        \caption{$\Delta t = 1 T_{hs}$}
+        \label{fig:spots1R}
+      \end{subfigure}
+      \begin{subfigure}[t]{0.49\textwidth}
+        \includegraphics[width=\textwidth]{timestep-2ths/2R.png}
+        \caption{$\Delta t = 2 T_{hs}$}
+        \label{fig:spots2R}
+      \end{subfigure}
+      % \caption{2D heating track example with admissible and inadmissible
+      % time-step sizes according to inequality \eqref{eq:origconstraint}.}
+      % \label{fig:spots}
+    \end{figure}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Part-scale simulation}
+    \framesubtitle{Impossible}
+    So \eqref{eq:num_timesteps_uniform_mesh} is indeed a \textbf{lower bound} on the number of time-steps
+    when using uniform time-stepping.
+
+    \underline{Bad news:}
+    \begin{itemize}
+      \item \textbf{Uniform time-stepping} is the \textbf{de facto standard} in LPBF simulation.
+      \item Some references require time-steps much smaller than $T_{hs}$
+        to ensure stability and accuracy \citep{hodge2014, hodge2021, elahi2025}.
+    \end{itemize}
+    There are basically 4 (!) groups in the world that can run simulations in the order of $\mathcal{O}(10 \unit{\milli\meter})$:
+    Pittsburgh, Northwestern, LLNL, TUM.\\
     Decimeter-scale parts are currently unfeasible.
+    \todo{Expand}
   \end{frame}
 
   \setbeamertemplate{frame footer}{Computational strategies for \footlineHl{time-accurate} simulation part-scale LPBF}
@@ -447,24 +521,123 @@
     \frametitle{Part-scale simulation}
     \framesubtitle{Lumped heat source}
     What do you do if you don't have a cluster or a nice GPU ?
-    You simplify the model.
-    \todo{Explain it as thermal history simplification}
+    You \textbf{simplify the model}.
+
+    \begin{figure}
+      \centering
+      \def\svgwidth{0.5\textwidth}%
+      {\small
+      \import{./figures/goldakProfile}{profile.pdf_tex}
+      }
+      \caption{Double ellipsoidal profile \citep{goldak1984}.
+        $\xi$ is the welding direction.}
+      \label{fig:goldak}
+    \end{figure}
   \end{frame}
 
   \begin{frame}
     \frametitle{Part-scale simulation}
     \framesubtitle{Lumped heat source}
-    \todo{Comment on Van Elsen}
+    \begin{figure}
+      \centering
+      \begin{tikzpicture}
+        % include the original figure
+        \node[inner sep=0] (img) {\def\svgwidth{0.5\textwidth}%
+          {\small \import{./figures/goldakProfile}{profile.pdf_tex}}};
+
+        % red "forbidden" cross over the whole image
+        \draw[line width=2pt, red] ([shift={(-2mm,-2mm)}]img.south west)
+                                   -- ([shift={(+2mm,+2mm)}]img.north east);
+        \draw[line width=2pt, red] ([shift={(+2mm,-2mm)}]img.south east)
+                                   -- ([shift={(-2mm,+2mm)}]img.north west);
+      \end{tikzpicture}
+    \end{figure}
+    We give up on the accurate representation of the heat source
+    since it is too costly to resolve.
+
+    We use a \textbf{lumped heat source} instead.
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Part-scale simulation}
+    \framesubtitle{Lumped heat source}
+    A time-step is chosen regardless of the heat source path.
+    Elements that are intersected by the heat source path
+    during the time-step are \textbf{heated uniformly}.
+    \begin{figure}
+      \centering
+      \begin{subfigure}[t]{0.495\textwidth}
+        \centering
+        \def\svgwidth{\textwidth}
+        \import{./figures/lumped_hs}{heated_els.pdf_tex}
+        \caption{Elements heated uniformly during $[t^{n},\,t^{n+1}]$.\\
+             \begin{tikzpicture}
+               \draw[red, very thick, dashed] (0,0.3) -- (0.4,0.3);
+             \end{tikzpicture}
+             $\; \rightarrow \;$ Heat source path
+           }
+        \label{fig:lhs_heated_els}
+      \end{subfigure}%
+      \hfill%
+      \begin{subfigure}[t]{0.48508\columnwidth}
+        \centering
+        \includegraphics[width=\textwidth]{lumped_hs/tem.png}
+        \caption{Resulting temperature field.}
+        \label{fig:lhs_temp_field}
+      \end{subfigure}
+      \caption{Lumped heat source example.}
+    \end{figure}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Part-scale simulation}
+    \framesubtitle{Lumped heat source}
+    \begin{figure}
+      \begin{subfigure}[t]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{chiumenti2017-lhs/chiumenti2017multipleHatches.png}
+        \caption{Multiple hatches per time-step.}
+      \end{subfigure}%
+      \hfill
+      \begin{subfigure}[t]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{chiumenti2017-lhs/chiumenti2017singleLayer.png}
+        \caption{Single layer per time-step.}
+      \end{subfigure}%
+      \hfill
+      \begin{subfigure}[t]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{chiumenti2017-lhs/chiumenti2017multipleLayers.png}
+        \caption{4 layers per time-step.}
+      \end{subfigure}
+      \caption{Lumped heat input strategies from \cite{chiumenti2017b}.}
+    \end{figure}
+    \begin{itemize}
+      \item[+] Feasible simulations
+      \item[-] Distributed heat input $\;\longrightarrow\;$ temperatures below melt $\;\longrightarrow\;$ Numerical calibration (flash heating)
+      \item[-] Loss of history: no resolution of heat source motion
+    \end{itemize}
   \end{frame}
 
   \setbeamertemplate{frame footer}{\footlineHl{Computational strategies for time-accurate simulation part-scale LPBF}}
 
   \begin{frame}
+    \frametitle{Problematic}
+    \begin{itemize}
+      \item AMR is regarded as necessary for part-scale LPBF simulation
+        to adress spatial scale disparity.
+      \item The time scale disparity is \textbf{equally} severe,
+        yet uniform-time stepping is the standard.
+    \end{itemize}
+    $\implies$ Largely overlooked challenge:
+    reduce the number of global time-steps required
+    in part-scale LPBF simulation
+    while retaining time-accuracy.
+  \end{frame}
+
+  \begin{frame}
     \frametitle{Objectives of this work}
     \begin{itemize}
-      % \item Investigate practical MAM cases, assess the
-      %   feasibility of high-fidelity simulations and quantify
-      %   time-stepping bottlenecks in simulations of DED and LPBF at the part scale.
       \item
         Review existing methods for addressing time-stepping
         challenges in MAM.
@@ -485,28 +658,74 @@
   \end{frame}
 
   \begin{frame}
+    \frametitle{Domain decomposition}
+    \framesubtitle{Basics}
+    We've established that the part-scale build is driven
+    by the motion of a very localized heat source.
+
+    What if we treat differently this region aka the Heat Affected Zone (HAZ)?
+
+    We will do so via \textbf{domain decomposition} (DD).
+
+    Let $\Omega_1$ and $\Omega_2$ be a non-overlapping decomposition of
+    the domain $\Omega = \Omega_1 \sqcup \Omega_2$ such that
+    $\Omega_1$ contains the HAZ;
+    we will pose different problems in $\Omega_1$ and $\Omega_2$
+    and enforce \textbf{transmission conditions} at the interface
+    $\Gamma = \partial \Omega_1 \cap \partial \Omega_2$
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Domain decomposition}
+    \framesubtitle{Basics}
+  \begin{figure}
+    \centering
+    \def\svgwidth{1.0\columnwidth}
+    \import{figures/transmission_conds/}{drawing.pdf_tex}
+    \caption{Non-overlapping DD schematic for a welding problem. $\Omega_1$ and $\Omega_2$
+    cover the HAZ and underlying substrate, respectively. Transmission conditions
+    must be satisfied at the interface $\Gamma = \partial \Omega_1 \cap \partial \Omega_2$.
+    Admissible and inadmissible transmission conditions are shown in the miniature plots,
+    which represent temperature fields across $\Gamma$.
+    }
+    \label{fig:transmission_conditions}
+  \end{figure}
+  \end{frame}
+
+  \begin{frame}
     \frametitle{Advected subdomain}
-    Key idea:
-     We need small time-steps to resolve the motion of the heat source ->
-     get rid of it!
+      \movie[externalviewer]{\playthumb[width=1.0\textwidth]{thumbnail-chimera.png}}{../videos/chimera.mp4}
   \end{frame}
 
   \begin{frame}
     \frametitle{Substepping}
-    Key idea:
-    We don't need small time-steps everywhere
+      \movie[externalviewer]{\playthumb[width=1.0\textwidth]{thumbnail-basic-ss.png}}{../videos/basic-demo-ss.mp4}
   \end{frame}
 
   \begin{frame}
-    \frametitle{Parallel scalings}
-    (Support slide)
+    \frametitle{Advected subdomain + substepping}
+      \movie[externalviewer]{\playthumb[width=1.0\textwidth]{thumbnail-basic-css.png}}{../videos/basic-demo-css.mp4}
   \end{frame}
 
+  % \begin{frame}
+  %   \frametitle{Parallel scalings}
+  %   (Support slide)
+  % \end{frame}
+  %
+  % \begin{frame}
+  %   \frametitle{Is Celentano's method source-based or enthalpy-based}
+  %   (Support slide)
+  %     \todo{Add discussion on Celentano's method here}
+  % \end{frame}
+  %
   \begin{frame}
-    \frametitle{Is Celentano's method source-based or enthalpy-based}
-    (Support slide)
-      \todo{Add discussion on Celentano's method here}
+    \frametitle{Thank you!}
+    \begin{figure}
+      \movie[externalviewer]{\playthumb[width=0.8\textwidth]{thumbnail-thx-elya.png}}{../videos/yelya.mp4}
+      \caption{Robin substepper thanks you!}
+    \end{figure}
   \end{frame}
+
 
 \bibliographystyle{plainnat}
 \bibliography{refs}
