@@ -693,8 +693,183 @@
   \end{frame}
 
   \begin{frame}
+    \frametitle{Domain decomposition}
+    \framesubtitle{Basics}
+    Consider the linear heat equation with Dirichlet boundary conditions.
+    Solve for $T_i$ in each subdomain $\Omega_i$:
+    \begin{equation}
+    \label{eq:lproblem}
+    \left\{
+    \begin{aligned}
+      \partial_t T_i - \alpha \Delta T_i &= r && \forall \mathbf{x} \in \Omega_i\\
+      T_i(\mathbf{x}, t) &= T_d && \forall \mathbf{x} \in \partial \Omega_{D,i}\\
+      \mathcal{I}_i \left(T_i, T_j\right) &= 0 && \forall \mathbf{x} \in \Gamma, \enskip i \neq j
+    \end{aligned}
+    \right.
+    \end{equation}
+    This is equivalent to solving the original problem in $\Omega$ given
+    that the \textbf{transmission conditions}
+    are satisfied
+    \begin{equation}
+      \label{eq:interface_eq_conditions}
+      \begin{cases}
+        \mathcal{I}_1(T_1, T_2) = 0\\
+        \mathcal{I}_2(T_1, T_2) = 0
+      \end{cases}
+      \iff
+      \begin{cases}
+        T_1 = T_2\\
+        k_1 \partial_n T_1 = k_2 \partial_n T_2
+      \end{cases}
+      \qquad
+      \qquad
+      \forall \mathbf{x} \in \Gamma
+    \end{equation}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Domain decomposition}
+    \framesubtitle{Basics}
+    Any linearly independent combination of \eqref{eq:interface_eq_conditions}
+    lays a valid pair of subproblems on $\Omega_1$ and $\Omega_2$
+    {\small
+    \begin{equation}
+      \label{eq:lp1}
+      \left\{
+      \begin{aligned}
+        \rho c_p \partial_t T_1 - k \Delta T_1 &= r && \text{ in } \Omega_1\\
+        T_1 &= T_d && \text{ in } \partial \Omega_{D,1}\\
+        \gamma_1 T_1 + \eta_1 k_1 \frac{\partial T_1}{\partial n_1} &= \gamma_1 T_2 + \eta_1 k_2 \frac{\partial T_2}{\partial n_1} && \text{ in } \Gamma
+      \end{aligned}
+      \right.
+    \end{equation}
+    \begin{equation}
+      \label{eq:lp2}
+      \left\{
+      \begin{aligned}
+        \rho c_p \partial_t T_2 - k \Delta T_2 &= r && \text{ in } \Omega_2\\
+        T_2 &= T_d && \text{ in } \partial \Omega_{D,2}\\
+        \gamma_2 T_2 + \eta k_2 \frac{\partial T_2}{\partial n_2} &= \gamma_2 T_2 + \eta_2 k_2 \frac{\partial T_2}{\partial n_2} && \text{ in } \Gamma
+      \end{aligned}
+      \right.
+    \end{equation}
+    }
+    \begin{itemize}
+      \item $\gamma_1 = \eta_2 \neq 0$ and $\gamma_2 = \eta_1 = 0 \longrightarrow\;$ Dirichlet-Neumann
+
+      \item $\gamma_i \neq 0$ and $\eta_i \neq 0 \longrightarrow\;$ Robin-Robin
+
+      \item $\gamma_1 \neq 0$, $\eta_1 = 0$, $\gamma_2 \neq 0$ and $\eta_2 \neq 0
+        \longrightarrow\;$ Dirichlet-Robin
+    \end{itemize}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Domain decomposition}
+    \framesubtitle{Basics}
+    Assuming steady-state and applying FEM discretization
+    on both subdomains, we obtain the following
+    monolithic system:
+    \renewcommand{\arraystretch}{1.2} % increases spacing (default is 1.0)
+    \begin{equation}
+      \label{eq:monolithic}
+      \begin{pmatrix}
+        \mathbf{A}_{11} & \mathbf{A}_{1\Gamma_1} & \cdot & \cdot\\
+        \mathbf{A}_{\Gamma_1 1} & \mathbf{A}_{\Gamma_1 \Gamma_1} + \mathbf{R}_{11} & \cdot & \mathbf{R}_{12}\\
+        \cdot & \cdot & \mathbf{A}_{22} & \mathbf{A}_{2\Gamma_2}\\
+        \cdot & \mathbf{R}_{21} & \mathbf{A}_{\Gamma_2 2} & \mathbf{A}_{\Gamma_2 \Gamma_2} + \mathbf{R}_{22}
+      \end{pmatrix}
+      \begin{pmatrix}
+        \mathbf{T}_1\\
+        \mathbf{T}_{\Gamma_1}\\
+        \mathbf{T}_2\\
+        \mathbf{T}_{\Gamma_2}
+      \end{pmatrix}
+      =
+      \begin{pmatrix}
+        \mathbf{F}_1\\
+        \mathbf{F}_{\Gamma_1}\\
+        \mathbf{F}_2\\
+        \mathbf{F}_{\Gamma_2}
+      \end{pmatrix}
+    \end{equation}
+    $$
+        \underbrace{\int_{\Omega_i} \nabla v_i \cdot k \nabla T_i}_{\mathbf{A}}\,
+      - \underbrace{\int_{\Gamma} v_i \gamma_i T_i}_{\mathbf{R}_{ii}}\,
+      = \underbrace{\int_{\Omega_i} r v_i\,}_{\mathbf{F}}\,
+      - \underbrace{\int_{\Gamma} v_i \left(\gamma_i T_j + \eta_i k \partial_n T_j\right)}_{\mathbf{R}_{ij}}
+    $$
+    Solving \eqref{eq:monolithic} directly $\; \longrightarrow\;$ \textbf{monolithic} approach
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Domain decomposition}
+    \framesubtitle{Basics}
+    
+    Solving problem on $\Omega_1$
+    \renewcommand{\arraystretch}{1.2} % increases spacing (default is 1.0)
+    \begin{equation}\label{eq:staggered1}
+      \begin{pmatrix}
+        \mathbf{A}_{11} & \mathbf{A}_{1\Gamma_1}\\
+        \mathbf{A}_{\Gamma_1 1} & \mathbf{A}_{\Gamma_1 \Gamma_1} + \mathbf{R}_{11}
+      \end{pmatrix}
+      \begin{pmatrix}
+        \mathbf{T}^{k+1}_1\\
+        \mathbf{T}^{k+1}_{\Gamma_1}
+      \end{pmatrix}
+      =
+      \begin{pmatrix}
+        \mathbf{F}_1\\
+        \mathbf{F}_{\Gamma_1} - \mathbf{R}_{12} \mathbf{T}^k_{\Gamma_2}
+      \end{pmatrix}
+    \end{equation}
+    and feeding the interface values to the problem on $\Omega_2$
+    \begin{equation}\label{eq:staggered2}
+      \begin{pmatrix}
+        \mathbf{A}_{22} & \mathbf{A}_{2\Gamma_2}\\
+        \mathbf{A}_{\Gamma_2 2} & \mathbf{A}_{\Gamma_2 \Gamma_2} + \mathbf{R}_{22}
+      \end{pmatrix}
+      \begin{pmatrix}
+        \mathbf{T}^{k+1}_2\\
+        \mathbf{T}^{k+1}_{\Gamma_2}
+      \end{pmatrix}
+      =
+      \begin{pmatrix}
+        \mathbf{F}_2\\
+        \mathbf{F}_{\Gamma_2} - \mathbf{R}_{21} \mathbf{T}^{k+1}_{\Gamma_1}
+      \end{pmatrix}
+    \end{equation}
+    \renewcommand{\arraystretch}{1.0}
+    and iterating until convergence $\; \longrightarrow\;$ \textbf{staggered} approach
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Advected subdomain}
+    \begin{figure}
+      \centering
+      \def\svgwidth{1.05\columnwidth}
+      \small
+      \import{./figures/chimera_schematic/}{chimera_schematic.pdf_tex}
+      \caption{Schematic of Robin-Robin variant of advected subdomain method.}
+      \label{fig:chimera_schematic}
+    \end{figure}
+  \end{frame}
+
+  \begin{frame}
     \frametitle{Advected subdomain}
       \movie[externalviewer]{\playthumb[width=1.0\textwidth]{thumbnail-chimera.png}}{../videos/chimera.mp4}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Substepping}
+    \begin{figure}
+      \centering
+      \def\svgwidth{1.0\columnwidth} {\small \import{./figures/substepping/}{schematic.pdf_tex}}
+      \caption{Non-overlapping substepping decomposition. The HAZ is included in the fast partition $\Omega_f$.
+        The remainder of the domain belongs to the slow partition $\Omega_s$.}
+      \label{fig:substepping}
+    \end{figure}
+    
   \end{frame}
 
   \begin{frame}
