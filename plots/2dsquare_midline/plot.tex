@@ -1,0 +1,102 @@
+\begin{figure}[ht]
+  \centering
+  \pgfplotslegendfromname{legendmidline}\\[1em]
+  \begin{subfigure}[t]{0.5\linewidth}
+    \centering
+    \begin{tikzpicture}[
+        trim axis left,
+        trim axis right,
+        baseline,
+    ]
+    \begin{axis}[
+      width=1.0\linewidth,
+      oscillationstyle,
+      legend to name=legendmidline,
+      legend cell align=left,
+      legend style={font=\footnotesize,
+        /tikz/every even column/.append style={column sep=0.5cm},
+        legend columns=3,
+        transpose legend,
+      },
+      legend image post style={xscale=0.8, yscale=0.8},
+    ]
+      \addlegendentry{Dirichlet, $\Delta t_s = 4 T_{hs}$}
+      \addplot+
+      [mark=none, opacity=0.8]
+      table [col sep=comma, x=x, y=uh] {./plots/2dsquare_midline/midline_CSVs/smslinear-Ths=4-midline.csv};
+
+      \addlegendentry{Dirichlet, $\Delta t_s = 8 T_{hs}$}
+      \addplot+
+      [mark=none, opacity=0.8]
+      table [col sep=comma, x=x, y=uh] {./plots/2dsquare_midline/midline_CSVs/smslinear-Ths=8-midline.csv};
+
+      \addlegendentry{Dirichlet, $\Delta t_s = 16 T_{hs}$}
+      \addplot+
+      [mark=none, opacity=0.8]
+      table [col sep=comma, x=x, y=uh] {./plots/2dsquare_midline/midline_CSVs/smslinear-Ths=16-midline.csv};
+
+      \addlegendentry{Robin, $\Delta t_s = 4 T_{hs}$}
+      \addplot+
+      [mark=none, opacity=0.8, unbounded coords=jump]
+      table [col sep=comma, x=x, y=uh] {{plots/2dsquare_midline/midline_CSVs/ssrobinlinear-Ths=4-midline.csv}};
+
+      \addlegendentry{Robin, $\Delta t_s = 8 T_{hs}$}
+      \addplot+
+      [mark=none, opacity=0.8, unbounded coords=jump]
+      table [col sep=comma, x=x, y=uh] {{plots/2dsquare_midline/midline_CSVs/ssrobinlinear-Ths=8-midline.csv}};
+
+      \addlegendentry{Robin, $\Delta t_s = 16 T_{hs}$}
+      \addplot+
+      [mark=none, opacity=0.8, unbounded coords=jump]
+      table [col sep=comma, x=x, y=uh] {{plots/2dsquare_midline/midline_CSVs/ssrobinlinear-Ths=16-midline.csv}};
+    \end{axis}
+    \end{tikzpicture}
+    \caption{Linear case.}
+    \label{fig:midline_linear}
+  \end{subfigure}%
+  \begin{subfigure}[t]{0.5\linewidth}
+    \centering
+    \begin{tikzpicture}[
+        trim axis left,
+        trim axis right,
+        baseline,
+    ]
+    \begin{axis}[
+      width=1.0\linewidth,
+      oscillationstyle,
+      yticklabel={$$},
+      ylabel={},
+      y unit={},
+    ]
+      \addplot+
+      [mark=none, opacity=0.8]
+      table [col sep=comma, x=x, y=uh] {./plots/2dsquare_midline/midline_CSVs/smsnnlinear-Ths=4-midline.csv};
+      \addplot+
+      [mark=none, opacity=0.8]
+      table [col sep=comma, x=x, y=uh] {./plots/2dsquare_midline/midline_CSVs/smsnnlinear-Ths=8-midline.csv};
+      \addplot+
+      [mark=none, opacity=0.8]
+      table [col sep=comma, x=x, y=uh] {./plots/2dsquare_midline/midline_CSVs/smsnnlinear-Ths=16-midline.csv};
+
+      \addplot+
+      [mark=none, opacity=0.8, unbounded coords=jump]
+      table [col sep=comma, x=x, y=uh] {{plots/2dsquare_midline/midline_CSVs/ssrobinnnlinear-Ths=4-midline.csv}};
+
+      \addplot+
+      [mark=none, opacity=0.8, unbounded coords=jump]
+      table [col sep=comma, x=x, y=uh] {{plots/2dsquare_midline/midline_CSVs/ssrobinnnlinear-Ths=8-midline.csv}};
+
+      \addplot+
+      [mark=none, opacity=0.8, unbounded coords=jump]
+      table [col sep=comma, x=x, y=uh] {{plots/2dsquare_midline/midline_CSVs/ssrobinnnlinear-Ths=16-midline.csv}};
+    \end{axis}
+    \end{tikzpicture}
+    \caption{Non-linear case.}
+    \label{fig:midline_nnlinear}
+  \end{subfigure}
+
+  \caption{Solution profiles along first heating track
+  for increasing $\Delta t_s$ and constant $\Delta t_f = \tfrac{1}{8} T_{hs}$,
+  for both substeppers without AS.}
+  \label{fig:1sttrackmidline}
+\end{figure}

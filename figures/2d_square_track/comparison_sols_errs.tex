@@ -1,0 +1,80 @@
+\begin{figure}[H]
+  \centering
+  \begin{tabular}{cccc}
+    \begin{subfigure}[t]{0.28\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \node[anchor=south west, inner sep=0] (image) at (0, 0) {
+          \includegraphics[width=\textwidth, clip=true, trim={0cm 0cm 12cm 0cm}]{{2d_square_track/sols/linear_ref_pred0_16els_tf0_5_ts8_0_time0_0032.png}}
+        };
+      \end{tikzpicture}
+      \caption{Solution -- No substepping.}
+      \label{fig:sol_ref_t4}
+    \end{subfigure}
+    &
+    \begin{subfigure}[t]{0.28\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \node[anchor=south west, inner sep=0] (image) at (0, 0) {
+          \includegraphics[width=\textwidth, clip=true, trim={0cm 0cm 12cm 0cm}]{{2d_square_track/sols/robin_linear_ss_rr_pred0_16els_tf0_5_ts8_0_time0_0032.png}}
+        };
+        \node[text opacity=1] at ($(image.west)!0.125!(image.east) + (0.0, 0.0)$) {$\Omega_f$};
+      \end{tikzpicture}
+      \caption{Solution -- Robin.}
+      \label{fig:sol_robin_t4}
+    \end{subfigure}
+    &
+    \begin{subfigure}[t]{0.28\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \node[anchor=south west, inner sep=0] (image) at (0, 0) {
+          \includegraphics[width=\textwidth, clip=true, trim={0cm 0cm 12cm 0cm}]{{2d_square_track/sols/chimera_ss_RR_linear_css_pred0_16els_tf0_5_ts8_0_time0_0032.png}}
+        };
+        \node[text opacity=1] at ($(image.west)!0.125!(image.east) + (0.0, 0.0)$) {$\Omega_f$};
+        \node[text opacity=1, anchor=south, inner sep=1pt] at ($(image.south west)!0.08!(image.south east) + (0.0, 0.0)$) {$\Omega_m$};
+      \end{tikzpicture}
+      \caption{Solution -- Robin with \modelName{}.}
+      \label{fig:sol_chimera_robin_t4}
+    \end{subfigure}
+    &
+    \begin{subfigure}[t]{0.1\textwidth}
+      \raisebox{0.5\height}{
+        \vcolorbar{rainbow_blended_white}{0.2cm}{25}{2000}{$u_h$}{}
+      }
+    \end{subfigure}
+    \\[5mm]
+    \begin{subfigure}[t]{0.28\textwidth}
+      \centering
+      \includegraphics[width=\textwidth, clip=true, trim={0cm 0cm 12cm 0cm}]{{2d_square_track/errs/linear_ref_pred0_16els_tf0_5_ts8_0_time0_0032.png}}
+      \caption{Squared error -- No substepping.}
+      \label{fig:err_ref_t4}
+    \end{subfigure}
+    &
+    \begin{subfigure}[t]{0.28\textwidth}
+      \centering
+      \includegraphics[width=\textwidth, clip=true, trim={0cm 0cm 12cm 0cm}]{{2d_square_track/errs/robin_linear_ss_rr_pred0_16els_tf0_5_ts8_0_time0_0032.png}}
+      \caption{Squared error -- Robin.}
+      \label{fig:err_robin_t4}
+    \end{subfigure}
+    &
+    \begin{subfigure}[t]{0.28\textwidth}
+      \centering
+      \includegraphics[width=\textwidth, clip=true, trim={0cm 0cm 12cm 0cm}]{{2d_square_track/errs/chimera_ss_RR_linear_css_pred0_16els_tf0_5_ts8_0_time0_0032.png}}
+      \caption{Squared error -- Robin with \modelName{}.}
+      \label{fig:err_chimera_robin_t4}
+    \end{subfigure}
+    &
+    \begin{subfigure}[t]{0.1\textwidth}
+      \raisebox{0.5\height}{
+      \vcolorbar{fast}{0.2cm}{0}{10000}{$(u_h - u_{ex})^2$}{}
+      }
+    \end{subfigure}
+  \end{tabular}
+  \caption{Solutions (top row) and pointwise squared errors (bottom row) in the linear case for the Robin substepper
+    with and without an \modelName{}, with $\Delta t_s = 8 T_{hs}$ and $\Delta t_f = 0.5 T_{hs}$.
+    The unsubstepped solution with $\Delta t = 0.5 T_{hs}$ is shown for reference.
+    The substeppers introduce some error throughout the domain.
+    The advected subdomain reduces the error in the HAZ but increases the error near the track turns.
+  }
+  \label{fig:err_linear_vsadvected}
+\end{figure}

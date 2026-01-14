@@ -1,0 +1,97 @@
+\documentclass[authoryear]{elsarticle}
+\usepackage[margin=1in]{geometry}
+% Plots
+\usepackage[export, pgf]{adjustbox}
+\usepackage{subcaption}
+
+
+\usepackage{pgfplots}\pgfplotsset{compat=newest}
+
+\usepackage{siunitx}
+
+
+\usepgfplotslibrary{units}
+
+\begin{document}
+\begin{figure}
+  \centering
+  \begin{subfigure}{0.5\textwidth}
+    \adjustbox{}{\begin{tikzpicture}[
+        trim axis left,
+        trim axis right,
+        baseline
+    ]
+
+      \begin{axis}[
+            width=\textwidth,
+            grid=major,
+            x unit=\si{\mm},
+            every extra y tick/.append style={overlay,},
+            legend cell align=left,
+            legend pos=north west,
+            legend style={font=\footnotesize},
+            tick label style={font=\footnotesize},
+            cycle list name=color list,
+            ymin=-0.0001,
+            ymax=+0.0001,
+            unit vector ratio=1 1,
+            %ylabel style={yshift=-2mm},
+            legend style={
+              at={(0.5,-0.15)},
+              anchor=north,
+              legend columns=-1, % horizontal legend
+            },
+        ]
+        \addlegendentry{Kopp}
+        \addplot+
+        [mark=none, opacity=0.6, thick]
+        table [col sep=comma] {kopp_ulp200_bird_view_sorted.csv} -- cycle;
+
+        \addlegendentry{Hodge}
+        \addplot+
+        [mark=none, opacity=0.6, thick]
+        table [col sep=comma] {hodge_8els_s025_bird_view_sorted.csv} -- cycle;
+
+        \addlegendentry{\ModelName{} Hodge}
+        \addplot+
+        [mark=none, opacity=0.6, thick]
+        table [col sep=comma] {chimera_hodge_8els_s025_bird_view_sorted.csv} -- cycle;
+      \end{axis}
+    \end{tikzpicture}}
+  \end{subfigure}
+
+  \begin{subfigure}{0.5\textwidth}
+    \adjustbox{}{\begin{tikzpicture}[
+        trim axis left,
+        trim axis right,
+        baseline
+    ]
+
+      \begin{axis}[
+            width=\textwidth,
+            grid=major,
+            x unit=\si{\mm},
+            every extra y tick/.append style={overlay,},
+            tick label style={font=\footnotesize},
+            cycle list name=color list,
+            ymin=-0.00005,
+            ymax=+0.00001,
+            unit vector ratio=1 1,
+            %ylabel style={yshift=-2mm},
+        ]
+        \addplot+
+        [mark=none, opacity=0.6, thick]
+        table [col sep=comma] {kopp_ulp200_side_view_sorted.csv} -- cycle;
+
+        \addplot+
+        [mark=none, opacity=0.6, thick]
+        table [col sep=comma] {hodge_8els_s025_side_view_sorted.csv} -- cycle;
+
+        \addplot+
+        [mark=none, opacity=0.6, thick]
+        table [col sep=comma] {chimera_hodge_8els_s025_side_view_sorted.csv} -- cycle;
+      \end{axis}
+    \end{tikzpicture}}
+  \end{subfigure}
+\end{figure}
+\end{document}

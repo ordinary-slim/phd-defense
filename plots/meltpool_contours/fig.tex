@@ -1,0 +1,88 @@
+\begin{figure}
+  \begin{subfigure}[b]{0.44\linewidth}
+  \centering
+  \hcolorbar{rainbow}{0.4cm}{25}{2700}{$T$}{0.485985}\\
+  \begin{tikzpicture}
+    \node[anchor=south west, inner sep=0] (image) at (0, 0) {
+      \includegraphics[width=\linewidth]{ambench_perspective_chimera_stagg.png}
+    };
+    \node[fill=white, fill opacity=0.7, text opacity=1, inner sep=1pt, rounded corners=2pt] at ($(image.west)!0.5!(image.east) + (2.4, -0.5)$) {$\Omega_m$};
+    \node[fill=white, fill opacity=0.7, text opacity=1, inner sep=1pt, rounded corners=2pt] at ($(image.west)!0.9!(image.east) + (0.0, -1.05)$) {$\Omega_f$};
+    \node[fill=white, fill opacity=0.7, text opacity=1, inner sep=1pt, rounded corners=2pt] at ($(image.south)!0.9!(image.north) + (2.0, 0.0)$) {$\Omega_s$};
+  \end{tikzpicture}
+  \caption{Intermediate substep of Robin substepper with an AS.}
+  \label{fig:perspective_chimera}
+\end{subfigure}%
+\quad
+\begin{subfigure}[b]{0.52\linewidth}
+  \centering
+\begin{tikzpicture}[
+    spy using outlines= {rectangle, connect spies}
+  ]
+  \begin{groupplot}[
+    group style={
+      group size=1 by 2,
+      vertical sep=0.6cm, % adjust as needed
+    },
+    trim axis left,
+    trim axis right,
+    width=8cm, % set width for both plots
+    height=5cm,
+    meltpoolstyle,
+  ]
+    \nextgroupplot[
+        xlabel style={at={(axis description cs:1.0, -0.1)},anchor=west},
+        x unit=\si{\micro\meter},
+        ymin=0.0,
+        ymax=+100.0,
+        ylabel style={at={(axis description cs:1.05,0.3)},anchor=west},
+        legend style={
+          at={(0.5, +1.2)},
+          anchor=south,
+          legend columns=-1,
+          cells={align=left},
+          font=\footnotesize,
+        },
+        legend image post style={xscale=0.8},
+        title={Top view},
+        title style={at={(0.5,0.5)}, anchor=south},
+    ]
+    \addlegendentry{\citeauthor{kopp2022}}
+    \addplot+[mark=none, opacity=0.6, thick]
+      table [col sep=comma, x expr=\thisrow{x}*1e6, y expr=\thisrow{y}*1e6] {./plots/meltpool_contours/CSVs/kopp_ulp200_bird_view_sorted.csv} -- cycle;
+    \addlegendentry{w/o AS}
+    \addplot+[mark=none, opacity=0.6, thick]
+      table [col sep=comma, x expr=\thisrow{x}*1e6, y expr=\thisrow{y}*1e6] {./plots/meltpool_contours/CSVs/hodge_8els_s025_bird_view_sorted.csv} -- cycle;
+    \addlegendentry{w/ AS}
+    \addplot+[mark=none, opacity=0.6, thick]
+      table [col sep=comma, x expr=\thisrow{x}*1e3 - 1e3, y expr=\thisrow{y}*1e3] {./plots/meltpool_contours/CSVs/chimera_robin_8els_s025_bird_view_sorted.csv};
+    \coordinate (spypoint_bird) at (axis cs:27.5, 0);
+    \coordinate (magnifyglass_bird) at (axis cs:30,50);
+
+    \nextgroupplot[
+      xticklabels={},
+      xlabel style={at={(axis description cs:0.5,1.05)},anchor=south},
+      ymin=-50.0,
+      ymax=+0.0,
+      title={Side view},
+      title style={at={(0.5,-0.2)}, anchor=north},
+    ]
+    \addplot+[mark=none, opacity=0.6, thick]
+      table [col sep=comma, x expr=\thisrow{x}*1e4, y expr=\thisrow{y}*1e4] {./plots/meltpool_contours/CSVs/kopp_ulp200_side_view_sorted.csv};
+    \addplot+[mark=none, opacity=0.6, thick]
+      table [col sep=comma, x expr=\thisrow{x}*1e3 - 1e3, y expr=\thisrow{y}*1e3] {./plots/meltpool_contours/CSVs/robin_8els_s025_side_view_sorted.csv};
+    \addplot+[mark=none, opacity=0.6, thick]
+      table [col sep=comma, x expr=\thisrow{x}*1e3 - 1e3, y expr=\thisrow{y}*1e3] {./plots/meltpool_contours/CSVs/chimera_robin_8els_s025_side_view_sorted.csv};
+    \coordinate (spypoint_side) at (axis cs:-310.0, 0);
+    \coordinate (magnifyglass_side) at (axis cs:-304,-25);
+  \end{groupplot}
+  \spy [black, width=0.7cm, height=0.8cm, anchor=south west, magnification=3]
+    on (spypoint_bird) in node[fill=white] at (magnifyglass_bird);
+  \spy [black, width=0.9cm, height=0.6cm, anchor=north east, magnification=2.5]
+    on (spypoint_side) in node[fill=white] at (magnifyglass_side);
+\end{tikzpicture}
+  \caption{Top and side views of simulated melt pool contours, with and without AS, compared against results from \cite{kopp2022}.}
+  \label{fig:side_kopp_contours}
+\end{subfigure}
+\end{figure}
+

@@ -1,0 +1,73 @@
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[c]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{{stacked_cubes/unsubstepped_intermediate_mat.png}}
+  \end{subfigure}%
+  \hfill
+  \begin{subfigure}[c]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{{stacked_cubes/robin_intermediate_mat.png}}
+  \end{subfigure}%
+  \hfill
+  \begin{subfigure}[c]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{{stacked_cubes/chimera_intermediate_mat.png}}
+  \end{subfigure}%
+  \hfill
+  \begin{minipage}[c]{0.03\textwidth}
+      \begin{tikzpicture}
+      \begin{axis}[
+        hide axis,
+        scale only axis,
+        height=2cm,
+        width=0.2cm,
+        colormap name=powderbulk,
+        colorbar,
+        colorbar style={
+          ytick={0.0,1.0},
+          yticklabel pos=right,
+          yticklabel style={font=\footnotesize},
+          yticklabels={Powder, Bulk},
+          width=0.2cm,
+        },
+        point meta min=0,
+        point meta max=1,
+      ]
+      % dummy plot to force colorbar
+      \addplot [draw=none] coordinates {(0,0) (0,1)};
+    \end{axis}
+    \end{tikzpicture}
+  \end{minipage}
+  \begin{subfigure}[c]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{{stacked_cubes/unsubstepped_intermediate.png}}
+    \caption{Unsubstepped.}
+    \label{fig:3d_lpbf_unsubstepped_contour}
+  \end{subfigure}%
+  \hfill
+  \begin{subfigure}[c]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{{stacked_cubes/robin_intermediate.png}}
+    \caption{Robin.}
+    \label{fig:3d_lpbf_robin_contour}
+  \end{subfigure}%
+  \hfill
+  \begin{subfigure}[c]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{{stacked_cubes/chimera_intermediate.png}}
+    \caption{Robin with \modelName{}.}
+    \label{fig:3d_lpbf_chimera_contour}
+  \end{subfigure}%
+  \hfill
+  \begin{minipage}[c]{0.03\textwidth}
+    \vcolorbar{fast}{0.2cm}{25}{3200}{$T$ [\unit{\celsius}]}{0.50394}
+  \end{minipage}
+  \caption{Temperature contour and material composition
+    at intermediate time
+    for the 1 \unit{\milli\meter} cube case with $\Delta t_s = 10 T_{hs}$.
+    Tetrahedral elements correspond to the fast subdomain,
+    and hexahedral elements to the \modelName{}.
+  }
+  \label{fig:3d_lpbf_contours}
+\end{figure}

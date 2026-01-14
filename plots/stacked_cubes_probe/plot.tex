@@ -1,0 +1,199 @@
+\definecolor{OIblue}{HTML}{0072B2}
+\definecolor{OIverm}{HTML}{E69F00}
+\definecolor{OIred}{HTML}{D55E00}
+\definecolor{OIgreen}{HTML}{009E73}
+
+
+\pgfplotsset{
+  refstyle/.style={
+    very thick, color=OIblue, solid, mark=none,
+  },
+  staggeredstyle/.style={
+    thick, color=OIverm, densely dashed, mark=none,
+  },
+  dirichletstyle/.style={
+    thick, color=OIred, dash pattern=on 7pt off 3pt,
+    mark=none,
+  },
+  chimerastyle/.style={
+    thick, color=OIgreen!85!black, densely dotted,
+    mark=none,
+  },
+  layerzerostyle/.style={
+    enlarge x limits=false,
+    axis x discontinuity=crunch,
+    axis x line*=bottom,
+    axis y line*=left,
+    xtick=\empty,
+    clip=false,
+    yticklabel style={font=\tiny, /pgf/number format/fixed},
+    xticklabel style={font=\tiny},
+    grid=major,
+  },
+  layerstyle/.style={
+    layerzerostyle,
+    axis y line=none,
+    yticklabels=\empty,
+    xticklabel style={font=\tiny},
+  },
+}
+
+\newcommand{\addlayer}[6]{
+  \ifnum#1=0
+    \nextgroupplot[
+      layerzerostyle,
+      ylabel={\tiny #3},
+      y unit={\tiny #4},
+      ymin=#5, ymax=#6,
+    ]
+  \else
+    \nextgroupplot[
+      layerstyle,
+      ymin=#5, ymax=#6,
+    ]
+  \fi
+  \addplot[refstyle] table [x=time, y=#2, col sep=comma] {{plots/stacked_cubes_probe/ref_layers/layer_#1.csv}};
+  \addplot[staggeredstyle] table [x=time, y=#2, col sep=comma] {{plots/stacked_cubes_probe/robin_layers/layer_#1.csv}};
+  \addplot[dirichletstyle] table [x=time, y=#2, col sep=comma] {{plots/stacked_cubes_probe/hodge_layers/layer_#1.csv}};
+  \addplot[chimerastyle] table [x=time, y=#2, col sep=comma] {{plots/stacked_cubes_probe/chimera_layers/layer_#1.csv}};
+  \node at (rel axis cs:0.5,-0.05) {\tiny {\the\numexpr#1+1\relax}};
+  \draw[thin, gray!50] (rel axis cs:0.0,0.0) -- (rel axis cs:0.0,0.05);
+
+  \if#1=0
+    \coordinate (spypoint) at (rel axis cs:4.5, 0.12);
+    \coordinate (magnifyglass) at (rel axis cs:4.0, 0.8);
+  \fi
+
+}
+
+\begin{figure}
+  \centering
+  \begin{tikzpicture}[
+    baseline,
+    ]
+  \begin{axis}[
+    hide axis,
+    xmin=0, xmax=1, ymin=0, ymax=1, % keeps the box tiny
+    height=2cm,
+    legend columns=-1,
+    legend cell align=left,
+    legend style={
+      draw=none,
+      /tikz/every even column/.append style={column sep=8pt},
+    },
+  ]
+
+  % One dummy point per entry:
+  \addplot[refstyle]      coordinates {(0,0)};
+  \addlegendentry{Unsubstepped}
+
+  \addplot[staggeredstyle] coordinates {(0,0)};
+  \addlegendentry{Robin}
+
+  \addplot[dirichletstyle] coordinates {(0,0)};
+  \addlegendentry{Dirichlet}
+
+  \addplot[chimerastyle]  coordinates {(0,0)};
+  \addlegendentry{Robin w/ AS}
+
+  \end{axis}
+  \end{tikzpicture}\\
+  \begin{subfigure}[t]{0.45\textwidth}
+  \centering
+  \begin{tikzpicture}[
+      trim left={0mm},
+      baseline,
+      spy using outlines= {circle, connect spies}
+      ]
+    \begin{groupplot}[
+      group style={
+        group size=20 by 1,
+        horizontal sep=0pt, % panels touch
+        ylabels at=edge left,
+        xlabels at=edge bottom
+      },
+      width=1.85cm,
+      height=7cm,
+    ]
+
+    \addlayer{0}{pt1}{T}{\unit{\celsius}}{25}{1825}
+    \addlayer{1}{pt1}{T}{\unit{\celsius}}{25}{1825}
+    \addlayer{2}{pt1}{T}{\unit{\celsius}}{25}{1825}
+    \addlayer{3}{pt1}{T}{\unit{\celsius}}{25}{1825}
+    \addlayer{4}{pt1}{T}{\unit{\celsius}}{25}{1825}
+    \addlayer{5}{pt1}{T}{\unit{\celsius}}{25}{1825}
+    \addlayer{6}{pt1}{T}{\unit{\celsius}}{25}{1825}
+    \addlayer{7}{pt1}{T}{\unit{\celsius}}{25}{1825}
+    \addlayer{8}{pt1}{T}{\unit{\celsius}}{25}{1825}
+    \addlayer{9}{pt1}{T}{\unit{\celsius}}{25}{1825}
+    \addlayer{10}{pt1}{T}{\unit{\celsius}}{25}{1825}
+    \addlayer{11}{pt1}{T}{\unit{\celsius}}{25}{1825}
+    \addlayer{12}{pt1}{T}{\unit{\celsius}}{25}{1825}
+    \addlayer{13}{pt1}{T}{\unit{\celsius}}{25}{1825}
+    \addlayer{14}{pt1}{T}{\unit{\celsius}}{25}{1825}
+    \addlayer{15}{pt1}{T}{\unit{\celsius}}{25}{1825}
+    \addlayer{16}{pt1}{T}{\unit{\celsius}}{25}{1825}
+    \addlayer{17}{pt1}{T}{\unit{\celsius}}{25}{1825}
+    \addlayer{18}{pt1}{T}{\unit{\celsius}}{25}{1825}
+    \addlayer{19}{pt1}{T}{\unit{\celsius}}{25}{1825}
+
+    \end{groupplot}
+    \node at ($(group c1r1.south)!0.5!(group c20r1.south)-(0,5mm)$) {\tiny Layer};
+    \spy [black, width=2cm, height=2cm, magnification=3] on (spypoint) in node[fill=white] at (magnifyglass);
+
+  \end{tikzpicture}
+  \end{subfigure}%
+  \hfill
+  \begin{subfigure}[t]{0.45\textwidth}
+  \centering
+  \begin{tikzpicture}[
+      trim left={0mm},
+      baseline
+      ]
+    \begin{groupplot}[
+      group style={
+        group size=20 by 1,
+        horizontal sep=0pt, % panels touch
+        ylabels at=edge left,
+        xlabels at=edge bottom
+      },
+      width=1.85cm,
+      height=7cm,
+    ]
+
+    \addlayer{0}{W}{Melt pool width}{\unit{\milli\meter}}{0.0}{0.35}
+    \addlayer{1}{W}{Melt pool width}{\unit{\milli\meter}}{0.0}{0.35}
+    \addlayer{2}{W}{Melt pool width}{\unit{\milli\meter}}{0.0}{0.35}
+    \addlayer{3}{W}{Melt pool width}{\unit{\milli\meter}}{0.0}{0.35}
+    \addlayer{4}{W}{Melt pool width}{\unit{\milli\meter}}{0.0}{0.35}
+    \addlayer{5}{W}{Melt pool width}{\unit{\milli\meter}}{0.0}{0.35}
+    \addlayer{6}{W}{Melt pool width}{\unit{\milli\meter}}{0.0}{0.35}
+    \addlayer{7}{W}{Melt pool width}{\unit{\milli\meter}}{0.0}{0.35}
+    \addlayer{8}{W}{Melt pool width}{\unit{\milli\meter}}{0.0}{0.35}
+    \addlayer{9}{W}{Melt pool width}{\unit{\milli\meter}}{0.0}{0.35}
+    \addlayer{10}{W}{Melt pool width}{\unit{\milli\meter}}{0.0}{0.35}
+    \addlayer{11}{W}{Melt pool width}{\unit{\milli\meter}}{0.0}{0.35}
+    \addlayer{12}{W}{Melt pool width}{\unit{\milli\meter}}{0.0}{0.35}
+    \addlayer{13}{W}{Melt pool width}{\unit{\milli\meter}}{0.0}{0.35}
+    \addlayer{14}{W}{Melt pool width}{\unit{\milli\meter}}{0.0}{0.35}
+    \addlayer{15}{W}{Melt pool width}{\unit{\milli\meter}}{0.0}{0.35}
+    \addlayer{16}{W}{Melt pool width}{\unit{\milli\meter}}{0.0}{0.35}
+    \addlayer{17}{W}{Melt pool width}{\unit{\milli\meter}}{0.0}{0.35}
+    \addlayer{18}{W}{Melt pool width}{\unit{\milli\meter}}{0.0}{0.35}
+    \addlayer{19}{W}{Melt pool width}{\unit{\milli\meter}}{0.0}{0.35}
+
+    \end{groupplot}
+    \node at ($(group c1r1.south)!0.5!(group c20r1.south)-(0,5mm)$) {\tiny Layer};
+
+  \end{tikzpicture}
+  \end{subfigure}
+  \caption{Temperature history at a point (left)
+    and melt pool width (right)
+    throughout the print of the 1.0 \unit{\milli\meter}
+    cube using $\Delta t_s = 10 T_{hs}$.
+    The probe is located at the center of the top surface of the substrate,
+    that is, right below the first layer.
+    Cooling intervals are excluded for clarity.
+  }
+  \label{fig:3d_lpbf_probe}
+\end{figure}

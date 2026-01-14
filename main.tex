@@ -13,6 +13,7 @@
 
 \newif\ifisdraft
 \isdrafttrue
+\newcommand{\isdraft}{\ifisdraft true\else false\fi}
 \newcommand{\todo}[1]{
   \ifisdraft {
     \Large
@@ -99,6 +100,9 @@
   rightComments=false,
 ]{algpseudocodex}
 
+\usepackage{stackengine}
+\usepackage{changepage}
+
 % CASTEL PACKAGES
 \usepackage{import}
 \usepackage{xifthen}
@@ -115,8 +119,9 @@
 
 \usepackage{calc}
 \usepackage{tikz}
-\usepackage{pgfplots}% Plots
-\usetikzlibrary{calc,positioning}
+\usepackage{pgfplots}\pgfplotsset{compat=newest}
+\usetikzlibrary{decorations.pathreplacing,calc,positioning,spy,pgfplots.units}
+\usepgfplotslibrary{groupplots}
 \tikzset{
   annotate box/.style={
     fill=white,
@@ -133,21 +138,6 @@
   % Inline TikZ node; safe in text, math, tabular, makebox, etc.
   \tikz[baseline=(X.base)]\node[annotate box,#1] (X) {#2};%
 }
-\newcommand{\playthumb}[2][]{%
-  \begin{tikzpicture}
-    % Thumbnail image
-    \node[inner sep=0] (img) {\includegraphics[#1]{#2}};
-    % Dark circle
-    \draw[fill=black!60, draw=white, line width=0.8pt]
-      (img.center) circle[radius=0.6cm];
-    % Triangle
-    \draw[fill=white, draw=none, rounded corners=1.5pt]
-      ([xshift=0.34cm]img.center) --
-      ([xshift=-0.19cm,yshift=0.3cm]img.center) --
-      ([xshift=-0.19cm,yshift=-0.3cm]img.center) -- cycle;
-  \end{tikzpicture}%
-}
-
 \newcommand{\nablaxi}[0]{\nabla_{\boldsymbol{\xi}}}
 \newcommand{\deltaxi}[0]{\Delta_{\boldsymbol{\xi}}}
 \newcommand{\eunorm}[1]{
@@ -161,6 +151,7 @@
 
 \graphicspath{{figures/}}
 
+\input{helpers.tex}
 
 \begin{document}
 
@@ -196,12 +187,12 @@
     \end{figure}
   \end{frame}
 
-  \begin{frame}
-    \frametitle{LPBF}
-    \framesubtitle{How does it work?}
-    \todo{Add schematic of LPBF process here.}
-  \end{frame}
-
+  % \begin{frame}
+  %   \frametitle{LPBF}
+  %   \framesubtitle{How does it work?}
+  %   \todo{Add schematic of LPBF process here.}
+  % \end{frame}
+  %
   \begin{frame}
     \frametitle{{LPBF}}
     \framesubtitle{Fast, small, precise}
@@ -441,7 +432,7 @@
   \begin{frame}
     \frametitle{Discretization}
     \begin{figure}
-      \movie[externalviewer]{\playthumb[width=0.8\textwidth]{thumbnail-2dlpbf_2d_lpbf_ref.png}}{../videos/2dlpbf_2d_lpbf_ref.mp4}
+      \externalvod{width=0.8\textwidth}{videos/2dlpbf_2d_lpbf_ref.mp4}{thumbnail-2dlpbf_2d_lpbf_ref.png}
       \caption{Demo simulation of 2D LPBF with element activation.\\
         Wireframe elements (\;\wireframeTriangle{}) correspond to powder region.
       }
@@ -628,6 +619,7 @@
       \end{subfigure}
       \caption{Lumped heat input strategies from \cite{chiumenti2017b}.}
     \end{figure}
+    \textit{Pros and cons}
     \begin{itemize}
       \item[+] Feasible simulations
       \item[-] Distributed heat input $\;\longrightarrow\;$ temperatures below melt $\;\longrightarrow\;$ Numerical calibration (flash heating)
@@ -673,6 +665,7 @@
     \end{itemize}
   \end{frame}
 
+  \setbeamertemplate{frame footer}{}
   \begin{frame}
     \frametitle{Domain decomposition}
     \framesubtitle{Basics}
@@ -863,10 +856,14 @@
     \frametitle{Advected subdomain}
     Resolving the motion requires prohibitively small time-steps.
 
-    Idea: Get rid of the motion!
+    Idea: \textbf{Get rid of the motion}!
 
     Define a subdomain $\Omega_m$ that moves with the heat source
     and solves the heat equation in its reference frame.
+
+    Due to motion of reference frame, the heat equation in $\Omega_m$
+    acquires an advection term $\longrightarrow$ \textbf{advected subdomain}
+    (AS) method.
   \end{frame}
 
   \begin{frame}
@@ -968,33 +965,33 @@
     \end{figure}
   \end{frame}
 
+  % \begin{frame}
+  %   \frametitle{Advected subdomain}
+  %   \begin{table}
+  %     \centering
+  %     \begin{tabular}{lrl}
+  %       \toprule
+  %       Parameter & Value & Unit \\
+  %       \midrule
+  %       Density  & 4300 & $kg / m^3$\\
+  %       Specific heat  & 700 & $J / kg K$\\
+  %       Conductivity  & 10 & $W / m K$\\
+  %       Speed $V$  & 1000 & $mm / s$\\
+  %       Radius $R$  & 0.1 & $mm$\\
+  %       Power  & 50 & \unit{\watt}\\
+  %       Environment temperature  & 25 & \unit{\celsius}\\
+  %       \bottomrule
+  %     \end{tabular}
+  %     \label{tbl:mat}
+  %   \end{table}
+  % \end{frame}
+
   \begin{frame}
     \frametitle{Advected subdomain}
     Analytical validation with 3D welding example
     \citep{nguyen1999,vanelsen2007}
     and Ti64-like material properties.
-    \begin{table}
-      \centering
-      \begin{tabular}{lrl}
-        \toprule
-        Parameter & Value & Unit \\
-        \midrule
-        Density  & 4300 & $kg / m^3$\\
-        Specific heat  & 700 & $J / kg K$\\
-        Conductivity  & 10 & $W / m K$\\
-        Speed $V$  & 1000 & $mm / s$\\
-        Radius $R$  & 0.1 & $mm$\\
-        Power  & 50 & \unit{\watt}\\
-        Environment temperature  & 25 & \unit{\celsius}\\
-        \bottomrule
-      \end{tabular}
-      \label{tbl:mat}
-    \end{table}
-  \end{frame}
-
-  \begin{frame}
-    \frametitle{Advected subdomain}
-    
+    \vspace{-5mm}
     \begin{figure}[]
         \centering
         \begin{tabular}{cc}
@@ -1053,7 +1050,189 @@
 
   \begin{frame}
     \frametitle{Advected subdomain}
-      \movie[externalviewer]{\playthumb[width=1.0\textwidth]{thumbnail-chimera.png}}{../videos/chimera.mp4}
+      \begin{figure}
+        \centering
+        \externalvod{width=0.8\textwidth}{videos/chimera.mp4}{2d_welding_chimera/thumbnail-chimera.png}
+        \vspace{-3mm}
+        \caption{2D welding example with growing time-step workflow.}
+      \end{figure}
+      \vspace{-3mm}
+      \begin{figure}
+        \centering
+        \begin{subfigure}[t]{0.3\linewidth}
+          \centering
+          \stackinset{l}{ 0.35\textwidth}{b}{ 0.025\textwidth}{
+            {\color{white}$\Omega_f$}
+          }{
+            \includegraphics[width=\textwidth]{2d_welding_chimera/changeOfDir_OFF.png}
+          }
+          \caption{No AS, $\Delta t = 0.5\,T_{hs}$.}
+          \label{fig:2dWeldNoShear}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}[t]{0.3\linewidth}
+          \centering
+          \stackinset{r}{ 0.32\textwidth}{b}{ 0.1\textwidth}{
+            {\color{white}$\Gamma$}
+          }{
+          \stackinset{r}{ 0.19\textwidth}{t}{ 0.075\textwidth}{
+            {\color{white}$\Omega_m$}
+          }{
+          \stackinset{l}{ 0.35\textwidth}{b}{ 0.025\textwidth}{
+            {\color{white}$\Omega_f$}
+          }{
+          \includegraphics[width=\textwidth]{2d_welding_chimera/changeOfDir_ON.png}
+          }}}
+          \caption{AS, $\Delta t = 0.5\,T_{hs}$.}
+          \label{fig:2dWeldShear_05R}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}[t]{0.3\linewidth}
+          \centering
+          \stackinset{r}{ 0.32\textwidth}{b}{ 0.1\textwidth}{
+            {\color{white}$\Gamma$}
+          }{
+          \stackinset{r}{ 0.19\textwidth}{t}{ 0.075\textwidth}{
+            {\color{white}$\Omega_m$}
+          }{
+          \stackinset{l}{ 0.35\textwidth}{b}{ 0.025\textwidth}{
+            {\color{white}$\Omega_f$}
+          }{
+          \includegraphics[width=\textwidth]{2d_welding_chimera/changeOfDir_ON_finer.png}
+          }}}
+          \caption{AS, $\Delta t = 0.25\,T_{hs}$.}
+          \label{fig:2dWeldShear_025R}
+        \end{subfigure}
+        \vspace{-3mm}
+        \caption{``Shearing'' of previous thermal tail by the AS.}
+        \label{fig:2dWeldTurn}
+      \end{figure}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Advected subdomain}
+    \framesubtitle{Thin wall}
+    \begin{figure}
+      \centering
+      \begin{subfigure}[t]{0.48\textwidth}
+        \includegraphics[draft=\isdraft, width=\textwidth]{3d_lpbf_chimera/overview1_compressed.png}
+        \caption{Mesh and bulk-powder distribution at final time-step.\\
+        % \legendMats
+        }
+        \label{fig:3dLpbfMeshMat}
+      \end{subfigure}\hfill%
+      \begin{subfigure}[t]{0.52\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{3d_lpbf_chimera/overview2.png}
+        \caption{Temperature contour at intermediate time-step, metal only.
+        last $\Delta t = 8 T_{hs}$, \enskip $\Gamma$ extends $50 R$ behind
+        heat source.}
+        \label{fig:3dLpbfPerspective}
+      \end{subfigure}%
+      \vspace{-3mm}
+      \caption{Mesh and $\Omega_m$.}
+    \end{figure}
+    One track of $100R$ per layer, 10 layers, Ti64-like material properties.
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Advected subdomain}
+    \framesubtitle{Thin wall}
+    \begin{minipage}[t]{0.58\textwidth}
+    \pgfplotsset{compat=newest}
+    \begin{figure}
+      \centering
+      \begin{tikzpicture}[
+          trim axis left,
+          trim axis right,
+          baseline,
+      ]
+
+        \begin{axis}[
+              clip=true,
+              enlarge x limits=false,
+              enlarge y limits=false,
+              width=1.21\textwidth,
+              grid=major,
+              xlabel={x},
+              x unit=\unit{\milli\meter},
+              ylabel={T},
+              y unit=\unit{\celsius},
+              xmin=-6.0,
+              xmax=+6.0,
+              ymin=20.0,
+              ymax=2575.0,
+              ytick={25,500,1000,2000,2500},
+              extra x ticks={-5, 5},
+              every extra y tick/.append style={overlay,},
+              legend cell align=left,
+              legend pos=north west,
+              legend style={font=\footnotesize},
+              tick label style={font=\footnotesize},
+              ylabel style={yshift=-2mm, font=\footnotesize, at={(axis description cs:-0.05,0.6)}},
+              xlabel style={font=\footnotesize, at={(axis description cs:0.5,-0.1)}},
+          ]
+        \addlegendentry{AS, last $\Delta t = 8\,T_{hs}$}
+        \addplot
+        [mark=none, color=red, opacity=0.6, thin]
+        table [col sep=comma, x="Points:0", y="T"] {figures/3d_lpbf_chimera/plots/endFifthLayer_coupled_rerun.csv};
+
+        \addlegendentry{Reference, $\Delta t = 0.5\,T_{hs}$}
+        \addplot
+        [mark=none, color=blue, opacity=0.6, thin]
+        table [col sep=comma, x="Points:0", y="T"] {figures/3d_lpbf_chimera/plots/endFifthLayer_ref_normal.csv};
+
+        \addlegendentry{Reference, $\Delta t = 0.125\,T_{hs}$}
+        \addplot
+        [mark=none, color=black, opacity=0.6, thin]
+        table [col sep=comma, x="Points:0", y="T"] {figures/3d_lpbf_chimera/plots/endFifthLayer_ref_fine.csv};
+
+        \addplot
+        [forget plot, color=red, thin, dashed, opacity=0.6]
+        coordinates
+        {(0.93, \pgfkeysvalueof{/pgfplots/ymin})
+         (0.93, \pgfkeysvalueof{/pgfplots/ymax})};
+
+        \addplot
+        [forget plot, color=red, thin, dashed, opacity=0.6]
+        coordinates
+        {(5.0, \pgfkeysvalueof{/pgfplots/ymin})
+         (5.0, \pgfkeysvalueof{/pgfplots/ymax})};
+      \end{axis}
+
+      \end{tikzpicture}
+      \vspace{-3mm}
+      \caption{Plot along top centerline of build towards end of fifth layer.}
+      \label{fig:3dLpbf_plot5}
+    \end{figure}
+    \end{minipage}%
+    \hspace{-0.01\textwidth}%
+    \begin{minipage}[t]{0.43\textwidth}
+      \small
+      \begin{itemize}
+        \item About 6 times fewer time-steps with AS for the same build.
+        \item Each AS time-step is roughly 2 times more expensive to compute.
+        \item[$\rightarrow$] Overall net speedup of about 3 times in wall-clock time.
+        \item Cost of boolean operations is negligible; overhead mainly comes
+              from the increased linear solve time.
+      \end{itemize}
+    \end{minipage}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Advected subdomain}
+    \framesubtitle{Intermediate conclusions}
+    Conclusions of \cite{slimani2024}:
+    \begin{itemize}
+       \item AS recovers accurate thermal profiles in the HAZ and enables
+         larger time-steps.
+       \item Trade-off: increased algebraic complexity and potential
+         oscillations at subdomain discontinuities.
+       \item Performance degrades for short scanning tracks; minimum track
+         length $\approx 5R$ recommended.
+       \item Future work: combine with substepping algorithms and explore
+         alternative domain decomposition strategies.
+    \end{itemize}
   \end{frame}
 
   \begin{frame}
@@ -1061,38 +1240,390 @@
     \begin{figure}
       \centering
       \def\svgwidth{1.0\columnwidth} {\small \import{./figures/substepping/}{schematic.pdf_tex}}
-      \caption{Non-overlapping substepping decomposition. The HAZ is included in the fast partition $\Omega_f$.
-        The remainder of the domain belongs to the slow partition $\Omega_s$.}
+      \caption{Non-overlapping substepping decomposition. The HAZ is included in the \textbf{fast partition} $\Omega_f$.
+      The remainder of the domain belongs to the \textbf{slow partition} $\Omega_s$.}
       \label{fig:substepping}
     \end{figure}
-    
   \end{frame}
 
   \begin{frame}
     \frametitle{Substepping}
-      \movie[externalviewer]{\playthumb[width=1.0\textwidth]{thumbnail-basic-ss.png}}{../videos/basic-demo-ss.mp4}
+      \begin{figure}
+        \centering
+        \externalvod{width=1.0\textwidth}{videos/basic-demo-ss.mp4}{thumbnail-basic-ss.png}
+        \caption{Basic demo of substepping method.}
+      \end{figure}
   \end{frame}
 
   \begin{frame}
-    \frametitle{Advected subdomain + substepping}
-      \movie[externalviewer]{\playthumb[width=1.0\textwidth]{thumbnail-basic-css.png}}{../videos/basic-demo-css.mp4}
+    \frametitle{Substepping}
+    \cite{slimani2025}:
+    \begin{itemize}
+      \item Examines SOA of substepping methods for LPBF;
+        identifies common structures and shortcomings.
+      \item New Robin-Robin substepper for LPBF is compared against
+        Dirichlet substepper of \cite{hodge2021}.
+      \item Realistic speedup estimates provided.
+      \item Alternate predictor schemes are proposed and tested.
+      \item Robin-Robin version of AS method is proposed.
+      \item AS is nested within the fast partition of said substeppers.
+    \end{itemize}
   \end{frame}
 
-  % \begin{frame}
-  %   \frametitle{Parallel scalings}
-  %   (Support slide)
-  % \end{frame}
-  %
-  % \begin{frame}
-  %   \frametitle{Is Celentano's method source-based or enthalpy-based}
-  %   (Support slide)
-  %     \todo{Add discussion on Celentano's method here}
-  % \end{frame}
-  %
+  \begin{frame}
+    \frametitle{Substepping + advected subdomain}
+    \begin{figure}
+      \centering
+      \externalvod{width=1.0\textwidth}{videos/basic-demo-css.mp4}{thumbnail-basic-css.png}
+      \caption{Basic demo of combined substepping + advected subdomain method.}
+    \end{figure}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Substepping}
+    \framesubtitle{Example time-step}
+    \begin{figure}
+      \begin{subfigure}[t]{0.46\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{{ss_robin/prev_sol.png}}
+        \caption{$T^{n}$}
+        \label{fig:robin_prev}
+      \end{subfigure}%
+      \hfill%
+      \begin{subfigure}[t]{0.46\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{{ss_robin/predictor.png}}
+        \caption{$\tilde{T}^{n+1}$ after predictor step}
+        \label{fig:robin_predictor}
+      \end{subfigure}
+      \caption{Previous solution and predictor step.}
+    \end{figure}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Substepping}
+    \framesubtitle{Example time-step}
+    \begin{figure}
+    \begin{subfigure}[t]{0.46\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{{ss_robin/micro_step.png}}
+      \caption{Intermediate \textbf{Robin} substep.}
+      \label{fig:robin_substep}
+    \end{subfigure}%
+    \hfill%
+    \begin{subfigure}[t]{0.46\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \node[anchor=south west, inner sep=0] (A) {\includegraphics[width=\textwidth]{{ss_robin/macro_step.png}}};
+      \begin{scope}[x={(A.south east)},y={(A.north west)}]
+        % Rectangle highlight (coordinates between 0 and 1)
+        %\draw[teal!20, step=0.05] (0,0) grid (1,1);%grid, comment out for draft
+        \draw[red, thick, dash pattern=on 1pt off 1pt] (0.286, 0.5475) circle (0.02);
+        \draw[red, thick, dash pattern=on 1pt off 1pt] (0.286, 0.6385) circle (0.02);
+      \end{scope}
+      \end{tikzpicture}
+      \caption{\textbf{Robin} corrector step.}
+      \label{fig:robin_corrector}
+    \end{subfigure}
+    \caption{Robin-Robin substepper.}
+    \end{figure}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Substepping}
+    \framesubtitle{Example time-step}
+    \begin{figure}
+      \begin{subfigure}[t]{0.46\textwidth}
+        \centering
+        \begin{tikzpicture}
+          \node[anchor=south west, inner sep=0] (A) {\includegraphics[width=\textwidth]{{hodge/micro_step.png}}};
+        \begin{scope}[x={(A.south east)},y={(A.north west)}]
+          % Rectangle highlight (coordinates between 0 and 1)
+          %\draw[teal!20, step=0.01] (0,0) grid (1,1);%grid, comment out for draft
+          \draw[red, thick, dash pattern=on 1pt off 1pt, rounded corners] (0.0625, 0.450) rectangle (0.2, 0.5);
+          \draw[red, thick, dash pattern=on 1pt off 1pt, rounded corners] (0.2500, 0.5505) rectangle (0.3100, 0.7100);
+        \end{scope}
+        \end{tikzpicture}
+        \caption{Intermediate \textbf{Dirichlet} substep. The Dirichlet
+        condition does not let the solution deviate from the predictor.}
+        \label{fig:hodge_substep}
+      \end{subfigure}%
+      \hfill%
+      \begin{subfigure}[t]{0.46\textwidth}
+        \centering
+        \begin{tikzpicture}
+          \node[anchor=south west, inner sep=0] (A) {\includegraphics[width=\textwidth]{{hodge/macro_step.png}}};
+        \begin{scope}[x={(A.south east)},y={(A.north west)}]
+          % Rectangle highlight (coordinates between 0 and 1)
+          %\draw[teal!20, step=0.01] (0,0) grid (1,1);%grid, comment out for draft
+          \draw[red, thick, dash pattern=on 1pt off 1pt, rounded corners] (0.065, 0.4550) rectangle (0.1905, 0.4905);
+          \draw[red, thick, dash pattern=on 1pt off 1pt, rounded corners] (0.2600, 0.5605) rectangle (0.3000, 0.7000);
+        \end{scope}
+        \end{tikzpicture}
+    \caption{\textbf{Dirichlet} corrector step.}
+    \label{fig:hodge_corrector}
+  \end{subfigure}
+      \caption{Dirichlet substepper of \cite{hodge2021}.}
+    \end{figure}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Substepping}
+    \framesubtitle{No heat source predictor}
+
+    \begin{figure}
+      \begin{subfigure}[t]{0.33\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{hodge/to_predictor.png}
+        \caption{Predictor step without heat input}
+        \label{fig:to_hodge_predictor}
+      \end{subfigure}%
+      \hfill
+      \begin{subfigure}[t]{0.33\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{hodge/to_micro_step.png}
+        \caption{Micro-step.}
+        \label{fig:to_hodge_micro}
+      \end{subfigure}%
+      \hfill
+      \begin{subfigure}[t]{0.33\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{hodge/to_macro_step.png}
+        \caption{Corrector step.}
+        \label{fig:to_hodge_macro}
+      \end{subfigure}
+      \caption{Example of Dirichlet substepper step using a predictor step without including the source term.}
+      \label{fig:to_hodge}
+    \end{figure}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Substepping}
+    \framesubtitle{2D square track}
+
+      \begin{adjustwidth}{-10mm}{-10mm}
+      \begin{figure}
+      \centering
+      \begin{tabular}{cccc}
+        \begin{subfigure}[t]{0.28\textwidth}
+          \centering
+          \begin{tikzpicture}
+            \node[anchor=south west, inner sep=0] (image) at (0, 0) {
+              \includegraphics[width=\textwidth, clip=true, trim={0cm 0cm 12cm 0cm}]{{2d_square_track/sols/linear_ref_pred0_16els_tf0_5_ts8_0_time0_0032.png}}
+            };
+          \end{tikzpicture}
+          \caption{Solution -- No substepping.}
+          \label{fig:sol_ref_t4}
+        \end{subfigure}
+        &
+        \begin{subfigure}[t]{0.28\textwidth}
+          \centering
+          \begin{tikzpicture}
+            \node[anchor=south west, inner sep=0] (image) at (0, 0) {
+              \includegraphics[width=\textwidth, clip=true, trim={0cm 0cm 12cm 0cm}]{{2d_square_track/sols/robin_linear_ss_rr_pred0_16els_tf0_5_ts8_0_time0_0032.png}}
+            };
+          \node[text opacity=1] at ($(image.west)!0.35!(image.east) + (0.0, 0.0)$) {\labelbox{$\Omega_f$}};
+          \end{tikzpicture}
+          \caption{Solution -- Robin.}
+          \label{fig:sol_robin_t4}
+        \end{subfigure}
+        &
+        \begin{subfigure}[t]{0.28\textwidth}
+          \centering
+          \begin{tikzpicture}
+            \node[anchor=south west, inner sep=0] (image) at (0, 0) {
+              \includegraphics[width=\textwidth, clip=true, trim={0cm 0cm 12cm 0cm}]{{2d_square_track/sols/chimera_ss_RR_linear_css_pred0_16els_tf0_5_ts8_0_time0_0032.png}}
+            };
+            \node[text opacity=1] at ($(image.west)!0.35!(image.east) + (0.0, 0.0)$) {\labelbox{$\Omega_f$}};
+            \node[text opacity=1, anchor=south, inner sep=1pt] at ($(image.south west)!0.36!(image.south east) + (0.0, 0.0)$) {\labelbox{$\Omega_m$}};
+          \end{tikzpicture}
+          \caption{Solution -- Robin with AS.}
+          \label{fig:sol_chimera_robin_t4}
+        \end{subfigure}
+        &
+        \begin{subfigure}[t]{0.1\textwidth}
+          \raisebox{0.1\height}{
+            \vcolorbar{rainbow_blended_white}{0.2cm}{25}{2000}{$u_h$}{}
+          }
+        \end{subfigure}
+        \\[5mm]
+        \begin{subfigure}[t]{0.28\textwidth}
+          \centering
+          \includegraphics[width=\textwidth, clip=true, trim={0cm 0cm 12cm 0cm}]{{2d_square_track/errs/linear_ref_pred0_16els_tf0_5_ts8_0_time0_0032.png}}
+          \caption{Squared error -- No substepping.}
+          \label{fig:err_ref_t4}
+        \end{subfigure}
+        &
+        \begin{subfigure}[t]{0.28\textwidth}
+          \centering
+          \includegraphics[width=\textwidth, clip=true, trim={0cm 0cm 12cm 0cm}]{{2d_square_track/errs/robin_linear_ss_rr_pred0_16els_tf0_5_ts8_0_time0_0032.png}}
+          \caption{Squared error -- Robin.}
+          \label{fig:err_robin_t4}
+        \end{subfigure}
+        &
+        \begin{subfigure}[t]{0.28\textwidth}
+          \centering
+          \includegraphics[width=\textwidth, clip=true, trim={0cm 0cm 12cm 0cm}]{{2d_square_track/errs/chimera_ss_RR_linear_css_pred0_16els_tf0_5_ts8_0_time0_0032.png}}
+          \caption{Squared error -- Robin with AS.}
+          \label{fig:err_chimera_robin_t4}
+        \end{subfigure}
+        &
+        \begin{subfigure}[t]{0.1\textwidth}
+          \raisebox{0.1\height}{
+          \vcolorbar{fast}{0.2cm}{0}{10000}{$(u_h - u_{ex})^2$}{}
+          }
+        \end{subfigure}
+      \end{tabular}
+      % \caption{Solutions (top row) and pointwise squared errors (bottom row) in the linear case for the Robin substepper
+      %   with and without an AS, with $\Delta t_s = 8 T_{hs}$ and $\Delta t_f = 0.5 T_{hs}$.
+      %   The unsubstepped solution with $\Delta t = 0.5 T_{hs}$ is shown for reference.
+      %   The substeppers introduce some error throughout the domain.
+      %   The advected subdomain reduces the error in the HAZ but increases the error near the track turns.
+      % }
+      \label{fig:err_linear_vsadvected}
+    \end{figure}
+    \end{adjustwidth}
+  \end{frame}
+  
+  \begin{frame}
+    \frametitle{Substepping}
+    \framesubtitle{2D square track}
+    \input{./plots/2dsquare_midline/plot.tex}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Substepping}
+    \framesubtitle{2D square track}
+    \begin{adjustwidth}{-7mm}{-5mm}
+      \input{./plots/truncated_iters/plot.tex}
+    \end{adjustwidth}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Substepping}
+    \framesubtitle{Experimental validation}
+    Validation against experimental melt pool shape data of \cite{lane2020} (AMB2018-02),
+    as done in \cite{kopp2022}.\\
+    \begin{adjustwidth}{-5mm}{-5mm}
+      \input{./plots/meltpool_contours/fig.tex}
+    \end{adjustwidth}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Substepping}
+    \framesubtitle{3D LPBF cube}
+    \begin{figure}
+      \centering
+      \begin{subfigure}[b]{0.33\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{{stacked_cubes/mesh.png}}
+        \caption{Mesh and material composition at start of print.}
+        \label{fig:3d_lpbf_mesh}
+      \end{subfigure}%
+      \hfill
+      \begin{subfigure}[b]{0.33\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{{stacked_cubes/scan_path.png}}
+        \caption{Printing path.}
+        \label{fig:3d_lpbf_path}
+      \end{subfigure}%
+      \hfill
+      \begin{subfigure}[b]{0.33\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{{stacked_cubes/bulk_mesh.png}}
+        \caption{Bulk material at final time.}
+        \label{fig:3d_lpbf_bulk_mesh}
+      \end{subfigure}
+      \caption{\centering \SI{1}{\milli\meter} cube. Powder elements
+        corresponding to each layer are activated during recoating time-steps.
+      \qquad \legendpowderbulk{}}
+    \end{figure}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Substepping}
+    \framesubtitle{3D LPBF cube}
+
+    \vspace{-7mm}
+    \input{./plots/stacked_cubes_probe/plot.tex}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Substepping}
+    \framesubtitle{3D LPBF cube}
+    \begin{itemize}
+      \item Speed-up factors range from about $1.3$--$2.0$ for fast DOF ratios around
+      $30\%$, up to roughly $4$--$6.5$ when the fast DOF ratio drops below
+      $10\%$, depending on substepper and use of AS.
+      \item Robin substepping slightly outperforms Dirichlet.
+      \item AS approach yields increasing speed-ups with domain size; substantial gains for cubes $\geq 2\,\si{\milli\meter}$.
+      \item For short tracks and large macro-steps, fast-domain DOF fraction can exceed profitability threshold and reduce speed-up.
+      \item AS distorts thermal tail when advected subdomain overlaps previous tracks.
+    \end{itemize}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Substepping + advected subdomain}
+    \framesubtitle{Final conclusions}
+    \begin{itemize}
+      \item The AS method improved HAZ accuracy and allowed much larger
+        time-steps (up to several \(T_{hs}\)), at the cost of losing SPD
+        structure and increasing per-step cost by roughly a factor of 2–3.
+      \item AS works best on long, simple tracks; direction
+        changes and overlapping tracks shear thermal tails and can severely
+        degrade accuracy, limiting applicability as a general speed-up
+        technique.
+      \item Substepping, via fast/slow domain partitioning with
+        \(\Delta t_f\) and \(\Delta t_s \gg \Delta t_f\), provided a more
+        robust and broadly applicable way to exploit time-scale disparity in
+        LPBF.
+      \end{itemize}
+    \end{frame}
+    \begin{frame}
+      \frametitle{Substepping + advected subdomain}
+      \framesubtitle{Final conclusions}
+      \begin{itemize}
+      \item Fast/slow DOF ratio was identified as the primary driver of
+        speed-up, with \(\Delta t_s / \Delta t_f\) playing a secondary role;
+        overly large macro-steps can enlarge the fast domain and erode gains.
+      \item The proposed Robin–Robin scheme
+        achieved accuracy comparable to
+        \cite{hodge2021}. Both clearly outperformed Dirichlet–Neumann coupling.
+      \item Extra staggered iterations in the substepping loop brought negligible accuracy benefits.
+      \item The main accuracy limiter for large macro-steps was the slow-region
+        time integrator (Backward Euler)
+      % \item Diffusion-focused predictors for the substepper improved stability and
+      %   accuracy relative to source-driven predictors, especially at large
+      %   macro-steps.
+      % \item
+      %   An enthalpy-based latent-heat treatment proved substantially more
+      %   robust than the apparent heat capacity method for powder-to-solid
+      %   transitions.
+      % \item Calibration against melt pool experiments required
+      %   an unphysical absorptivity dip, indicating that important heat-loss
+      %   physics—likely tied to melt pool flow and evaporation—is missing from
+      %   the thermal model.
+      % \item Overall, advected subdomains and substepping
+      %   together form a flexible toolbox that makes high-fidelity, part-scale
+      %   LPBF simulations more computationally feasible while retaining local
+      %   accuracy near the heat source.
+    \end{itemize}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Substepping + advected subdomain}
+    \framesubtitle{Future works}
+    \begin{itemize}
+      \item Improve the advected subdomain by using spatially and temporally varying advection fields (e.g.\ ALE-based fading and ramped velocities) and adaptive deactivation when thermal gradients misalign with scan direction.
+      \item Enhance substepping via better characterization of LPBF time-scales, higher-order time integration for the slow partition, improved predictors/interpolation, adaptive fast-domain definitions, and dynamic load balancing.
+    \end{itemize}
+
+  \end{frame}
+
   \begin{frame}
     \frametitle{Thank you!}
     \begin{figure}
-      \movie[externalviewer]{\playthumb[width=0.8\textwidth]{thumbnail-thx-elya.png}}{../videos/yelya.mp4}
+      \externalvod{width=0.8\textwidth}{videos/thx.mp4}{thumbnail-thx.png}
       \caption{Robin substepper thanks you!}
     \end{figure}
   \end{frame}

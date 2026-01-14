@@ -1,0 +1,70 @@
+\begin{figure}[H]
+  \vspace{-1.0cm}
+  \centering
+  \begin{subfigure}[t]{0.425\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{{ss_robin/prev_sol.png}}
+    \caption{Previous solution $T^{n}$}
+    \label{fig:robin_prev}
+  \end{subfigure}%
+  \hspace{1.5cm}
+  \begin{subfigure}[t]{0.425\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{{ss_robin/predictor.png}}
+    \caption{$\tilde{T}^{n+1}$ after predictor step}
+    \label{fig:robin_predictor}
+  \end{subfigure}\\
+  \begin{subfigure}[t]{0.425\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \node[anchor=south west, inner sep=0] (A) {\includegraphics[width=\textwidth]{{hodge/micro_step.png}}};
+    \begin{scope}[x={(A.south east)},y={(A.north west)}]
+      % Rectangle highlight (coordinates between 0 and 1)
+      %\draw[teal!20, step=0.01] (0,0) grid (1,1);%grid, comment out for draft
+      \draw[red, thick, dash pattern=on 1pt off 1pt, rounded corners] (0.0625, 0.450) rectangle (0.2, 0.5);
+      \draw[red, thick, dash pattern=on 1pt off 1pt, rounded corners] (0.2500, 0.5505) rectangle (0.3100, 0.7100);
+    \end{scope}
+    \end{tikzpicture}
+    \caption{Intermediate \textbf{Dirichlet} substep. The Dirichlet
+    condition does not let the solution deviate from the predictor.}
+    \label{fig:hodge_substep}
+  \end{subfigure}%
+  \hspace{1.5cm}
+  \begin{subfigure}[t]{0.425\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \node[anchor=south west, inner sep=0] (A) {\includegraphics[width=\textwidth]{{hodge/macro_step.png}}};
+    \begin{scope}[x={(A.south east)},y={(A.north west)}]
+      % Rectangle highlight (coordinates between 0 and 1)
+      %\draw[teal!20, step=0.01] (0,0) grid (1,1);%grid, comment out for draft
+      \draw[red, thick, dash pattern=on 1pt off 1pt, rounded corners] (0.065, 0.4550) rectangle (0.1905, 0.4905);
+      \draw[red, thick, dash pattern=on 1pt off 1pt, rounded corners] (0.2600, 0.5605) rectangle (0.3000, 0.7000);
+    \end{scope}
+    \end{tikzpicture}
+    \caption{\textbf{Dirichlet} corrector step. Note the leftover temperature peaks from the predictor.}
+    \label{fig:hodge_corrector}
+  \end{subfigure}\\
+  \begin{subfigure}[t]{0.425\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{{ss_robin/micro_step.png}}
+    \caption{Intermediate \textbf{Robin} substep. Compared to the Dirichlet substep, the solution is free to diffuse away from the predictor.}
+    \label{fig:robin_substep}
+  \end{subfigure}%
+  \hspace{1.5cm}
+  \begin{subfigure}[t]{0.425\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \node[anchor=south west, inner sep=0] (A) {\includegraphics[width=\textwidth]{{ss_robin/macro_step.png}}};
+    \begin{scope}[x={(A.south east)},y={(A.north west)}]
+      % Rectangle highlight (coordinates between 0 and 1)
+      %\draw[teal!20, step=0.05] (0,0) grid (1,1);%grid, comment out for draft
+      \draw[red, thick, dash pattern=on 1pt off 1pt] (0.286, 0.5475) circle (0.02);
+      \draw[red, thick, dash pattern=on 1pt off 1pt] (0.286, 0.6385) circle (0.02);
+    \end{scope}
+    \end{tikzpicture}
+    \caption{\textbf{Robin} corrector step. Note the discontinuities in the solution.}
+    \label{fig:robin_corrector}
+  \end{subfigure}
+  \caption{Examples of Dirichlet and Robin substepping cycles.}
+  \label{fig:substepin_examples}
+\end{figure}

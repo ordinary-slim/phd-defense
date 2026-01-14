@@ -1,0 +1,165 @@
+\begin{figure}
+  \centering
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \begin{tikzpicture}[
+        trim axis left,
+        trim axis right,
+        baseline,
+    ]
+    \begin{axis}[
+      width=1.0\textwidth,
+      oscillationstyle,
+      xlabel={},
+      x unit={},
+      legend pos=north west,
+    ]
+      \addlegendentry{${T}_u^{n+1}$}
+      \addplot
+      [uhnpstyle, opacity=1.0]
+      table [col sep=comma, x=x, y=uh] {./plots/2dsquare_midline/midline_CSVs/wrong_interp/sms-midline_t0_0.csv};
+
+      \addlegendentry{$T^{n}$}
+      \addplot
+      [uhnstyle, opacity=1.0]
+      table [col sep=comma, x=x, y=uh_n] {./plots/2dsquare_midline/midline_CSVs/wrong_interp/sms-midline_t0_0.csv};
+    \end{axis}
+    \end{tikzpicture}
+    \caption{Unsubstepped solution $T_u$ serves as a predictor.}
+    \label{fig:step_by_step_midline_initial}
+  \end{subfigure}%
+  \hfill
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \begin{tikzpicture}[
+        trim axis left,
+        trim axis right,
+        baseline,
+    ]
+    \begin{axis}[
+      width=1.0\textwidth,
+      oscillationstyle,
+      yticklabel={$$},
+      xlabel={},
+      x unit={},
+      ylabel={},
+      y unit={},
+      legend pos=north west,
+    ]
+      \newcommand{\timeplot}{0_375}
+
+      \gammafs{}
+
+      \addlegendentry{$T_{h}^{n+m/M}$}
+      \addplot[substepstyle, opacity=0.8]
+      [mark=none, opacity=0.8, thick]
+      table [col sep=comma, x=x, y=uh] {./plots/2dsquare_midline/midline_CSVs/wrong_interp/sms-midline_t\timeplot.csv};
+
+      \addlegendentry{$T_u^{n+m/M}$}
+      \addplot[correctstyle, opacity=0.8]
+      [mark=none, opacity=0.8, thick]
+      table [col sep=comma, x=x, y=uh] {./plots/2dsquare_midline/midline_CSVs/wrong_interp/post_substep1_sms_theoretical_predictor-midline_t\timeplot.csv};
+
+      %\addlegendentry{$T^{n+1}$}
+      \addplot
+      [uhnpstyle, opacity=0.3]
+      table [col sep=comma, x=x, y=uh] {./plots/2dsquare_midline/midline_CSVs/wrong_interp/sms-midline_t0_0.csv};
+
+      %\addlegendentry{$T^{n}$}
+      \addplot
+      [uhnstyle, opacity=0.3]
+      table [col sep=comma, x=x, y=uh_n] {./plots/2dsquare_midline/midline_CSVs/wrong_interp/sms-midline_t0_0.csv};
+
+      \addplot[only marks, mark=o] coordinates {
+        (-0.15313, 1978.1)
+        (-0.15313, 1099.5)
+      };
+      \addplot[only marks, mark=*] coordinates {
+        (-0.15313, 1648.6)
+      };
+    \end{axis}
+    \end{tikzpicture}
+    \caption{Early in the substepping process, diffusion
+      at the fast-slow interface is severely underestimated
+      by the linear interpolation \eqref{eq:timeinterp_slow}.}
+    \label{fig:step_by_step_midline_early}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \begin{tikzpicture}[
+        trim axis left,
+        trim axis right,
+        baseline,
+    ]
+    \begin{axis}[
+      width=1.0\textwidth,
+      oscillationstyle,
+      legend pos=north west,
+    ]
+      \newcommand{\timeplot}{0_9921875}
+
+      \gammafs{}
+
+      \addlegendentry{$T_u^{n+\tfrac{M-1}{M}}$}
+      \addplot
+      [correctstyle, opacity=0.8]
+      table [col sep=comma, x=x, y=uh] {./plots/2dsquare_midline/midline_CSVs/wrong_interp/post_substep1_sms_theoretical_predictor-midline_t\timeplot.csv};
+
+      \addlegendentry{$T_{h}^{n+\tfrac{M-1}{M}}$}
+      \addplot
+      [substepstyle, opacity=0.8]
+      table [col sep=comma, x=x, y=uh] {./plots/2dsquare_midline/midline_CSVs/wrong_interp/sms-midline_t\timeplot.csv};
+    \end{axis}
+    \end{tikzpicture}
+    \caption{At the last substep,
+    the linear interpolation
+    has caught up, with only a small residual wave remaining on the fast side.}
+    \label{fig:step_by_step_midline_late}
+  \end{subfigure}%
+  \hfill
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \begin{tikzpicture}[
+        trim axis left,
+        trim axis right,
+        baseline,
+    ]
+    \begin{axis}[
+      width=1.0\textwidth,
+      yticklabel={$$},
+      oscillationstyle,
+      legend pos=north west,
+      ylabel={},
+      y unit={},
+      legend style={font=\footnotesize,},
+    ]
+
+      \gammafs{}
+
+      \addlegendentry{$T_h^{n+1}$}
+      \addplot[substepstyle, opacity=0.8]
+      [mark=none, opacity=0.8, thick]
+      table [col sep=comma, x=x, y=uh] {./plots/2dsquare_midline/midline_CSVs/wrong_interp/sms-midline_t1_0.csv};
+
+      \addlegendentry{%
+        \shortstack{$T_h^{n+\tfrac{M-1}{M}}$ set to\\$T_u^{n+\tfrac{M-1}{M}}$}%
+      }
+      \addplot+[opacity=0.8]
+      [mark=none, opacity=0.8, thick]
+      table [col sep=comma, x=x, y=uh] {./plots/2dsquare_midline/midline_CSVs/smsforced_lastsubstep-midline.csv};
+
+      \addlegendentry{$T_u^{n+1}$}
+      \addplot[correctstyle, opacity=0.8]
+      [mark=none, opacity=0.8, thick]
+      table [col sep=comma, x=x, y=uh] {./plots/2dsquare_midline/midline_CSVs/wrong_interp/sms-midline_t0_0.csv};
+    \end{axis}
+    \end{tikzpicture}
+    \caption{The unsubstepped predictor still produces a jump at the interface.
+    Forcing the last substep to match the unsubstepped solution removes the
+    residual wave on the fast side but does not eliminate the jump.}
+    \label{fig:step_by_step_midline_final}
+  \end{subfigure}
+  \caption{Step-by-step illustration of a linear problem where the Dirichlet substepper uses the unsubstepped solution as a predictor,
+    with $\Delta t_s = 16 T_{hs}$ and $\Delta t_f = \tfrac{1}{8} T_{hs}$.}
+    \label{fig:step_by_step_midline}
+\end{figure}

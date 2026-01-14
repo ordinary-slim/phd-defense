@@ -1,0 +1,95 @@
+\begin{figure}
+  \centering
+  \begin{tikzpicture}[
+      baseline,
+      spy using outlines= {circle, connect spies},
+    ]
+    \begin{groupplot}[
+      group style={
+        group size=3 by 1,
+        horizontal sep=0.4cm,
+      },
+    ]
+    \nextgroupplot[
+      truncatedddstyle,
+      legend style={legend columns=2, at={(0.5,0.02)}, anchor=south},
+      width=0.31\textwidth,
+      legend cell align=left,
+      title={Dirichlet-Neumann},
+      ]
+
+      \gammafs{}
+
+      \addlegendentry{Iter. 1}
+      \addplot+[mark=none, thin, unbounded coords=jump, opacity=0.8]
+      table [col sep=comma, x=x, y=uh] {./plots/truncated_iters/CSVs/ssdnaitken_relax-midline-t1.csv};
+      \addlegendentry{Iter. 2}
+      \addplot+[mark=none, thin, unbounded coords=jump, opacity=0.8]
+      table [col sep=comma, x=x, y=uh] {./plots/truncated_iters/CSVs/ssdnaitken_relax-midline-t2.csv};
+      \addlegendentry{Iter. 4}
+      \addplot+[mark=none, thin, unbounded coords=jump, opacity=0.8]
+      table [col sep=comma, x=x, y=uh] {./plots/truncated_iters/CSVs/ssdnaitken_relax-midline-t4.csv};
+      \addlegendentry{Iter. 8}
+      \addplot+[mark=none, thin, unbounded coords=jump, opacity=0.8]
+      table [col sep=comma, x=x, y=uh] {./plots/truncated_iters/CSVs/ssdnaitken_relax-midline-t8.csv};
+    \nextgroupplot[
+      truncatedddstyle,
+      ylabel={},
+      y unit={},
+      yticklabel={$$},
+      width=0.31\textwidth,
+      legend pos=south east,
+      legend cell align=left,
+      title={Robin},
+      ]
+
+      \gammafs{}
+
+      \addlegendentry{Iter. 1}
+      \addplot+[mark=none, thin, unbounded coords=jump, opacity=0.8]
+      table [col sep=comma, x=x, y=uh] {./plots/truncated_iters/CSVs/ssrobin-midline-t1.csv};
+      \addlegendentry{Iter. 2}
+      \addplot+[mark=none, thin, unbounded coords=jump, opacity=0.8]
+      table [col sep=comma, x=x, y=uh] {./plots/truncated_iters/CSVs/ssrobin-midline-t2.csv};
+
+      \coordinate (spypointrobin) at (axis cs:-0.15,  1418.0);
+      \coordinate (magnifyglassrobin) at (axis cs:-0.5,  1900.0);
+    \nextgroupplot[
+      truncatedddstyle,
+      legend style={legend columns=2},
+      ylabel={},
+      y unit={},
+      yticklabel={$$},
+      width=0.31\textwidth,
+      legend pos=south east,
+      legend cell align=left,
+      title={Dirichlet},
+      ]
+
+      \gammafs{}
+
+      \addlegendentry{Iter. 1}
+      \addplot+[mark=none, thin, unbounded coords=jump, opacity=0.8]
+      table [col sep=comma, x=x, y=uh] {./plots/truncated_iters/CSVs/sms-midline-t1.csv};
+      \addlegendentry{Iter. 2}
+      \addplot+[mark=none, thin, unbounded coords=jump, opacity=0.8]
+      table [col sep=comma, x=x, y=uh] {./plots/truncated_iters/CSVs/sms-midline-t2.csv};
+      \addlegendentry{Iter. 4}
+      \addplot+[mark=none, thin, unbounded coords=jump, opacity=0.8]
+      table [col sep=comma, x=x, y=uh] {./plots/truncated_iters/CSVs/sms-midline-t4.csv};
+
+      \coordinate (spypointsms) at (axis cs:-0.15,  1430.0);
+      \coordinate (magnifyglasssms) at (axis cs:-0.5,  1900.0);
+  \end{groupplot}
+
+  \spy [black, width=1.5cm, height=1.5cm, magnification=10] on (spypointrobin) in node[fill=white] at (magnifyglassrobin);
+  \spy [black, width=1.5cm, height=1.5cm, magnification=10] on (spypointsms) in node[fill=white] at (magnifyglasssms);
+
+
+\end{tikzpicture}
+\caption{Solution profiles along the heating track after multiple staggered
+iterations for a linear problem with $\Delta t_s = 8 T_{hs}$ and $\Delta t_f =
+0.125 T_{hs}$. Substeppers from left to right: Dirichlet–Neumann with Aitken
+relaxation, Robin, and Dirichlet.}
+\label{fig:truncated_iters}
+\end{figure}

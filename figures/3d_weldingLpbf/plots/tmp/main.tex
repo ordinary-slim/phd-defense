@@ -1,0 +1,214 @@
+\documentclass{article}
+\usepackage{siunitx}
+\usepackage{amsmath}
+\usepackage{subcaption}
+\usepackage{nicematrix}
+\usepackage[export, pgf]{adjustbox}
+\usepackage[margin=2.5cm]{geometry}
+
+% Plots
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{units}
+\usetikzlibrary{fillbetween}
+\usepgfplotslibrary{external}
+\tikzexternalize[]
+\tikzsetfigurename{something}
+
+
+\begin{document}
+
+
+\begin{figure}[h]
+    \centering
+    \begin{NiceTabular}[]{ll}
+    \begin{subfigure}[t]{0.5\linewidth}
+      \centering
+      \includegraphics[width=1.0\textwidth]{../../coupled_elsPerRad8_closeInterface.png}
+      \caption{Same as but $\Gamma$ ``too close'' to heat source.}
+    \end{subfigure}
+      &
+      \Block{2-1}{\begin{subfigure}{0.5\linewidth}
+      \centering
+
+      \definecolor{gammaCloseColor}{RGB}{0, 0, 255}
+      \newcommand{\closeInterfacePos}{-0.3}
+      \definecolor{gammaMidColor}{RGB}{255, 0, 0.0}
+      \newcommand{\midInterfacePos}{-0.6}
+      \definecolor{gammaFarColor}{RGB}{0.0, 255, 0.0}
+      \newcommand{\farInterfacePos}{-1.0}
+
+      \adjustbox{}{\begin{tikzpicture}[
+          %trim axis left,
+          %trim axis right,
+          baseline,
+      ]
+
+        \begin{axis}[
+              width=\textwidth,
+              xlabel={x},
+              x unit=\si{\mm},
+              ylabel={T},
+              y unit=\si{\celsius},
+              xmin=-1.2,
+              xmax=0.5,
+              ymin=20.0,
+              ymax=2400.0,
+              extra y ticks={25, 2400},
+              every extra y tick/.append style={overlay,},
+              legend entries={{$\Gamma$ 3R back},
+              {$\Gamma$ \ 6R back},
+              {$\Gamma$ 10R back},
+              {Analytical solution}},
+              legend cell align=left,
+              legend pos=north west,
+              legend style={font=\footnotesize},
+              tick label style={font=\footnotesize},
+              ylabel style={yshift=-2mm},
+          ]
+        \addplot
+        [mark=none, color=gammaCloseColor, opacity=0.6, thick]
+        table [col sep=comma, x="Points:0", y="T"] {../closeInterface.csv};
+
+        \addplot
+        [mark=none, color=gammaMidColor, opacity=0.6, thick]
+        table [col sep=comma, x="Points:0", y="T"] {../middleInterface.csv};
+
+        \addplot
+        [mark=none, color=gammaFarColor, opacity=0.6, thick]
+        table [col sep=comma, x="Points:0", y="T"] {../farInterface.csv};
+
+
+        \addplot
+        [forget plot, color=gammaCloseColor, thin, dashed]
+        coordinates
+        {(\closeInterfacePos, \pgfkeysvalueof{/pgfplots/ymin})
+         (\closeInterfacePos, \pgfkeysvalueof{/pgfplots/ymax})};
+
+        \addplot
+        [forget plot, color=gammaMidColor, thin, dashed]
+        coordinates
+        {(\midInterfacePos, \pgfkeysvalueof{/pgfplots/ymin})
+         (\midInterfacePos, \pgfkeysvalueof{/pgfplots/ymax})};
+
+        \addplot
+        [forget plot, color=gammaFarColor, thin, dashed]
+        coordinates
+        {(\farInterfacePos, \pgfkeysvalueof{/pgfplots/ymin})
+         (\farInterfacePos, \pgfkeysvalueof{/pgfplots/ymax})};
+
+        \addplot
+        [mark=none, color=black, dashed]
+        table [col sep=comma, x="Points:0", y="T"] {../analytical.csv};
+      \end{axis}
+
+      \end{tikzpicture}}
+
+      \caption{Hello}
+    \end{subfigure}} \\
+    %
+    \begin{subfigure}[t]{0.5\linewidth}
+      \adjustbox{minipage=\textwidth, padding=0 0 0 0.5cm}{
+        \begin{tikzpicture}[
+            baseline,
+            trim axis left,
+          ]
+
+        \begin{axis}[
+          tiny,
+          title={$T^n$ before $\Omega^m$ motion},
+          xmin=-15,
+          xmax=15,
+          width=0.47\textwidth,
+          legend entries={{$T^n \textrm{ on } \Omega^m$},{$T^n \textrm{ on } \Omega^f$},},
+          legend style={font=\footnotesize,
+                        draw=none,
+                        at={(0.5,-0.1)},
+                        anchor=north,},
+          xtick=\empty,
+          ytick=\empty,
+          %ylabel=\emtpy,
+          %hide axis,
+        ]
+        \addplot
+        [mark=none, color=red, thick]
+        table [col sep=comma, x="Points:0", y="T"] {../discontinuity_fixed_tn_left.csv};
+        \addplot
+        [mark=none, color=red, thick]
+        table [forget plot, col sep=comma, x="Points:0", y="T"] {../discontinuity_fixed_tn_right.csv};
+        \addplot
+        [mark=none, color=orange, thick]
+        table [col sep=comma, x="Points:0", y="T"] {../discontinuity_moving_tn.csv};
+      \end{axis}
+      \end{tikzpicture}\hfill%
+      \begin{tikzpicture}[
+          baseline,
+          trim axis left,
+        ]
+        \begin{axis}[
+          tiny,
+          title={$T^n$ after $\Omega^m$ motion},
+          xmin=-15,
+          xmax=15,
+          width=0.47\textwidth,
+          legend entries={{$T^n \textrm{ on } \Omega^m$},{$T^n \textrm{ on } \Omega^f$},},
+          legend style={font=\footnotesize,
+                        draw=none,
+                        at={(0.5,-0.1)},
+                        anchor=north,},
+          xtick=\empty,
+          ytick=\empty,
+          %hide axis,
+        ]
+        \addplot
+        [mark=none, color=red, thick]
+        table [col sep=comma, x="Points:0", y="Tn"] {../discontinuity_fixed_tnp1_left.csv};
+        \addplot
+        [mark=none, color=red, thick]
+        table [forget plot, col sep=comma, x="Points:0", y="Tn"] {../discontinuity_fixed_tnp1_right.csv};
+        \addplot
+        [mark=none, color=orange, thick]
+        table [col sep=comma, x="Points:0", y="Tn"] {../discontinuity_moving_tnp1.csv};
+      \end{axis}
+      \end{tikzpicture}\hfill%
+      \begin{tikzpicture}[
+          baseline,
+          trim axis left,
+        ]
+        \begin{axis}[
+          tiny,
+          title={$T^{n+1}$},
+          xmin=-15,
+          xmax=15,
+          width=0.47\textwidth,
+          %legend entries={{$T^{n+1}$}},
+          legend style={font=\footnotesize,
+                        draw=none,
+                        at={(0.5,-0.1)},
+                        anchor=north,},
+          xtick=\empty,
+          ytick=\empty,
+          %hide axis,
+        ]
+        \addplot
+        [mark=none, color=black, thin]
+        table [col sep=comma, x="Points:0", y="T"] {../discontinuity_fixed_tnp1_left.csv};
+        \addplot
+        [mark=none, color=black, thin, forget plot]
+        table [col sep=comma, x="Points:0", y="T"] {../discontinuity_fixed_tnp1_right.csv};
+        \addplot
+        [mark=none, color=black, thin, forget plot]
+        table [col sep=comma, x="Points:0", y="T"] {../discontinuity_moving_tnp1.csv};
+      \end{axis}
+      \end{tikzpicture}
+      }
+      \caption{Illustration of $T^n$ discontinuity at $t^n{n+1}$ resulting in oscillation.}
+
+    \end{subfigure} &
+  \end{NiceTabular}
+\end{figure}
+
+
+
+\end{document}
