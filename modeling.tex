@@ -1,0 +1,103 @@
+\begin{frame}
+  \frametitle{Part-scale simulation}
+  \framesubtitle{Lumped heat source}
+  What do you do if you don't have a cluster or a nice GPU ?
+  You \textbf{simplify the model}.
+
+  \begin{figure}
+    \centering
+    \def\svgwidth{0.5\textwidth}%
+    {\small
+    \import{./figures/goldakProfile}{profile.pdf_tex}
+    }
+    \caption{Double ellipsoidal profile \citep{goldak1984}.
+      $\xi$ is the welding direction.}
+    \label{fig:goldak}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Part-scale simulation}
+  \framesubtitle{Lumped heat source}
+  \begin{figure}
+    \centering
+    \begin{tikzpicture}
+      % include the original figure
+      \node[inner sep=0] (img) {\def\svgwidth{0.5\textwidth}%
+        {\small \import{./figures/goldakProfile}{profile.pdf_tex}}};
+
+      % red "forbidden" cross over the whole image
+      \draw[line width=2pt, red] ([shift={(-2mm,-2mm)}]img.south west)
+                                 -- ([shift={(+2mm,+2mm)}]img.north east);
+      \draw[line width=2pt, red] ([shift={(+2mm,-2mm)}]img.south east)
+                                 -- ([shift={(-2mm,+2mm)}]img.north west);
+    \end{tikzpicture}
+  \end{figure}
+  We give up on the accurate representation of the heat source
+  since it is too costly to resolve.
+
+  We use a \textbf{lumped heat source} instead.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Part-scale simulation}
+  \framesubtitle{Lumped heat source}
+  A time-step is chosen regardless of the heat source path.
+  Elements that are intersected by the heat source path
+  during the time-step are \textbf{heated uniformly}.
+  \begin{figure}
+    \centering
+    \begin{subfigure}[t]{0.495\textwidth}
+      \centering
+      \def\svgwidth{\textwidth}
+      \import{./figures/lumped_hs}{heated_els.pdf_tex}
+      \caption{Elements heated uniformly during $[t^{n},\,t^{n+1}]$.\\
+           \begin{tikzpicture}
+             \draw[red, very thick, dashed] (0,0.3) -- (0.4,0.3);
+           \end{tikzpicture}
+           $\; \rightarrow \;$ Heat source path
+         }
+      \label{fig:lhs_heated_els}
+    \end{subfigure}%
+    \hfill%
+    \begin{subfigure}[t]{0.48508\columnwidth}
+      \centering
+      \includegraphics[width=\textwidth]{lumped_hs/tem.png}
+      \caption{Resulting temperature field.}
+      \label{fig:lhs_temp_field}
+    \end{subfigure}
+    \caption{Lumped heat source example.}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Part-scale simulation}
+  \framesubtitle{Lumped heat source}
+  \begin{figure}
+    \begin{subfigure}[t]{0.32\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{chiumenti2017-lhs/chiumenti2017multipleHatches.png}
+      \caption{Multiple hatches per time-step.}
+    \end{subfigure}%
+    \hfill
+    \begin{subfigure}[t]{0.32\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{chiumenti2017-lhs/chiumenti2017singleLayer.png}
+      \caption{Single layer per time-step.}
+    \end{subfigure}%
+    \hfill
+    \begin{subfigure}[t]{0.32\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{chiumenti2017-lhs/chiumenti2017multipleLayers.png}
+      \caption{4 layers per time-step.}
+    \end{subfigure}
+    \caption{Lumped heat input strategies from \cite{chiumenti2017b}.}
+  \end{figure}
+  \textit{Pros and cons}
+  \begin{itemize}
+    \item[+] Feasible simulations
+    \item[-] Distributed heat input $\;\longrightarrow\;$ temperatures below melt $\;\longrightarrow\;$ Numerical calibration (flash heating)
+    \item[-] Loss of history: no resolution of heat source motion
+  \end{itemize}
+\end{frame}
+

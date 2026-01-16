@@ -1,0 +1,275 @@
+\begin{frame}
+  \frametitle{LPBF}
+  \framesubtitle{Extremely multiscale}
+  LPBF is an \textit{extremely multiscale} application \citep{hodge2021}.\\
+  Let's quantify this statement:
+  \begin{itemize}
+    \item The \textbf{smallest} spatial and temporal \textbf{scales} are governed by the
+      \textbf{heat source}, characterized by its radius $\mathbf{R}$ and by
+      the time it takes to travel one radius,
+      \[
+        \mathbf{T_{hs}} := \frac{R}{V}.
+      \]
+    \item The \textbf{largest} spatial and temporal \textbf{scales} are set
+      by the \textbf{part} and the printer.
+      We choose here the characteristic part length $\mathbf{L_{part}}$ and
+      the net printing time $\mathbf{T_{print}}$, i.e. the cumulative
+      laser-on time.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{LPBF}
+  \framesubtitle{Extremely multiscale}
+  \centering
+  \begin{minipage}{0.59\textwidth}
+    \begin{figure}[ht]
+      \def\svgwidth{\columnwidth}
+      \import{./figures/cube-example}{cube-scan-schematic.pdf_tex}
+      \caption{Cube scan path of \textbf{side length} $L$, \textbf{layer thickness} $t$
+      and \textbf{hatch spacing} $h$.}
+    \end{figure}
+  \end{minipage}%
+  \hfill%
+  \begin{minipage}{0.38\textwidth}
+    Consider printing a cube of side length $L$.
+    The ratio of volume scales is
+    $$
+    \frac{L^3}{R^3}
+    $$
+    Let's compute the time scale ratio.
+    Assume $t~=~h~=~R$ for simplicity, so that
+    $$N_{layers} = N_{hatches\\/layer} = \frac{L}{R}$$
+  \end{minipage}
+\end{frame}
+
+\begin{frame}
+  \frametitle{LPBF}
+  \framesubtitle{Extremely multiscale}
+  For this simple geometry, the net print time is
+  \begin{gather*}
+    T_{print} = N_{hatches} \cdot T_{hatch} = N_{layers} \cdot N_{hatches/layer} \cdot T_{hatch}\\
+    T_{hatch} = \frac{L}{V}\\
+    \implies
+    T_{print} = \frac{L}{R} \cdot \frac{L}{R} \cdot \frac{L}{V} = \frac{L^2}{R^2} \cdot \frac{L}{V} = \frac{L^3}{R^2 V}
+  \end{gather*}
+  Therefore, the time scale disparity is
+  $$
+  \frac{T_{print}}{T_{hs}} = \frac{L^3}{R^2 V} \cdot \frac{V}{R} = \left(\frac{L}{R}\right)^3
+  $$
+\end{frame}
+
+\begin{frame}
+  \frametitle{Part-scale simulation}
+  \framesubtitle{Why?}
+
+  We've established that LPBF is extremely multiscale.
+  In a few slides, we'll see why this is a problem for
+  part-scale simulation.
+
+  Why part-scale simulation?
+  \begin{itemize}
+    \item Avoid costly experimental trial-and-error
+    \item Predict residual stresses and distortions
+    \item Predict microstructure features
+    \item Optimize process parameters
+    \item Save time and costs in the design cycle
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Multiphysics \todo{Better title}}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[height=0.8\textheight]{bayat2021.png}
+    \caption{Relevant physics at melt-pool and part scales \citep{bayat2021}.}
+    \label{fig:bayat2021}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Problem statement}
+  \framesubtitle{Domain}
+  \begin{figure}[ht]
+    \def\svgwidth{\columnwidth}
+    \hspace{-6mm}
+    \import{./figures/lpbf_schematic}{schematic.pdf_tex}
+    \caption{Schematic of the LPBF computational domain 
+    $\Omega(t)$, encompassing the bulk (part and substrate) and powder bed regions,
+    together with the applied heat source and convective/radiative heat losses.
+  }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Problem statement}
+  \framesubtitle{PDE system}
+  {\small
+  Define the extended temperature and liquid fraction fields
+  \begin{equation*}
+    T_e\dependson{\mathbf{x}, t} =
+    \begin{cases}
+      T\dependson{\mathbf{x}, t} & \mathbf{x} \in \overline{\Omega}(t)\\
+      T_{dep} & \mathbf{x} \in \overline{\Omega}(t_{final}) \setminus \overline{\Omega}(t)
+    \end{cases}
+    \qquad
+    f_{l,\; e}\dependson{\mathbf{x}, t} = f_l(T_e\dependson{\mathbf{x}, t})
+  \end{equation*}
+  where $T_{dep}$ is the deposition temperature.\\
+  Find $T : \Omega(t) \times [0, T_{\text{final}}] \to \mathbb{R}$ such that
+  \begin{align}
+    \label{eq:original_pde}
+    \rho c_p \partial_t T_e + \rho L \partial_t f_{l,\; e} - k \Delta T
+    &= r\dependson{\mathbf{x}, t} &&\forall \mathbf{x} \in \Omega(t)\\
+    \notag
+    - k \partial_n T &= h_{conv} (T - T_{\text{env}}) + \varepsilon \sigma (T^4 - T_{\text{env}}^4) &&\forall \mathbf{x} \in \partial \Omega(t)\\
+    \notag
+    T\dependson{\mathbf{x}, 0} &= T_0 \qquad &&\forall \mathbf{x} \in \Omega(0)
+  \end{align}
+  }
+    \todo{Comment on phase change treatment here}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Discretization}
+    Multiply \cref{eq:original_pde}
+    by $\phi \in V_T(t) = H^{1}\left(\Omega(t)\right)$;
+    integrate over $\Omega\dependson{t}$;
+    apply integration by parts on the diffusion term; insert BCs;
+    apply BDF1
+    {\small
+    \begin{gather*}
+      \label{eq:weak_heat}
+      \int_{\Omega} \phi \rho \left({c_p \frac{T^{n+1} - T^n}{\Delta t} + L \frac{f_l(T^{n+1}) - f_l(T^n)}{\Delta t}}\right)
+      + \int_{\Omega} \nabla \phi \cdot \left(k \nabla T\right)\\
+      \notag
+      \forall \phi \in V_T(t) \hspace{1cm}
+      \;=\; \int_{\Omega} \phi r
+      + \int_{\partial \Omega} \phi \left({h_{\text{conv}} \left( T - T_{\text{env}} \right)
+      + \varepsilon \sigma \left( {T}^4 - T_{\text{env}}^4 \right)}\right)
+    \end{gather*}
+    }
+\end{frame}
+
+\begin{frame}
+  \frametitle{Discretization}
+  \framesubtitle{Element activation}
+  \begin{figure}
+    \begin{subfigure}[t]{0.30\textwidth}
+      \includegraphics[width=\textwidth]{schematic_melting/0.png}
+      \caption{Bare substrate below an inactive powder layer.}
+      \label{fig:refModelBareSubstrate}
+    \end{subfigure}\hfill%
+    \begin{subfigure}[t]{0.30\textwidth}
+      \includegraphics[width=\textwidth]{schematic_melting/1.png}
+      \caption{A powder layer is activated during a recoating step.}
+      \label{fig:powderLayer}
+    \end{subfigure}\hfill%
+    \begin{subfigure}[t]{0.30\textwidth}
+      \includegraphics[width=\textwidth]{schematic_melting/2.png}
+      \caption{After a heating step, elements whose average temperature
+      surpasses $T_m$ are set to bulk.}
+      \label{fig:activPhaseChange3}
+    \end{subfigure}\hfill%
+    \caption{Illustration of deposition and melting processes.\qquad
+      \legendpowderbulk{}
+    }
+    \label{fig:activPhaseChange}.
+  \end{figure}
+  Same treatment of phase change as in \citep{kollmannsberger2018}
+  \todo{Maybe remove this slide, contradicting legend on next slide?}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Discretization}
+  \begin{figure}
+    \seudoembeddedvod{width=0.8\textwidth}{videos/2dlpbf_2d_lpbf_ref.mp4}{thumbnail-2dlpbf_2d_lpbf_ref.png}
+    \caption{Demo simulation of 2D LPBF with element activation.\\
+      Wireframe elements (\;\wireframeTriangle{}) correspond to powder region.
+    }
+  \end{figure}
+  \todo{Merge with previous slide?}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Part-scale simulation}
+  \framesubtitle{Impossible}
+  Previous slide: ``uniform'' mesh in part and powder region.
+  Recall the volume scale ratio;
+  In 3D, we would need
+  \begin{equation}
+    \label{eq:num_elements_uniform_mesh}
+    \text{\# elements} = \mathcal{O}\left(\frac{L^3}{R^3}\right)
+  \end{equation}
+  to resolve the heat source throughout the print.
+
+  In practice, no one uses uniform meshes for LPBF simulation;
+  \textbf{AMR} is regarded as the \textbf{de facto standard}.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Part-scale simulation}
+  \framesubtitle{Impossible}
+  But what about time-steps?
+  The interval of interest is $]0, T_{final}[$ with
+  $$
+  T_{final} = T_{print} + T_{cool}
+  $$
+  i.e. the net printing time plus cooling.
+  The time scale disparity requires again \cref{eq:num_elements_uniform_mesh} time-steps
+  \begin{gather}
+    \label{eq:num_timesteps_uniform_mesh}
+    \text{\# time-steps} > \frac{T_{print}}{T_{hs}} = \mathcal{O}\left(\frac{L^3}{R^3}\right)\\
+  \end{gather}
+  when discretizing with \textbf{uniform time-steps}.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Part-scale simulation}
+  \framesubtitle{Impossible}
+  Intuitively, if we don't respect the constraint
+  \begin{equation}
+    \label{eq:origconstraint}
+    \Delta t \leq T_{hs}
+  \end{equation}
+  , we won't resolve the motion of the heat source.\\
+  In practice, that's indeed what happens:
+  if the time-step is larger than $T_{hs}$ i.e. the heat source
+  travels more than $1 R$ per time-step,
+  it skips over parts of the domain,
+  and generates artificial temperature spikes.
+  \begin{figure}
+    \begin{subfigure}[t]{0.49\textwidth}
+      \includegraphics[width=\textwidth]{timestep-2ths/1R.png}
+      \caption{$\Delta t = 1 T_{hs}$}
+      \label{fig:spots1R}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.49\textwidth}
+      \includegraphics[width=\textwidth]{timestep-2ths/2R.png}
+      \caption{$\Delta t = 2 T_{hs}$}
+      \label{fig:spots2R}
+    \end{subfigure}
+    % \caption{2D heating track example with admissible and inadmissible
+    % time-step sizes according to inequality \eqref{eq:origconstraint}.}
+    % \label{fig:spots}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Part-scale simulation}
+  \framesubtitle{Impossible}
+  So \eqref{eq:num_timesteps_uniform_mesh} is indeed a \textbf{lower bound} on the number of time-steps
+  when using uniform time-stepping.
+
+  \underline{Bad news:}
+  \begin{itemize}
+    \item \textbf{Uniform time-stepping} is the \textbf{de facto standard} in LPBF simulation.
+    \item Some references require time-steps much smaller than $T_{hs}$
+      to ensure stability and accuracy \citep{hodge2014, hodge2021, elahi2025}.
+  \end{itemize}
+  There are basically 4 (!) groups in the world that can run simulations in the order of $\mathcal{O}(10 \unit{\milli\meter})$:
+  Pittsburgh, Northwestern, LLNL, TUM.\\
+  Decimeter-scale parts are currently unfeasible.
+  \todo{Expand}
+\end{frame}
+

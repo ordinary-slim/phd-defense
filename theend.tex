@@ -1,0 +1,50 @@
+\begin{frame}
+  \frametitle{Substepping + advected subdomain}
+  \framesubtitle{Final conclusions}
+  \begin{itemize}
+  \item Fast/slow DOF ratio was identified as the primary driver of
+    speed-up, with \(\Delta t_s / \Delta t_f\) playing a secondary role;
+    overly large macro-steps can enlarge the fast domain and erode gains.
+  \item The proposed Robin–Robin scheme
+    achieved accuracy comparable to
+    \cite{hodge2021}. Both clearly outperformed Dirichlet–Neumann coupling.
+  \item Extra staggered iterations in the substepping loop brought negligible accuracy benefits.
+  \item The main accuracy limiter for large macro-steps was the slow-region
+    time integrator (Backward Euler)
+  % \item Diffusion-focused predictors for the substepper improved stability and
+  %   accuracy relative to source-driven predictors, especially at large
+  %   macro-steps.
+  % \item
+  %   An enthalpy-based latent-heat treatment proved substantially more
+  %   robust than the apparent heat capacity method for powder-to-solid
+  %   transitions.
+  % \item Calibration against melt pool experiments required
+  %   an unphysical absorptivity dip, indicating that important heat-loss
+  %   physics—likely tied to melt pool flow and evaporation—is missing from
+  %   the thermal model.
+  % \item Overall, advected subdomains and substepping
+  %   together form a flexible toolbox that makes high-fidelity, part-scale
+  %   LPBF simulations more computationally feasible while retaining local
+  %   accuracy near the heat source.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Substepping + advected subdomain}
+\framesubtitle{Future works}
+\begin{itemize}
+  \item Improve the advected subdomain by using spatially and temporally varying advection fields (e.g.\ ALE-based fading and ramped velocities) and adaptive deactivation when thermal gradients misalign with scan direction.
+  \item Enhance substepping via better characterization of LPBF time-scales, higher-order time integration for the slow partition, improved predictors/interpolation, adaptive fast-domain definitions, and dynamic load balancing.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Thank you!}
+\begin{figure}
+  \seudoembeddedvod{width=0.8\textwidth}{videos/thx.mp4}{thumbnail-thx.png}
+  \caption{Robin substepper thanks you!}
+\end{figure}
+\end{frame}
+
+

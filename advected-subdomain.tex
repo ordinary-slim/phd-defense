@@ -1,0 +1,403 @@
+\begin{frame}
+  \frametitle{Advected subdomain}
+  Resolving the motion requires prohibitively small time-steps.
+
+  Idea: \textbf{Get rid of the motion}!
+
+  Define a subdomain $\Omega_m$ that moves with the heat source
+  and solves the heat equation in its reference frame.
+
+  Due to motion of reference frame, the heat equation in $\Omega_m$
+  acquires an advection term $\longrightarrow$ \textbf{advected subdomain}
+  (AS) method.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Advected subdomain}
+  \begin{figure}
+    \centering
+    \def\svgwidth{1.05\columnwidth}
+    \small
+    \import{./figures/chimera_schematic/}{chimera_schematic.pdf_tex}
+    \caption{Schematic of Robin-Robin variant of advected subdomain method.}
+    \label{fig:chimera_schematic}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Advected subdomain}
+  
+    {\small
+    \begin{gather*}
+      (\mathbf{x}, t) \longrightarrow (\boldsymbol{\xi}, \eta) \thinspace , \thinspace
+      \begin{cases}
+        \boldsymbol{\xi} = \mathbf{x} - \int_0^t \mathbf{v}\dependson{t} dt\\
+        \eta = t
+      \end{cases}
+    \end{gather*}
+    \begin{gather*}
+      \Longrightarrow
+      \begin{cases}
+        \partial_{x_i} &= \partial_{\xi_i} \Rightarrow \nabla_{\mathbf{x}} = \nablaxi\\
+        \partial_t &= \partial_\eta - v_i \partial_{\xi_i} = \partial_\eta - \mathbf{v}\dependson{t} \cdot \nablaxi
+      \end{cases}
+    \end{gather*}
+
+    Find $T_m : \Omega_m(t) \times [0, T_{\text{final}}] \to \mathbb{R}$
+    and $T_f : \Omega_f(t) \times [0, T_{\text{final}}] \to \mathbb{R}$
+    such that
+    \begin{align*}
+      \rho c_p \Big( \partial_t T^m{\scriptstyle (\xi, t)} - \mathbf{v}\dependson{t} \cdot \nabla T^m{\scriptstyle (\xi, t)} \Big) -
+      \nabla \cdot ( k \nabla T^m{\scriptstyle (\xi, t)}) &= r{\scriptstyle (\xi,t)}  &\xi &\in \Omega_m(t)
+    \end{align*}
+    \begin{align*}
+    \rho c_p \partial_t T^f{\scriptstyle (x, t)} - \nabla \cdot (k \nabla T^f{\scriptstyle (x, t)}) &= 0 \qquad &x &\in \Omega_f(t)
+    \end{align*}
+    }
+\end{frame}
+
+\begin{frame}
+  \frametitle{Advected subdomain}
+  \cite{slimani2024}: Dirichlet-Neumann multi-mesh variant of advected
+  subdomain method for linear heat equation.
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\textwidth]{quadTriang.png}
+    \caption{A finer mesh can be attached to the heat source
+    to adress spatial scale disparity: not done here.}
+  \end{figure}
+  \begin{itemize}
+    \item VMS stabilization to handle advection in $\Omega_m$
+    \item Monolithic solution of the coupled problem
+    \item Serial C++ implementation available on GitHub.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Advected subdomain}
+  Goal workflow:
+  \begin{gather*}
+    \texttt{steadiness\_metric}(T_m) := \frac{\eunorm{T_m\big|_{t^{n+1}} - T_m\big|_{t^{n}}}}{\eunorm{T_m\big|_{t^{n+1}}}} < \epsilon\\
+    \big\Downarrow\\
+    \text{Increase } \Delta t \text{ for } t^{n+2} = t^{n+1} + \Delta t\\
+    \big\Downarrow\\
+    \textrm{Resize } \Omega_m
+  \end{gather*}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Advected subdomain}
+  \framesubtitle{Non-trivial workflow}
+  \begin{figure}
+    \begin{subfigure}[t]{0.36\textwidth}
+      \includegraphics[width=\textwidth]{2d_meshing_example/afterShaping.png}
+      \caption{$\mathcal{T}^m \leftarrow \texttt{shapeSubdomain}(\mathcal{T}^m_{bg})$}
+    \end{subfigure}
+    \hfill%
+    \begin{subfigure}[t]{0.36\textwidth}
+      \includegraphics[width=\textwidth]{2d_meshing_example/after_intersec1.png}
+      \caption{$\mathcal{T}^m \leftarrow \texttt{intersect}\big(\mathcal{T}^m, \mathcal{T}^f \textrm{ at } t^n\big)$}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.36\textwidth}
+      \includegraphics[width=\textwidth]{2d_meshing_example/after_intersec2.png}
+      \caption{$\mathcal{T}^m \leftarrow \texttt{intersect}\big(\mathcal{T}^m, \mathcal{T}^f\big) \textrm{ at } t^{n+1}$}
+    \end{subfigure}
+    \hfill%
+    \begin{subfigure}[t]{0.36\textwidth}
+      \includegraphics[width=\textwidth]{2d_meshing_example/dd.png}
+      \caption{$\mathcal{T}^f \leftarrow \texttt{subtract}\big(\mathcal{T}^f, \mathcal{T}^m\big)$}
+    \end{subfigure}
+    \label{fig:2d_meshing_example}
+  \end{figure}
+\end{frame}
+
+% \begin{frame}
+%   \frametitle{Advected subdomain}
+%   \begin{table}
+%     \centering
+%     \begin{tabular}{lrl}
+%       \toprule
+%       Parameter & Value & Unit \\
+%       \midrule
+%       Density  & 4300 & $kg / m^3$\\
+%       Specific heat  & 700 & $J / kg K$\\
+%       Conductivity  & 10 & $W / m K$\\
+%       Speed $V$  & 1000 & $mm / s$\\
+%       Radius $R$  & 0.1 & $mm$\\
+%       Power  & 50 & \unit{\watt}\\
+%       Environment temperature  & 25 & \unit{\celsius}\\
+%       \bottomrule
+%     \end{tabular}
+%     \label{tbl:mat}
+%   \end{table}
+% \end{frame}
+
+\begin{frame}
+  \frametitle{Advected subdomain}
+  Analytical validation with 3D welding example
+  \citep{nguyen1999,vanelsen2007}
+  and Ti64-like material properties.
+  \vspace{-5mm}
+  \begin{figure}[]
+      \centering
+      \begin{tabular}{cc}
+  \begin{subfigure}[t]{0.49\linewidth}
+    \centering
+    \includegraphics[width=\textwidth]{3d_weldingLpbf/analytical.png}
+    \caption{Analytical}
+  \end{subfigure} &
+  \addtocounter{subfigure}{2}
+  \begin{subfigure}[t]{0.49\linewidth}
+    \centering
+    \includegraphics[width=\textwidth]{3d_weldingLpbf/allContours.png}
+    \definecolor{referenceColor}{HTML}{1762FB}
+    \definecolor{proposedColor}{HTML}{00AA00}
+    \vspace{-0.7cm}
+    \caption{
+         ({\color{black} \rule[-1.5 pt]{8 pt}{8 pt}}) Analytical \;\;
+         ({\color{proposedColor} \rule[-1.5 pt]{8 pt}{8 pt}}) AS \;\;
+         ({\color{referenceColor} \rule[-1.5 pt]{8 pt}{8 pt}}) Reference \;\;
+         \\
+      Isothermals and position of maximum temperature.
+    }
+    \label{fig:3dweldallcontours}
+  \end{subfigure} \\
+  \addtocounter{subfigure}{-3}
+  \begin{subfigure}[t]{0.49\linewidth}
+    \centering
+    \includegraphics[width=\textwidth]{3d_weldingLpbf/coupled_elsPerRad8.png}
+    \caption{Advected subdomain (AS), $\Delta t = 2\,T_{hs}$}
+    \label{fig:3dweldcontourprop}
+  \end{subfigure} & 
+  \addtocounter{subfigure}{2}
+  \begin{subfigure}[t]{0.49\linewidth}
+    \centering
+    \includegraphics[width=\textwidth]{3d_weldingLpbf/err_coupled_elsPerRad8.png}
+    \caption{Pointwise error of \ref{fig:3dweldcontourprop}. Max error is $\approx \mathbf{12}$}
+  \end{subfigure} \\
+  \addtocounter{subfigure}{-3}
+  \begin{subfigure}[t]{0.49\linewidth}
+    \centering
+    \includegraphics[width=\textwidth]{3d_weldingLpbf/reference_elsPerRad8_tstepsPerRad4.png}
+    \caption{Reference method, $\Delta t = 0.25\,T_{hs}$}
+    \label{fig:3dweldcontourref}
+  \end{subfigure} & 
+  \addtocounter{subfigure}{2}
+  \begin{subfigure}[t]{0.49\linewidth}
+    \centering
+    \includegraphics[width=\textwidth]{3d_weldingLpbf/err_reference_elsPerRad8_tstepsPerRad4.png}
+    \caption{Pointwise error of \ref{fig:3dweldcontourref}. Max error is $\approx \mathbf{263}$}
+    \label{fig:3dweldpointwiseref}
+  \end{subfigure} \\
+      \end{tabular}
+    \caption{Solution (left) and error (right) contour at steady-state.}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Advected subdomain}
+    \begin{figure}
+      \centering
+      \seudoembeddedvod{width=0.8\textwidth}{videos/chimera.mp4}{2d_welding_chimera/thumbnail-chimera.png}
+      \vspace{-3mm}
+      \caption{2D welding example with growing time-step workflow.}
+    \end{figure}
+    \vspace{-3mm}
+    \begin{figure}
+      \centering
+      \begin{subfigure}[t]{0.3\linewidth}
+        \centering
+        \stackinset{l}{ 0.35\textwidth}{b}{ 0.025\textwidth}{
+          {\color{white}$\Omega_f$}
+        }{
+          \includegraphics[width=\textwidth]{2d_welding_chimera/changeOfDir_OFF.png}
+        }
+        \caption{No AS, $\Delta t = 0.5\,T_{hs}$.}
+        \label{fig:2dWeldNoShear}
+      \end{subfigure}
+      \hfill
+      \begin{subfigure}[t]{0.3\linewidth}
+        \centering
+        \stackinset{r}{ 0.32\textwidth}{b}{ 0.1\textwidth}{
+          {\color{white}$\Gamma$}
+        }{
+        \stackinset{r}{ 0.19\textwidth}{t}{ 0.075\textwidth}{
+          {\color{white}$\Omega_m$}
+        }{
+        \stackinset{l}{ 0.35\textwidth}{b}{ 0.025\textwidth}{
+          {\color{white}$\Omega_f$}
+        }{
+        \includegraphics[width=\textwidth]{2d_welding_chimera/changeOfDir_ON.png}
+        }}}
+        \caption{AS, $\Delta t = 0.5\,T_{hs}$.}
+        \label{fig:2dWeldShear_05R}
+      \end{subfigure}
+      \hfill
+      \begin{subfigure}[t]{0.3\linewidth}
+        \centering
+        \stackinset{r}{ 0.32\textwidth}{b}{ 0.1\textwidth}{
+          {\color{white}$\Gamma$}
+        }{
+        \stackinset{r}{ 0.19\textwidth}{t}{ 0.075\textwidth}{
+          {\color{white}$\Omega_m$}
+        }{
+        \stackinset{l}{ 0.35\textwidth}{b}{ 0.025\textwidth}{
+          {\color{white}$\Omega_f$}
+        }{
+        \includegraphics[width=\textwidth]{2d_welding_chimera/changeOfDir_ON_finer.png}
+        }}}
+        \caption{AS, $\Delta t = 0.25\,T_{hs}$.}
+        \label{fig:2dWeldShear_025R}
+      \end{subfigure}
+      \vspace{-3mm}
+      \caption{``Shearing'' of previous thermal tail by the AS.}
+      \label{fig:2dWeldTurn}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Advected subdomain}
+  \framesubtitle{Thin wall}
+  \begin{figure}
+    \centering
+    \begin{subfigure}[t]{0.48\textwidth}
+      \includegraphics[draft=\isdraft, width=\textwidth]{3d_lpbf_chimera/overview1_compressed.png}
+      \caption{Mesh and bulk-powder distribution at final time-step.\\
+      % \legendMats
+      }
+      \label{fig:3dLpbfMeshMat}
+    \end{subfigure}\hfill%
+    \begin{subfigure}[t]{0.52\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{3d_lpbf_chimera/overview2.png}
+      \caption{Temperature contour at intermediate time-step, metal only.
+      last $\Delta t = 8 T_{hs}$, \enskip $\Gamma$ extends $50 R$ behind
+      heat source.}
+      \label{fig:3dLpbfPerspective}
+    \end{subfigure}%
+    \vspace{-3mm}
+    \caption{Mesh and $\Omega_m$.}
+  \end{figure}
+  One track of $100R$ per layer, 10 layers, Ti64-like material properties.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Advected subdomain}
+  \framesubtitle{Thin wall}
+  \begin{minipage}[t]{0.58\textwidth}
+  \pgfplotsset{compat=newest}
+  \begin{figure}
+    \centering
+    \begin{tikzpicture}[
+        trim axis left,
+        trim axis right,
+        baseline,
+    ]
+
+      \begin{axis}[
+            clip=true,
+            enlarge x limits=false,
+            enlarge y limits=false,
+            width=1.21\textwidth,
+            grid=major,
+            xlabel={x},
+            x unit=\unit{\milli\meter},
+            ylabel={T},
+            y unit=\unit{\celsius},
+            xmin=-6.0,
+            xmax=+6.0,
+            ymin=20.0,
+            ymax=2575.0,
+            ytick={25,500,1000,2000,2500},
+            extra x ticks={-5, 5},
+            every extra y tick/.append style={overlay,},
+            legend cell align=left,
+            legend pos=north west,
+            legend style={font=\footnotesize},
+            tick label style={font=\footnotesize},
+            ylabel style={yshift=-2mm, font=\footnotesize, at={(axis description cs:-0.05,0.6)}},
+            xlabel style={font=\footnotesize, at={(axis description cs:0.5,-0.1)}},
+        ]
+      \addlegendentry{AS, last $\Delta t = 8\,T_{hs}$}
+      \addplot
+      [mark=none, color=red, opacity=0.6, thin]
+      table [col sep=comma, x="Points:0", y="T"] {figures/3d_lpbf_chimera/plots/endFifthLayer_coupled_rerun.csv};
+
+      \addlegendentry{Reference, $\Delta t = 0.5\,T_{hs}$}
+      \addplot
+      [mark=none, color=blue, opacity=0.6, thin]
+      table [col sep=comma, x="Points:0", y="T"] {figures/3d_lpbf_chimera/plots/endFifthLayer_ref_normal.csv};
+
+      \addlegendentry{Reference, $\Delta t = 0.125\,T_{hs}$}
+      \addplot
+      [mark=none, color=black, opacity=0.6, thin]
+      table [col sep=comma, x="Points:0", y="T"] {figures/3d_lpbf_chimera/plots/endFifthLayer_ref_fine.csv};
+
+      \addplot
+      [forget plot, color=red, thin, dashed, opacity=0.6]
+      coordinates
+      {(0.93, \pgfkeysvalueof{/pgfplots/ymin})
+       (0.93, \pgfkeysvalueof{/pgfplots/ymax})};
+
+      \addplot
+      [forget plot, color=red, thin, dashed, opacity=0.6]
+      coordinates
+      {(5.0, \pgfkeysvalueof{/pgfplots/ymin})
+       (5.0, \pgfkeysvalueof{/pgfplots/ymax})};
+    \end{axis}
+
+    \end{tikzpicture}
+    \vspace{-3mm}
+    \caption{Plot along top centerline of build towards end of fifth layer.}
+    \label{fig:3dLpbf_plot5}
+  \end{figure}
+  \end{minipage}%
+  \hspace{-0.01\textwidth}%
+  \begin{minipage}[t]{0.43\textwidth}
+    \small
+    \begin{itemize}
+      \item About 6 times fewer time-steps with AS for the same build.
+      \item Each AS time-step is roughly 2 times more expensive to compute.
+      \item[$\rightarrow$] Overall net speedup of about 3 times in wall-clock time.
+      \item Cost of boolean operations is negligible; overhead mainly comes
+            from the increased linear solve time.
+    \end{itemize}
+  \end{minipage}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Advected subdomain}
+  \framesubtitle{Intermediate conclusions}
+  Conclusions of \cite{slimani2024}:
+  \begin{itemize}
+     \item AS recovers accurate thermal profiles in the HAZ and enables
+       larger time-steps.
+     \item Trade-off: increased algebraic complexity and potential
+       oscillations at subdomain discontinuities.
+     \item Performance degrades for short scanning tracks; minimum track
+       length $\approx 5R$ recommended.
+     \item Future work: combine with substepping algorithms and explore
+       alternative domain decomposition strategies.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Substepping}
+  \begin{figure}
+    \centering
+    \def\svgwidth{1.0\columnwidth} {\small \import{./figures/substepping/}{schematic.pdf_tex}}
+    \caption{Non-overlapping substepping decomposition. The HAZ is included in the \textbf{fast partition} $\Omega_f$.
+    The remainder of the domain belongs to the \textbf{slow partition} $\Omega_s$.}
+    \label{fig:substepping}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Substepping}
+    \begin{figure}
+      \centering
+      \seudoembeddedvod{width=1.0\textwidth}{videos/basic-demo-ss.mp4}{thumbnail-basic-ss.png}
+      \caption{Basic demo of substepping method.}
+    \end{figure}
+\end{frame}
+

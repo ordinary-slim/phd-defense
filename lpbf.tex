@@ -1,0 +1,88 @@
+\begin{frame}
+  \frametitle{{LPBF}}
+  \framesubtitle{MAM technology}
+  Also known as PBF-LB/M (ISO nomenclature), one of the
+  main Metal Additive Manufacturing (MAM) technologies
+
+  \begin{figure}
+    \begin{subfigure}[t]{0.32\textwidth}
+      \centering
+      \includegraphics[width=\linewidth]{waam.jpg}
+      \textbf{Wire Arc Additive Manufacturing
+      \raisebox{5pt}{(}\includegraphics[height=16pt]{waam-comic-effect.png}\raisebox{5pt}{)}}
+    \end{subfigure}%
+    \hfill
+    \begin{subfigure}[t]{0.32\textwidth}
+      \centering
+      \includegraphics[width=\linewidth]{ded.jpg}
+      \textbf{Directed Energy Deposition (DED)}
+    \end{subfigure}%
+    \hfill
+    \begin{subfigure}[t]{0.32\textwidth}
+      \centering
+      \includegraphics[width=\linewidth]{lpbf.png}
+      \textbf{Laser Powder Bed Fusion (LPBF)}
+    \end{subfigure}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{LPBF}
+  % \framesubtitle{How does it work?}
+  \begin{center}
+    \seudoembeddedvod{width=0.8\textwidth}{videos/Build_chamber_process_animation.webm}{thumbnail-lpbf-schematic.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{{LPBF}}
+  \framesubtitle{Fast, small, precise}
+
+  \begin{table}
+    \centering
+    \begin{tabular}{l
+      S
+      S
+      S }
+      \toprule
+      & {Radius $R$} 
+      & {Speed $V$} 
+      & {Power $P$} \\
+      \midrule
+      WAAM 
+        & \qtyrange[]{2}{4}{\milli\meter}
+        & \qtyrange[]{3}{10}{\milli\meter\per\second}
+        & \qtyrange[]{5}{15}{\kilo\watt} \\
+      DED 
+        & \qtyrange[]{0.5}{1.5}{\milli\meter}
+        & \qtyrange[]{5}{20}{\milli\meter\per\second}
+        & \qtyrange[]{1}{4}{\kilo\watt} \\
+      LPBF 
+        & \qtyrange[]{25}{100}{\micro\meter}
+        & \qtyrange[]{400}{1400}{\milli\meter\per\second}
+        & \qtyrange[]{0.2}{1}{\kilo\watt} \\
+      \bottomrule
+    \end{tabular}
+    \caption{Characteristic heat source parameters for the main MAM technologies.}
+  \end{table}
+
+  \vspace{-3mm}
+  % LPBF offers a finer resolution and smoother surface finish,
+  % but it is limited to smaller parts.
+  \begin{figure}
+    \centering
+    \begin{subfigure}[t]{0.48\textwidth}
+      \centering
+      \includegraphics[width=0.9\linewidth]{waam-example.jpg}\\
+      {\scriptsize WAAM: large parts (> \qty{1}{\meter}), coarse features.}
+    \end{subfigure}%
+    \hfill
+    \begin{subfigure}[t]{0.48\textwidth}
+      \centering
+      \includegraphics[width=0.6\linewidth]{lpbf-fine.png}\\
+      {\scriptsize LPBF: small part (< \qty{1}{\meter}), fine features.}
+    \end{subfigure}
+  \end{figure}
+
+\end{frame}
+
