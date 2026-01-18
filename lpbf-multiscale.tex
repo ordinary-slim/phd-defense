@@ -24,7 +24,7 @@
   \centering
   \begin{minipage}{0.59\textwidth}
     \begin{figure}[ht]
-      \def\svgwidth{\columnwidth}
+      \def\svgwidth{0.84\columnwidth}
       \import{./figures/cube-example}{cube-scan-schematic.pdf_tex}
       \caption{Cube scan path of \textbf{side length} $L$, \textbf{layer thickness} $t$
       and \textbf{hatch spacing} $h$.}
@@ -78,8 +78,8 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Multiphysics \todo{Better title}}
-  \begin{figure}[ht]
+  \frametitle{Multiphysics}
+  \begin{figure}
     \centering
     \includegraphics[height=0.8\textheight]{bayat2021.png}
     \caption{Relevant physics at melt-pool and part scales \citep{bayat2021}.}
@@ -91,7 +91,7 @@
   \frametitle{Problem statement}
   \framesubtitle{Domain}
   \begin{figure}[ht]
-    \def\svgwidth{\columnwidth}
+    \def\svgwidth{0.9\columnwidth}
     \hspace{-6mm}
     \import{./figures/lpbf_schematic}{schematic.pdf_tex}
     \caption{Schematic of the LPBF computational domain 
@@ -182,13 +182,17 @@
 
 \begin{frame}
   \frametitle{Discretization}
-  \begin{figure}
-    \seudoembeddedvod{width=0.8\textwidth}{videos/2dlpbf_2d_lpbf_ref.mp4}{thumbnail-2dlpbf_2d_lpbf_ref.png}
-    \caption{Demo simulation of 2D LPBF with element activation.\\
+
+  \video<1>[above,height=0.7,aspectratio=62/27,fit=fill,controls]
+at (0.5,0.18) {videos/2dlpbf_2d_lpbf_ref.mp4}
+
+  \begin{tikzpicture}[remember picture, overlay]
+    \node[align=center,above=0.05\pageheight] at (current page.south) 
+    {
+      Demo simulation of 2D LPBF with element activation.\\
       Wireframe elements (\;\wireframeTriangle{}) correspond to powder region.
-    }
-  \end{figure}
-  \todo{Merge with previous slide?}
+    };
+  \end{tikzpicture}
 \end{frame}
 
 \begin{frame}

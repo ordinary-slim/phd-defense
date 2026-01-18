@@ -6,7 +6,7 @@
 
   \begin{figure}
     \centering
-    \def\svgwidth{0.5\textwidth}%
+    \def\svgwidth{0.4\textwidth}%
     {\small
     \import{./figures/goldakProfile}{profile.pdf_tex}
     }
@@ -23,7 +23,7 @@
     \centering
     \begin{tikzpicture}
       % include the original figure
-      \node[inner sep=0] (img) {\def\svgwidth{0.5\textwidth}%
+      \node[inner sep=0] (img) {\def\svgwidth{0.4\textwidth}%
         {\small \import{./figures/goldakProfile}{profile.pdf_tex}}};
 
       % red "forbidden" cross over the whole image
@@ -82,7 +82,17 @@
     \hfill
     \begin{subfigure}[t]{0.32\textwidth}
       \centering
-      \includegraphics[width=\textwidth]{chiumenti2017-lhs/chiumenti2017singleLayer.png}
+      \begin{tikzpicture}[
+        spy using outlines= {circle, connect spies}
+      ]
+        % include the original figure
+        \node[inner sep=0] (img) {\includegraphics[width=\textwidth]{chiumenti2017-lhs/chiumenti2017singleLayer.png}};
+        \coordinate (spypoint) at ($(img.south west)!.88!(img.south east)!0.35!(img.north east)$);
+        \coordinate (magnifypoint) at ($(img.south west)!.7!(img.south east)!0.8!(img.north east)$);
+
+        \spy [black, width=2cm, height=2cm, magnification=3] on (spypoint) in node[fill=white] at (magnifypoint);
+
+      \end{tikzpicture}
       \caption{Single layer per time-step.}
     \end{subfigure}%
     \hfill
@@ -93,6 +103,7 @@
     \end{subfigure}
     \caption{Lumped heat input strategies from \cite{chiumenti2017b}.}
   \end{figure}
+  \vspace{-5mm}
   \textit{Pros and cons}
   \begin{itemize}
     \item[+] Feasible simulations

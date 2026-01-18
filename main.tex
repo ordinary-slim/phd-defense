@@ -1,79 +1,7 @@
 %! TeX program = lualatex
-\documentclass{beamer}
-\usetheme{metropolis}
-
-\setbeamerfont{page number in head/foot}{size=\tiny}
-\setbeamercolor{footline}{fg=gray!70}
-
-% Footline highlight
-\colorlet{footlineHlColor}{black!60}
-\newcommand{\footlineHl}[1]{
-  \textbf{\textcolor{footlineHlColor}{#1}}
-}
-
-\newif\ifisdraft
-\isdrafttrue
-\newcommand{\isdraft}{\ifisdraft true\else false\fi}
-\newcommand{\todo}[1]{
-  \ifisdraft {
-    \Large
-    $\color{black}\star$\color{red}~\textit{#1}\color{black}~$\star$
-  } \fi
-}
-
-\definecolor{powderColor}{rgb}{0.878,0.859,0.811}
-\definecolor{metalColor}{rgb}{0.420,0.408,0.384}
-\newcommand{\legendpowderbulk}{%
-  \begin{tabular}{rlrl}
-     ({\color{powderColor} \rule[-1.5 pt]{8 pt}{8 pt}}) & Powder & ({\color{metalColor} \rule[-1.5 pt]{8 pt}{8 pt}})  & Bulk
-  \end{tabular}
-}
-\newcommand{\wireframeTriangle}{%
-    \begin{tikzpicture}[scale=0.2] % adjust scale as needed
-      % Bottom triangle
-      \draw[]
-        (0,0) coordinate (A)
-        -- (0,1) coordinate (B)
-        -- (1,0) coordinate (C)
-        -- cycle;
-      % Upper triangle
-      \draw[]
-        (0,1) coordinate (D)
-        -- (1,1) coordinate (E)
-        -- (1,0) coordinate (F);
-    \end{tikzpicture}
-}
-
-\defbeamertemplate*{title page}{customized}[1][]
-{
-  \usebeamerfont{title}\inserttitle\par
-  \usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par
-  \bigskip
-  \usebeamerfont{author}\insertauthor\par
-  \usebeamerfont{institute}\insertinstitute\par
-  \usebeamerfont{date}\insertdate\par
-  \usebeamercolor[fg]{titlegraphic}\inserttitlegraphic
-}
-\makeatletter
-  \setbeamertemplate{frametitle}{%
-    \begin{beamercolorbox}[%
-      wd=\paperwidth,%
-      sep=0pt,%
-      leftskip=\metropolis@frametitle@padding,%
-      rightskip=\metropolis@frametitle@padding,%
-      ]{frametitle}%
-      \metropolis@frametitlestrut@start%
-      \insertframetitle%
-      \ifx\insertframesubtitle\@empty%
-      \else%
-        \hfill%
-        {\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}\insertframesubtitle}%
-      \fi%
-      \nolinebreak%
-      \metropolis@frametitlestrut@end%
-    \end{beamercolorbox}%
-  }
-\makeatother
+\documentclass[10pt, aspectratio=169]{beamer}
+\usepackage{beamer-reveal}
+\input{metropolis.tex}
 
 \usepackage{caption}
 \captionsetup{font=scriptsize,labelfont=scriptsize}
@@ -134,15 +62,6 @@
     line width=.4pt,
   },
 }
-\DeclareRobustCommand{\labelbox}[2][]{%
-  % Inline TikZ node; safe in text, math, tabular, makebox, etc.
-  \tikz[baseline=(X.base)]\node[annotate box,#1] (X) {#2};%
-}
-\newcommand{\nablaxi}[0]{\nabla_{\boldsymbol{\xi}}}
-\newcommand{\deltaxi}[0]{\Delta_{\boldsymbol{\xi}}}
-\newcommand{\eunorm}[1]{
-  \text{\Large$|\hspace{-0.8mm}|$}\; #1 \;\text{\Large$|\hspace{-0.8mm}|_{\scriptscriptstyle{2}}$}
-}
 
 \title{Computational strategies for time-accurate simulation of part-scale LPBF}
 \subtitle{Time scale disparity in moving heat source problems}
@@ -155,35 +74,37 @@
 
 \begin{document}
 
-  \maketitle
+  \begin{frame}[titleslide]
+    \titlepage
+  \end{frame}
 
-  \setbeamertemplate{frame footer}{Computational strategies for time-accurate simulation of part-scale \footlineHl{LPBF}}
-  \section{LPBF}
-    \input{lpbf.tex}
+  % \setbeamertemplate{frame footer}{\qquad Computational strategies for time-accurate simulation of part-scale \footlineHl{LPBF}}
+  % \section{LPBF}
+  %   \input{lpbf.tex}
 
-  \setbeamertemplate{frame footer}{Computational strategies for time-accurate \footlineHl{simulation} of \footlineHl{part-scale} LPBF}
-  \subsection{Multiscale application}
-    \input{lpbf-multiscale.tex}
-
+  % \setbeamertemplate{frame footer}{Computational strategies for time-accurate \footlineHl{simulation} of \footlineHl{part-scale} LPBF}
+  % \subsection{Multiscale application}
+  %   \input{lpbf-multiscale.tex}
+  %
   \setbeamertemplate{frame footer}{Computational strategies for \footlineHl{time-accurate} simulation part-scale LPBF}
   \section{Part-scale simulation}
     \input{modeling.tex}
-
-  \setbeamertemplate{frame footer}{\footlineHl{Computational strategies for time-accurate simulation part-scale LPBF}}
-  \section{Objectives}
-    \input{objectives.tex}
-
-  \setbeamertemplate{frame footer}{}
-  \section{Domain decomposition}
-    \input{domain-decomposition.tex}
-  \section{Advected subdomain}
-    \input{advected-subdomain.tex}
-  
-  \section{Substepping}
-    \input{substepping.tex}
-
-  \section{Final remarks}
-    \input{theend.tex}
+  %
+  % \setbeamertemplate{frame footer}{\footlineHl{Computational strategies for time-accurate simulation part-scale LPBF}}
+  % \section{Objectives}
+  %   \input{objectives.tex}
+  %
+  % \setbeamertemplate{frame footer}{}
+  % \section{Domain decomposition}
+  %   \input{domain-decomposition.tex}
+  % \section{Advected subdomain}
+  %   \input{advected-subdomain.tex}
+  %
+  % \section{Substepping}
+  %   \input{substepping.tex}
+  %
+  % \section{Final remarks}
+  %   \input{theend.tex}
 
 \bibliographystyle{plainnat}
 \bibliography{refs}

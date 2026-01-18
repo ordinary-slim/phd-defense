@@ -1,3 +1,36 @@
+\newif\ifisdraft
+\isdrafttrue
+\newcommand{\isdraft}{\ifisdraft true\else false\fi}
+\newcommand{\todo}[1]{
+  \ifisdraft {
+    \Large
+    $\color{black}\star$\color{red}~\textit{#1}\color{black}~$\star$
+  } \fi
+}
+
+\definecolor{powderColor}{rgb}{0.878,0.859,0.811}
+\definecolor{metalColor}{rgb}{0.420,0.408,0.384}
+\newcommand{\legendpowderbulk}{%
+  \begin{tabular}{rlrl}
+     ({\color{powderColor} \rule[-1.5 pt]{8 pt}{8 pt}}) & Powder & ({\color{metalColor} \rule[-1.5 pt]{8 pt}{8 pt}})  & Bulk
+  \end{tabular}
+}
+\newcommand{\wireframeTriangle}{%
+    \begin{tikzpicture}[scale=0.2] % adjust scale as needed
+      % Bottom triangle
+      \draw[]
+        (0,0) coordinate (A)
+        -- (0,1) coordinate (B)
+        -- (1,0) coordinate (C)
+        -- cycle;
+      % Upper triangle
+      \draw[]
+        (0,1) coordinate (D)
+        -- (1,1) coordinate (E)
+        -- (1,0) coordinate (F);
+    \end{tikzpicture}
+}
+
 \newcommand{\playthumb}[2][]{%
   \begin{tikzpicture}
     % Thumbnail image
@@ -12,8 +45,19 @@
       ([xshift=-0.19cm,yshift=-0.3cm]img.center) -- cycle;
   \end{tikzpicture}%
 }
+
 \newcommand{\externalvod}[3]{\movie[externalviewer]{\playthumb[#1]{#3}}{#2}}
 \newcommand{\seudoembeddedvod}[3]{\movie[poster, showcontrols]{\playthumb[#1]{#3}}{#2}}
+
+\DeclareRobustCommand{\labelbox}[2][]{%
+  % Inline TikZ node; safe in text, math, tabular, makebox, etc.
+  \tikz[baseline=(X.base)]\node[annotate box,#1] (X) {#2};%
+}
+\newcommand{\nablaxi}[0]{\nabla_{\boldsymbol{\xi}}}
+\newcommand{\deltaxi}[0]{\Delta_{\boldsymbol{\xi}}}
+\newcommand{\eunorm}[1]{
+  \text{\Large$|\hspace{-0.8mm}|$}\; #1 \;\text{\Large$|\hspace{-0.8mm}|_{\scriptscriptstyle{2}}$}
+}
 
 \input{paraview-colorbars.tex}
 

@@ -1,3 +1,15 @@
+\begin{frame}[sectionslide]
+  \begin{center}
+    \video<1>[above,autoplay,height=0.7,aspectratio=359/208,fit=contain]
+at (0.5,0.15) {videos/lpbf.mp4}
+    % \begin{tikzpicture}[remember picture,overlay]
+    %    \node[anchor=south west, inner sep=0pt] at (current page.south west) {%
+    %      \movie[autostart] {\includegraphics[width=0.8\textwidth]{thumbnail-lpbf-section.png}}{videos/lpbf.mp4}%
+    %    };
+    % \end{tikzpicture}
+  \end{center}
+\end{frame}
+
 \begin{frame}
   \frametitle{{LPBF}}
   \framesubtitle{MAM technology}
@@ -9,7 +21,7 @@
       \centering
       \includegraphics[width=\linewidth]{waam.jpg}
       \textbf{Wire Arc Additive Manufacturing
-      \raisebox{5pt}{(}\includegraphics[height=16pt]{waam-comic-effect.png}\raisebox{5pt}{)}}
+      (\raisebox{-5pt}{\includegraphics[height=16pt]{waam-comic-effect.png}})}
     \end{subfigure}%
     \hfill
     \begin{subfigure}[t]{0.32\textwidth}
@@ -30,7 +42,8 @@
   \frametitle{LPBF}
   % \framesubtitle{How does it work?}
   \begin{center}
-    \seudoembeddedvod{width=0.8\textwidth}{videos/Build_chamber_process_animation.webm}{thumbnail-lpbf-schematic.png}
+    \video<1>[above,autoplay,height=0.7,aspectratio=16/9,fit=fill,controls]
+at (0.5,0.1) {videos/Build_chamber_process_animation.webm}
   \end{center}
 \end{frame}
 
@@ -65,21 +78,20 @@
     \end{tabular}
     \caption{Characteristic heat source parameters for the main MAM technologies.}
   \end{table}
-
-  \vspace{-3mm}
+  \vspace{-4mm}
   % LPBF offers a finer resolution and smoother surface finish,
   % but it is limited to smaller parts.
   \begin{figure}
     \centering
     \begin{subfigure}[t]{0.48\textwidth}
       \centering
-      \includegraphics[width=0.9\linewidth]{waam-example.jpg}\\
+      \includegraphics[width=0.74\linewidth]{waam-example.jpg}\\
       {\scriptsize WAAM: large parts (> \qty{1}{\meter}), coarse features.}
     \end{subfigure}%
     \hfill
     \begin{subfigure}[t]{0.48\textwidth}
       \centering
-      \includegraphics[width=0.6\linewidth]{lpbf-fine.png}\\
+      \includegraphics[width=0.55\linewidth]{lpbf-fine.png}\\
       {\scriptsize LPBF: small part (< \qty{1}{\meter}), fine features.}
     \end{subfigure}
   \end{figure}

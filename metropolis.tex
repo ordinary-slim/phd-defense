@@ -1,0 +1,60 @@
+\usetheme[
+sectionpage=none,
+]{metropolis}
+
+\setbeamerfont{page number in head/foot}{size=\tiny}
+\setbeamercolor{footline}{fg=gray!70}
+
+% Footline highlight
+\colorlet{footlineHlColor}{black!60}
+\newcommand{\footlineHl}[1]{
+  \textbf{\textcolor{footlineHlColor}{#1}}
+}
+
+\defbeamertemplate*{title page}{customized}[1][]
+{
+  \usebeamerfont{title}\inserttitle\par
+  \usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par
+  \bigskip
+  \usebeamerfont{author}\insertauthor\par
+  \usebeamerfont{institute}\insertinstitute\par
+  \usebeamerfont{date}\insertdate\par
+  \usebeamercolor[fg]{titlegraphic}\inserttitlegraphic
+}
+
+\defbeamertemplate*{footline}{customized}{%
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.1\textwidth,left,sep=1.5ex]{footline}%
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.8\textwidth,center,sep=1.5ex]{footline}%
+      \usebeamertemplate*{frame footer}%
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.1\textwidth,right,sep=1.5ex]{footline}%
+      \usebeamerfont{page number in head/foot}%
+      \hfill%
+      \usebeamertemplate*{frame numbering}
+    \end{beamercolorbox}%
+  }%
+}
+\makeatletter
+  \setbeamertemplate{frametitle}{%
+    \begin{beamercolorbox}[%
+      wd=\paperwidth,%
+      sep=0pt,%
+      leftskip=\metropolis@frametitle@padding,%
+      rightskip=\metropolis@frametitle@padding,%
+      ]{frametitle}%
+      \metropolis@frametitlestrut@start%
+      \insertframetitle%
+      \ifx\insertframesubtitle\@empty%
+      \else%
+        \hfill%
+        {\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}\insertframesubtitle}%
+      \fi%
+      \nolinebreak%
+      \metropolis@frametitlestrut@end%
+    \end{beamercolorbox}%
+  }
+\makeatother
+
