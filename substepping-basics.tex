@@ -1,0 +1,51 @@
+\begin{frame}
+  \frametitle{Substepping}
+  \begin{figure}
+    \centering
+    \def\svgwidth{1.0\columnwidth} {\small \import{./figures/substepping/}{schematic.pdf_tex}}
+    \caption{Non-overlapping substepping decomposition. The HAZ is included in the \textbf{fast partition} $\Omega_f$.
+    The remainder of the domain belongs to the \textbf{slow partition} $\Omega_s$.}
+    \label{fig:substepping}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Substepping}
+    \begin{figure}
+      \centering
+      \video<1>[above,height=0.7,aspectratio=62/27,fit=fill,controls]
+    at (0.5,0.18) {videos/basic-demo-ss.mp4}
+      \vspace{0.7\pageheight+3pt}
+      \videoCaption{
+        Basic demo of substepping method.
+      }
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Substepping}
+  \cite{slimani2025}:
+  \begin{itemize}
+    \item Examines SOA of substepping methods for LPBF;
+      identifies common structures and shortcomings.
+    \item New Robin-Robin substepper for LPBF is compared against
+      Dirichlet substepper of \cite{hodge2021}.
+    \item Realistic speedup estimates provided.
+    \item Alternate predictor schemes are proposed and tested.
+    \item Robin-Robin version of AS method is proposed.
+    \item AS is nested within the fast partition of said substeppers.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Substepping + advected subdomain}
+    \begin{figure}
+      \centering
+      \video<1>[above,height=0.7,aspectratio=62/27,fit=fill,controls]
+    at (0.5,0.18) {videos/basic-demo-css.mp4}
+      \vspace{0.7\pageheight+3pt}
+      \videoCaption{
+        Basic demo substepping + advected subdomain
+      }
+    \end{figure}
+\end{frame}

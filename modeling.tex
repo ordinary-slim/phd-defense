@@ -1,42 +1,36 @@
 \begin{frame}
   \frametitle{Part-scale simulation}
   \framesubtitle{Lumped heat source}
+  
   What do you do if you don't have a cluster or a nice GPU ?
   You \textbf{simplify the model}.
 
   \begin{figure}
     \centering
-    \def\svgwidth{0.4\textwidth}%
-    {\small
-    \import{./figures/goldakProfile}{profile.pdf_tex}
-    }
+    \begin{tikzpicture}
+      % include the original figure
+      \node[inner sep=0] (img) {\def\svgwidth{0.3\textwidth}%
+        {\small \import{./figures/goldakProfile}{profile.pdf_tex}}};
+
+      % red "forbidden" cross over the whole image (hidden on overlay 1)
+      \uncover<2>{
+        \draw[line width=2pt, red] ([shift={(-2mm,-2mm)}]img.south west)
+                                   -- ([shift={(+2mm,+2mm)}]img.north east);
+        \draw[line width=2pt, red] ([shift={(+2mm,-2mm)}]img.south east)
+                                   -- ([shift={(-2mm,+2mm)}]img.north west);
+      }
+    \end{tikzpicture}
     \caption{Double ellipsoidal profile \citep{goldak1984}.
       $\xi$ is the welding direction.}
     \label{fig:goldak}
   \end{figure}
-\end{frame}
 
-\begin{frame}
-  \frametitle{Part-scale simulation}
-  \framesubtitle{Lumped heat source}
-  \begin{figure}
-    \centering
-    \begin{tikzpicture}
-      % include the original figure
-      \node[inner sep=0] (img) {\def\svgwidth{0.4\textwidth}%
-        {\small \import{./figures/goldakProfile}{profile.pdf_tex}}};
+  \uncover<2>{
+    We give up on the accurate representation of the heat source
+    since it is too costly to resolve.
 
-      % red "forbidden" cross over the whole image
-      \draw[line width=2pt, red] ([shift={(-2mm,-2mm)}]img.south west)
-                                 -- ([shift={(+2mm,+2mm)}]img.north east);
-      \draw[line width=2pt, red] ([shift={(+2mm,-2mm)}]img.south east)
-                                 -- ([shift={(-2mm,+2mm)}]img.north west);
-    \end{tikzpicture}
-  \end{figure}
-  We give up on the accurate representation of the heat source
-  since it is too costly to resolve.
-
-  We use a \textbf{lumped heat source} instead.
+    We use a \textbf{lumped heat source} instead.
+  }
 \end{frame}
 
 \begin{frame}
@@ -83,15 +77,15 @@
     \begin{subfigure}[t]{0.32\textwidth}
       \centering
       \begin{tikzpicture}[
-        spy using outlines= {circle, connect spies}
+        spy using outlines= {connect spies}
       ]
-        % include the original figure
         \node[inner sep=0] (img) {\includegraphics[width=\textwidth]{chiumenti2017-lhs/chiumenti2017singleLayer.png}};
-        \coordinate (spypoint) at ($(img.south west)!.88!(img.south east)!0.35!(img.north east)$);
-        \coordinate (magnifypoint) at ($(img.south west)!.7!(img.south east)!0.8!(img.north east)$);
+        \coordinate (spypoint) at ($(img.south west)!.88!(img.south east)!0.325!(img.north east)$);
+        \coordinate (magnifypoint) at ($($(img.south west)!.5!(img.south east)$)!.2!($(img.north west)!.5!(img.north east)$)$);
 
-        \spy [black, width=2cm, height=2cm, magnification=3] on (spypoint) in node[fill=white] at (magnifypoint);
-
+        \only<2->{
+          \spy [black, width=2cm, height=1cm, magnification=2.5] on (spypoint) in node[fill=white] at (magnifypoint);
+        }
       \end{tikzpicture}
       \caption{Single layer per time-step.}
     \end{subfigure}%
@@ -107,8 +101,7 @@
   \textit{Pros and cons}
   \begin{itemize}
     \item[+] Feasible simulations
-    \item[-] Distributed heat input $\;\longrightarrow\;$ temperatures below melt $\;\longrightarrow\;$ Numerical calibration (flash heating)
-    \item[-] Loss of history: no resolution of heat source motion
+    \uncover<2->{\item[-] Distributed heat input $\;\longrightarrow\;$ temperatures below melt $\;\longrightarrow\;$ Numerical calibration (flash heating)}
+    \uncover<2->{\item[-] Loss of history: no resolution of heat source motion}
   \end{itemize}
 \end{frame}
-

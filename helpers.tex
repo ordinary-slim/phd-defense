@@ -8,6 +8,10 @@
   } \fi
 }
 
+% Used in advected_subdomain.tex
+\definecolor{advectionColor}{RGB}{213,94,0}   % vermillion / orange
+\definecolor{diffusionColor}{RGB}{0,114,178}  % blue
+
 \definecolor{powderColor}{rgb}{0.878,0.859,0.811}
 \definecolor{metalColor}{rgb}{0.420,0.408,0.384}
 \newcommand{\legendpowderbulk}{%
@@ -46,6 +50,12 @@
   \end{tikzpicture}%
 }
 
+\newcounter{video}
+\renewcommand{\thevideo}{Video \arabic{video}}
+\newcommand{\videoCaption}[1]{%
+  \captionof{video}{#1}%
+}
+
 \newcommand{\externalvod}[3]{\movie[externalviewer]{\playthumb[#1]{#3}}{#2}}
 \newcommand{\seudoembeddedvod}[3]{\movie[poster, showcontrols]{\playthumb[#1]{#3}}{#2}}
 
@@ -53,6 +63,7 @@
   % Inline TikZ node; safe in text, math, tabular, makebox, etc.
   \tikz[baseline=(X.base)]\node[annotate box,#1] (X) {#2};%
 }
+\newcommand{\support}[1]{\text{supp}\left(#1\right)}
 \newcommand{\nablaxi}[0]{\nabla_{\boldsymbol{\xi}}}
 \newcommand{\deltaxi}[0]{\Delta_{\boldsymbol{\xi}}}
 \newcommand{\eunorm}[1]{

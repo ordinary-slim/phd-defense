@@ -21,6 +21,7 @@
 \usepackage{multimedia}
 
 \usepackage{pifont}
+\usepackage{wasysym}
 
 % PSEUDO-CODE
 \usepackage{algorithm}
@@ -48,7 +49,7 @@
 \usepackage{calc}
 \usepackage{tikz}
 \usepackage{pgfplots}\pgfplotsset{compat=newest}
-\usetikzlibrary{decorations.pathreplacing,calc,positioning,spy,pgfplots.units}
+\usetikzlibrary{decorations.pathreplacing,calc,positioning,spy,pgfplots.units,chains}
 \usepgfplotslibrary{groupplots}
 \tikzset{
   annotate box/.style={
@@ -78,33 +79,33 @@
     \titlepage
   \end{frame}
 
-  % \setbeamertemplate{frame footer}{\qquad Computational strategies for time-accurate simulation of part-scale \footlineHl{LPBF}}
-  % \section{LPBF}
-  %   \input{lpbf.tex}
+  \setbeamertemplate{frame footer}{\qquad Computational strategies for time-accurate simulation of part-scale \footlineHl{LPBF}}
+  \section{LPBF}
+    \input{lpbf.tex}
 
-  % \setbeamertemplate{frame footer}{Computational strategies for time-accurate \footlineHl{simulation} of \footlineHl{part-scale} LPBF}
-  % \subsection{Multiscale application}
-  %   \input{lpbf-multiscale.tex}
-  %
+  \setbeamertemplate{frame footer}{Computational strategies for time-accurate \footlineHl{simulation} of \footlineHl{part-scale} LPBF}
+  \subsection{Multiscale application}
+    \input{lpbf-multiscale.tex}
+
   \setbeamertemplate{frame footer}{Computational strategies for \footlineHl{time-accurate} simulation part-scale LPBF}
   \section{Part-scale simulation}
     \input{modeling.tex}
-  %
-  % \setbeamertemplate{frame footer}{\footlineHl{Computational strategies for time-accurate simulation part-scale LPBF}}
-  % \section{Objectives}
-  %   \input{objectives.tex}
-  %
-  % \setbeamertemplate{frame footer}{}
-  % \section{Domain decomposition}
-  %   \input{domain-decomposition.tex}
-  % \section{Advected subdomain}
-  %   \input{advected-subdomain.tex}
-  %
-  % \section{Substepping}
-  %   \input{substepping.tex}
-  %
-  % \section{Final remarks}
-  %   \input{theend.tex}
+
+  \setbeamertemplate{frame footer}{\footlineHl{Computational strategies for time-accurate simulation part-scale LPBF}}
+  \section{Objectives}
+    \input{objectives.tex}
+
+  \setbeamertemplate{frame footer}{}
+  \section{Domain decomposition}
+    \input{domain-decomposition.tex}
+  \section{Advected subdomain}
+    \input{advected-subdomain.tex}
+
+  \section{Substepping}
+    \input{substepping.tex}
+
+  \section{Final remarks}
+    \input{theend.tex}
 
 \bibliographystyle{plainnat}
 \bibliography{refs}

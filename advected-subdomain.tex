@@ -26,7 +26,7 @@
 
 \begin{frame}
   \frametitle{Advected subdomain}
-  
+
     {\small
     \begin{gather*}
       (\mathbf{x}, t) \longrightarrow (\boldsymbol{\xi}, \eta) \thinspace , \thinspace
@@ -75,62 +75,63 @@
 
 \begin{frame}
   \frametitle{Advected subdomain}
-  Goal workflow:
-  \begin{gather*}
-    \texttt{steadiness\_metric}(T_m) := \frac{\eunorm{T_m\big|_{t^{n+1}} - T_m\big|_{t^{n}}}}{\eunorm{T_m\big|_{t^{n+1}}}} < \epsilon\\
-    \big\Downarrow\\
-    \text{Increase } \Delta t \text{ for } t^{n+2} = t^{n+1} + \Delta t\\
-    \big\Downarrow\\
-    \textrm{Resize } \Omega_m
-  \end{gather*}
+  \framesubtitle{Workflow}
+  Growing $\Delta t$ workflow:
+
+  \begin{center}
+  \begin{tikzpicture}[node distance=1em, every node/.style={align=center}]
+    \node (metric) {$\texttt{steadiness\_metric}(T_m) := \frac{\|T_m\big|_{t^{n+1}} - T_m\big|_{t^{n}}\|}{\|T_m\big|_{t^{n+1}}\|} < \epsilon$};
+    \node[below=of metric] (dt) {Increase $\Delta t$ for $t^{n+2} = t^{n+1} + \Delta t$};
+    \node[below=of dt] (omega) {Resize $\Omega_m$};
+    \draw[->] (metric) --  (dt) --  (omega);
+  \end{tikzpicture}
+  \end{center}
 \end{frame}
 
 \begin{frame}
   \frametitle{Advected subdomain}
-  \framesubtitle{Non-trivial workflow}
-  \begin{figure}
-    \begin{subfigure}[t]{0.36\textwidth}
-      \includegraphics[width=\textwidth]{2d_meshing_example/afterShaping.png}
-      \caption{$\mathcal{T}^m \leftarrow \texttt{shapeSubdomain}(\mathcal{T}^m_{bg})$}
-    \end{subfigure}
-    \hfill%
-    \begin{subfigure}[t]{0.36\textwidth}
-      \includegraphics[width=\textwidth]{2d_meshing_example/after_intersec1.png}
-      \caption{$\mathcal{T}^m \leftarrow \texttt{intersect}\big(\mathcal{T}^m, \mathcal{T}^f \textrm{ at } t^n\big)$}
-    \end{subfigure}
-    \begin{subfigure}[t]{0.36\textwidth}
-      \includegraphics[width=\textwidth]{2d_meshing_example/after_intersec2.png}
-      \caption{$\mathcal{T}^m \leftarrow \texttt{intersect}\big(\mathcal{T}^m, \mathcal{T}^f\big) \textrm{ at } t^{n+1}$}
-    \end{subfigure}
-    \hfill%
-    \begin{subfigure}[t]{0.36\textwidth}
-      \includegraphics[width=\textwidth]{2d_meshing_example/dd.png}
-      \caption{$\mathcal{T}^f \leftarrow \texttt{subtract}\big(\mathcal{T}^f, \mathcal{T}^m\big)$}
-    \end{subfigure}
-    \label{fig:2d_meshing_example}
-  \end{figure}
+  \framesubtitle{Workflow}
+  \begin{columns}
+    \begin{column}{0.4\textwidth}
+      \begin{itemize}
+      \item Dynamic resizing of $\Omega_m$\\
+        $\longrightarrow$ background mesh
+      \item $\Omega_m(t^n),\Omega_m(t^{n+1})\subset\Omega$\\
+        $\longrightarrow$ \texttt{intersect} at $t^n$ and $t^{n+1}$
+      \item Sizing of $\Omega_m$:
+        \begin{itemize}
+          \item Front and side lengths larger than $2 R$
+            to contain support of heat source.
+          \item Back length larger than $V \cdot \Delta t$
+            to not skip regions of domain.
+        \end{itemize}
+      \end{itemize}
+    \end{column}%
+    \begin{column}{0.6\textwidth}
+      \begin{figure}
+        \begin{subfigure}[t]{0.49\columnwidth}
+          \includegraphics[height=0.34\pageheight]{2d_meshing_example/afterShaping.png}
+          \caption{$\mathcal{T}^m \leftarrow \texttt{shapeSubdomain}(\mathcal{T}^m_{bg})$}
+        \end{subfigure}%
+        \hfill%
+        \begin{subfigure}[t]{0.49\columnwidth}
+          \includegraphics[height=0.34\pageheight]{2d_meshing_example/after_intersec1.png}
+          \caption{$\mathcal{T}^m \leftarrow \texttt{intersect}\big(\mathcal{T}^m, \mathcal{T}^f \textrm{ at } t^n\big)$}
+        \end{subfigure}\\
+        \begin{subfigure}[t]{0.49\columnwidth}
+          \includegraphics[height=0.34\pageheight]{2d_meshing_example/after_intersec2.png}
+          \caption{$\mathcal{T}^m \leftarrow \texttt{intersect}\big(\mathcal{T}^m, \mathcal{T}^f\big) \textrm{ at } t^{n+1}$}
+        \end{subfigure}%
+        \hfill%
+        \begin{subfigure}[t]{0.49\columnwidth}
+          \includegraphics[height=0.34\pageheight]{2d_meshing_example/dd.png}
+          \caption{$\mathcal{T}^f \leftarrow \texttt{subtract}\big(\mathcal{T}^f, \mathcal{T}^m\big)$}
+        \end{subfigure}
+        \label{fig:2d_meshing_example}
+      \end{figure}
+    \end{column}%
+  \end{columns}
 \end{frame}
-
-% \begin{frame}
-%   \frametitle{Advected subdomain}
-%   \begin{table}
-%     \centering
-%     \begin{tabular}{lrl}
-%       \toprule
-%       Parameter & Value & Unit \\
-%       \midrule
-%       Density  & 4300 & $kg / m^3$\\
-%       Specific heat  & 700 & $J / kg K$\\
-%       Conductivity  & 10 & $W / m K$\\
-%       Speed $V$  & 1000 & $mm / s$\\
-%       Radius $R$  & 0.1 & $mm$\\
-%       Power  & 50 & \unit{\watt}\\
-%       Environment temperature  & 25 & \unit{\celsius}\\
-%       \bottomrule
-%     \end{tabular}
-%     \label{tbl:mat}
-%   \end{table}
-% \end{frame}
 
 \begin{frame}
   \frametitle{Advected subdomain}
@@ -196,63 +197,127 @@
 
 \begin{frame}
   \frametitle{Advected subdomain}
+  \framesubtitle{2D welding example}
     \begin{figure}
       \centering
-      \seudoembeddedvod{width=0.8\textwidth}{videos/chimera.mp4}{2d_welding_chimera/thumbnail-chimera.png}
-      \vspace{-3mm}
-      \caption{2D welding example with growing time-step workflow.}
+      \video<1>[above,height=0.7,aspectratio=1540/782,fit=contain,controls]
+  at (0.5,0.15) {videos/chimera.mp4}
+      \vspace{0.7\pageheight + 7pt}
+      \videoCaption{
+        \begin{tabular}{lc}
+          Left & AS with growing $\Delta t$ workflow.\\
+          Right & No AS, $\Delta t = 0.5 T_{hs}$.
+        \end{tabular}
+      }
     \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Advected subdomain}
+  \framesubtitle{Shearing!}
+
+  \begin{figure}
+    \centering
+    \begin{subfigure}[t]{0.3\linewidth}
+      \centering
+      \stackinset{l}{ 0.35\textwidth}{b}{ 0.025\textwidth}{
+        {\color{white}$\Omega_f$}
+      }{
+        \includegraphics[width=\textwidth]{2d_welding_chimera/changeOfDir_OFF.png}
+      }
+      \caption{No AS, $\Delta t = 0.5\,T_{hs}$.}
+      \label{fig:2dWeldNoShear}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.3\linewidth}
+      \centering
+      \stackinset{r}{ 0.32\textwidth}{b}{ 0.1\textwidth}{
+        {\color{white}$\Gamma$}
+      }{
+      \stackinset{r}{ 0.19\textwidth}{t}{ 0.075\textwidth}{
+        {\color{white}$\Omega_m$}
+      }{
+      \stackinset{l}{ 0.35\textwidth}{b}{ 0.025\textwidth}{
+        {\color{white}$\Omega_f$}
+      }{
+      \includegraphics[width=\textwidth]{2d_welding_chimera/changeOfDir_ON.png}
+      }}}
+      \caption{AS, $\Delta t = 0.5\,T_{hs}$.}
+      \label{fig:2dWeldShear_05R}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.3\linewidth}
+      \centering
+      \stackinset{r}{ 0.32\textwidth}{b}{ 0.1\textwidth}{
+        {\color{white}$\Gamma$}
+      }{
+      \stackinset{r}{ 0.19\textwidth}{t}{ 0.075\textwidth}{
+        {\color{white}$\Omega_m$}
+      }{
+      \stackinset{l}{ 0.35\textwidth}{b}{ 0.025\textwidth}{
+        {\color{white}$\Omega_f$}
+      }{
+      \includegraphics[width=\textwidth]{2d_welding_chimera/changeOfDir_ON_finer.png}
+      }}}
+      \caption{AS, $\Delta t = 0.25\,T_{hs}$.}
+      \label{fig:2dWeldShear_025R}
+    \end{subfigure}
     \vspace{-3mm}
-    \begin{figure}
-      \centering
-      \begin{subfigure}[t]{0.3\linewidth}
-        \centering
-        \stackinset{l}{ 0.35\textwidth}{b}{ 0.025\textwidth}{
-          {\color{white}$\Omega_f$}
-        }{
-          \includegraphics[width=\textwidth]{2d_welding_chimera/changeOfDir_OFF.png}
-        }
-        \caption{No AS, $\Delta t = 0.5\,T_{hs}$.}
-        \label{fig:2dWeldNoShear}
-      \end{subfigure}
-      \hfill
-      \begin{subfigure}[t]{0.3\linewidth}
-        \centering
-        \stackinset{r}{ 0.32\textwidth}{b}{ 0.1\textwidth}{
-          {\color{white}$\Gamma$}
-        }{
-        \stackinset{r}{ 0.19\textwidth}{t}{ 0.075\textwidth}{
-          {\color{white}$\Omega_m$}
-        }{
-        \stackinset{l}{ 0.35\textwidth}{b}{ 0.025\textwidth}{
-          {\color{white}$\Omega_f$}
-        }{
-        \includegraphics[width=\textwidth]{2d_welding_chimera/changeOfDir_ON.png}
-        }}}
-        \caption{AS, $\Delta t = 0.5\,T_{hs}$.}
-        \label{fig:2dWeldShear_05R}
-      \end{subfigure}
-      \hfill
-      \begin{subfigure}[t]{0.3\linewidth}
-        \centering
-        \stackinset{r}{ 0.32\textwidth}{b}{ 0.1\textwidth}{
-          {\color{white}$\Gamma$}
-        }{
-        \stackinset{r}{ 0.19\textwidth}{t}{ 0.075\textwidth}{
-          {\color{white}$\Omega_m$}
-        }{
-        \stackinset{l}{ 0.35\textwidth}{b}{ 0.025\textwidth}{
-          {\color{white}$\Omega_f$}
-        }{
-        \includegraphics[width=\textwidth]{2d_welding_chimera/changeOfDir_ON_finer.png}
-        }}}
-        \caption{AS, $\Delta t = 0.25\,T_{hs}$.}
-        \label{fig:2dWeldShear_025R}
-      \end{subfigure}
-      \vspace{-3mm}
-      \caption{``Shearing'' of previous thermal tail by the AS.}
-      \label{fig:2dWeldTurn}
-    \end{figure}
+    \caption{``Shearing'' of previous thermal tail by the AS.}
+    \label{fig:2dWeldTurn}
+  \end{figure}
+  \vspace{-5mm}
+  \begin{minipage}[t]{0.48\textwidth}
+    \begin{center}
+      \[
+      % Uncover and stay
+      \uncover<2->{
+      \begin{alignedat}{5}
+        T \;= &\;
+        {\color{advectionColor}T_{\text{current track}}} &\;+\;&
+        {\color{diffusionColor}T_{\text{previous tracks}}} \\
+        =&\;
+        {\color{advectionColor}T_{\text{``recent''}}} &\;+\;&
+        {\color{diffusionColor}T_{\text{``old''}}} \\
+      \end{alignedat}
+      \]
+      }
+      \newcommand{\good}{\textcolor{green!70!black}{\Large\smiley}}
+      \newcommand{\ok}{\textcolor{orange!80!black}{\Large\textendash}}
+      \newcommand{\bad}{\textcolor{red!70!black}{\Large\frownie}}
+      \uncover<3->{
+      \begin{tabular}{rlcc}
+          & & $\Omega_m$ & $\Omega_f$ \\
+          ({\color{advectionColor}\rule[-0.5pt]{8pt}{8pt}})
+            & Heat-source dominated
+            & \good & \ok \\
+          ({\color{diffusionColor}\rule[-0.5pt]{8pt}{8pt}})
+            & Diffusion dominated
+            & \bad & \good \\
+      \end{tabular}
+    }
+    \end{center}
+  \end{minipage}%
+  \hfill
+  \begin{minipage}[t]{0.48\textwidth}
+    \uncover<4->{
+        As long as
+          $$
+          \support{T_{\text{curr. track}}}
+          \;\bigcap\;
+          \support{T_{\text{prev. tracks}}}
+          \approx \emptyset
+          $$
+          we can have
+          $$
+            \support{T_{\text{prev. tracks}}} 
+            \;\bigcap\;
+            \Omega_m
+            \approx \emptyset
+          $$
+    }
+  \end{minipage}
+  
 \end{frame}
 
 \begin{frame}
@@ -284,7 +349,7 @@
 \begin{frame}
   \frametitle{Advected subdomain}
   \framesubtitle{Thin wall}
-  \begin{minipage}[t]{0.58\textwidth}
+  \begin{minipage}[t]{0.55\textwidth}
   \pgfplotsset{compat=newest}
   \begin{figure}
     \centering
@@ -298,7 +363,7 @@
             clip=true,
             enlarge x limits=false,
             enlarge y limits=false,
-            width=1.21\textwidth,
+            height=0.7\pageheight,
             grid=major,
             xlabel={x},
             x unit=\unit{\milli\meter},
@@ -348,20 +413,55 @@
 
     \end{tikzpicture}
     \vspace{-3mm}
-    \caption{Plot along top centerline of build towards end of fifth layer.}
+    \caption{Plot along top centerline of build\\towards end of fifth layer.}
     \label{fig:3dLpbf_plot5}
   \end{figure}
   \end{minipage}%
-  \hspace{-0.01\textwidth}%
-  \begin{minipage}[t]{0.43\textwidth}
+  \hspace{-0.05\textwidth}%
+  \begin{minipage}[t]{0.5\textwidth}
     \small
-    \begin{itemize}
-      \item About 6 times fewer time-steps with AS for the same build.
-      \item Each AS time-step is roughly 2 times more expensive to compute.
-      \item[$\rightarrow$] Overall net speedup of about 3 times in wall-clock time.
-      \item Cost of boolean operations is negligible; overhead mainly comes
-            from the increased linear solve time.
-    \end{itemize}
+\begin{table}
+\centering
+\begin{tabular}{ccc}
+\toprule
+ & Reference & AS \\
+\midrule
+
+Total printing
+& \multirow{2}{*}{2000}
+& \multirow{2}{*}{331} \\
+time-steps &  &  \\
+
+Total duration printing
+& \multirow{2}{*}{22733}
+& \multirow{2}{*}{6832} \\
+time-steps [s] &  &  \\
+
+Total AS
+& \multirow{2}{*}{--}
+& \multirow{2}{*}{251} \\
+time-steps &  &  \\
+
+\midrule
+
+Average DOFs
+& \multirow{2}{*}{258122}
+& \multirow{2}{*}{264168} \\
+per time-step &  &  \\
+
+Average duration printing
+& \multirow{2}{*}{11.37}
+& \multirow{2}{*}{20.64} \\
+time-step [s] &  &  \\
+
+Average duration AS
+& \multirow{2}{*}{--}
+& \multirow{2}{*}{23.32} \\
+time-step [s] &  &  \\
+
+\bottomrule
+\end{tabular}
+\end{table}
   \end{minipage}
 \end{frame}
 

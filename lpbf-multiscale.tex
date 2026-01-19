@@ -183,16 +183,16 @@
 \begin{frame}
   \frametitle{Discretization}
 
-  \video<1>[above,height=0.7,aspectratio=62/27,fit=fill,controls]
-at (0.5,0.18) {videos/2dlpbf_2d_lpbf_ref.mp4}
-
-  \begin{tikzpicture}[remember picture, overlay]
-    \node[align=center,above=0.05\pageheight] at (current page.south) 
-    {
+  \begin{figure}
+    \video<1>[above,height=0.7,aspectratio=62/27,fit=fill,controls]
+  at (0.5,0.18) {videos/2dlpbf_2d_lpbf_ref.mp4}
+    \vspace{0.7\pageheight+3pt}
+    \videoCaption{
       Demo simulation of 2D LPBF with element activation.\\
       Wireframe elements (\;\wireframeTriangle{}) correspond to powder region.
-    };
-  \end{tikzpicture}
+    }
+  \end{figure}
+
 \end{frame}
 
 \begin{frame}
