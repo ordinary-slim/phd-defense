@@ -48,7 +48,7 @@
     such that
     \begin{align*}
       \rho c_p \Big( \partial_t T^m{\scriptstyle (\xi, t)} - \mathbf{v}\dependson{t} \cdot \nabla T^m{\scriptstyle (\xi, t)} \Big) -
-      \nabla \cdot ( k \nabla T^m{\scriptstyle (\xi, t)}) &= r{\scriptstyle (\xi,t)}  &\xi &\in \Omega_m(t)
+      \nabla \cdot ( k \nabla T^m{\scriptstyle (\xi, t)}) &= r{\scriptstyle (\xi)}  &\xi &\in \Omega_m(t)
     \end{align*}
     \begin{align*}
     \rho c_p \partial_t T^f{\scriptstyle (x, t)} - \nabla \cdot (k \nabla T^f{\scriptstyle (x, t)}) &= 0 \qquad &x &\in \Omega_f(t)
@@ -75,17 +75,47 @@
 
 \begin{frame}
   \frametitle{Advected subdomain}
-  \framesubtitle{Workflow}
-  Growing $\Delta t$ workflow:
+  \framesubtitle{Growing $\Delta t$ workflow}
+  We shifted the motion of the heat source into $\Omega_m$;
+  the time-scale of the motion is no longer $T_{hs}$,
+  it is $T_{\Omega_m}$:
+  $$
+    T_{\Omega_m} := \frac{L_{\Omega_m}}{V} > T_{hs} \quad \text{ given } \quad L_{\Omega_m} > R
+  $$
+  \begin{itemize}
+    \item $L_{\Omega_m}$ can be chosen and changed at each time-step.
+    \item The PDE in $\Omega_m$ can admit a steady solution,
+          provided that the geometry and material composition
+          remain constant over a time interval.
+  \end{itemize}
+  $\longrightarrow$ \textbf{Growing} $\Delta t$ \textbf{workflow}\;:
+  at the end of a time-step:
 
   \begin{center}
   \begin{tikzpicture}[node distance=1em, every node/.style={align=center}]
-    \node (metric) {$\texttt{steadiness\_metric}(T_m) := \frac{\|T_m\big|_{t^{n+1}} - T_m\big|_{t^{n}}\|}{\|T_m\big|_{t^{n+1}}\|} < \epsilon$};
-    \node[below=of metric] (dt) {Increase $\Delta t$ for $t^{n+2} = t^{n+1} + \Delta t$};
-    \node[below=of dt] (omega) {Resize $\Omega_m$};
-    \draw[->] (metric) --  (dt) --  (omega);
+    \tikzset{
+      blockdiagr/.style={
+        draw,
+        rounded corners,
+        align=center,
+        inner sep=4pt
+      }
+    }
+    \node[blockdiagr] (metric) {$\texttt{steadiness\_metric}(T_m) < \epsilon$};
+    \node[blockdiagr, below=of metric] (dt) {Increase $\Delta t$ for $t^{n+2} = t^{n+1} + \Delta t$};
+    \node[blockdiagr, below=of dt] (omega) {Resize $\Omega_m$};
+    \draw[->] (metric) -- (dt);
+    \draw[->] (dt) -- (omega);
   \end{tikzpicture}
   \end{center}
+  % where \texttt{steadiness\_metric} can be chosen as e.g.
+  % $$
+  % \max_{\Omega_m} \left| \frac{T_m^{n+1} - T_m^{n}}{\Delta t} \right|
+  % \quad
+  % \text{or}
+  % \quad
+  % \frac{\|T_m\big|_{t^{n+1}} - T_m\big|_{t^{n}}\|}{\|T_m\big|_{t^{n+1}}\|} 
+  % $$
 \end{frame}
 
 \begin{frame}

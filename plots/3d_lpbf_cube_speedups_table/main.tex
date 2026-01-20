@@ -1,0 +1,56 @@
+%     - Speed-up factors range from about $1.3$--$2.0$ for fast DOF ratios around
+%         $30\%$, up to roughly $4$--$6.5$ when the fast DOF ratio drops below
+%         $10\%$, depending on substepper and use of AS.
+%     - Robin substepping slightly outperforms Dirichlet.
+%     - AS approach yields increasing speed-ups with domain size; substantial gains for cubes $\geq 2\,\si{\milli\meter}$.
+%     - For short tracks and large macro-steps, fast-domain DOF fraction can exceed profitability threshold and reduce speed-up.
+%     - AS distorts thermal tail when advected subdomain overlaps previous tracks.
+
+\begin{frame}
+  \frametitle{Substepping}
+  \framesubtitle{3D LPBF cube}
+
+  \begin{table}
+    \centering
+    \setlength{\tabcolsep}{6pt}
+    \begin{tabular}{lSScccc}
+      \toprule[0.15em]
+      \multirow{3}{*}{\shortstack{Size [\unit{\milli\meter}]}} &
+      {\multirow{3}{*}{$\Delta t_s\,[T_{hs}]$}} &
+      {\multirow{3}{*}{Fast DOF [\%]}} &
+      \multicolumn{4}{c}{Speed-up} \\
+      \cmidrule(l){4-7}
+       & & &
+      \multirow{2}{*}{\shortstack{\small Robin\\ No AS}} &
+      \multirow{2}{*}{\shortstack{\small Dirichlet\\ No AS}} &
+      \multirow{2}{*}{\shortstack{\small Robin\\ Monolithic AS}} &
+      \multirow{2}{*}{\shortstack{\small Robin\\ Staggered AS}} \\
+       & & & & & & \\
+      \midrule[0.12em]
+      \multirow{2}{*}{1.0} &  5.0 & 22 & 2.0 & 1.7 & 1.9 & 1.4 \\
+                           & 10.0 & 31 & 1.8 & 1.7 & 1.8 & 1.3 \\
+      % \midrule
+      % \multirow{2}{*}{1.5} & 5.0 & 14 & 2.7 & 2.5 & 2.7 & 2.2 \\
+      %                      & 7.5 & 17 & 2.7 & 2.5 & 2.9 & 2.2 \\
+      \midrule
+      \multirow{2}{*}{2.0} &  5.0 & 10 & 3.3 & 3.0 & 3.6 & 3.3 \\
+                           & 10.0 & 14 & 3.3 & 3.1 & 4.4 & 3.2 \\
+      % \midrule
+      % \multirow{2}{*}{2.5} & 5.0 &  7.4 & 3.8 & 3.4 & 4.2 & 3.5 \\
+      %                     & 12.5 & 11.9 & 3.9 & 3.7 & 5.4 & 4.1 \\
+      \midrule
+      \multirow{2}{*}{3.0} & 5.0 & 5.5 & 4.2 & 3.7 & 4.7 & 4.0 \\
+                           % & 7.5 & 6.6 & 4.7 & 4.2 & 5.7 & 4.7 \\
+                          & 10.0 & 7.7 & 4.8 & 4.4 & 6.4 & 5.1 \\
+      \bottomrule[0.15em]
+    \end{tabular}
+    \caption{
+      Speed-up factors relative to the unsubstepped model.
+      Models without AS employ $\Delta t_f = 0.5 T_{hs}$
+      while AS models employ the growing time-step workflow,
+      up to $\Delta t_f = 3 T_{hs}$ for the $3.0 \unit{\milli\meter}$ cube.
+    }
+    \label{tab:speedups}
+  \end{table}
+  
+\end{frame}

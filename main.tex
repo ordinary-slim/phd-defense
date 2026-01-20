@@ -66,7 +66,14 @@
 
 \title{Computational strategies for time-accurate simulation of part-scale LPBF}
 \subtitle{Time scale disparity in moving heat source problems}
-\author{Mehdi Slimani}
+\author[Mehdi Slimani]{
+Mehdi Slimani \qquad \qquad
+{\footnotesize
+  \begin{tabular}{rl}
+    Supervised by & Michele Chiumenti \\
+                  & Miguel Cervera
+  \end{tabular}
+}}
 \date{January 23, 2026}
 
 \graphicspath{{figures/}}
@@ -79,33 +86,33 @@
     \titlepage
   \end{frame}
 
-  \setbeamertemplate{frame footer}{\qquad Computational strategies for time-accurate simulation of part-scale \footlineHl{LPBF}}
-  \section{LPBF}
-    \input{lpbf.tex}
-
-  \setbeamertemplate{frame footer}{Computational strategies for time-accurate \footlineHl{simulation} of \footlineHl{part-scale} LPBF}
-  \subsection{Multiscale application}
-    \input{lpbf-multiscale.tex}
-
-  \setbeamertemplate{frame footer}{Computational strategies for \footlineHl{time-accurate} simulation part-scale LPBF}
-  \section{Part-scale simulation}
-    \input{modeling.tex}
-
-  \setbeamertemplate{frame footer}{\footlineHl{Computational strategies for time-accurate simulation part-scale LPBF}}
-  \section{Objectives}
-    \input{objectives.tex}
-
-  \setbeamertemplate{frame footer}{}
-  \section{Domain decomposition}
-    \input{domain-decomposition.tex}
+  % \setbeamertemplate{frame footer}{\qquad Computational strategies for time-accurate simulation of part-scale \footlineHl{LPBF}}
+  % \section{LPBF}
+  %   \input{lpbf.tex}
+  %
+  % \setbeamertemplate{frame footer}{Computational strategies for time-accurate \footlineHl{simulation} of \footlineHl{part-scale} LPBF}
+  % \subsection{Multiscale application}
+  %   \input{lpbf-multiscale.tex}
+  %
+  % \setbeamertemplate{frame footer}{Computational strategies for \footlineHl{time-accurate} simulation part-scale LPBF}
+  % \section{Part-scale simulation}
+  %   \input{modeling.tex}
+  %
+  % \setbeamertemplate{frame footer}{\footlineHl{Computational strategies for time-accurate simulation part-scale LPBF}}
+  % \section{Objectives}
+  %   \input{objectives.tex}
+  %
+  % \setbeamertemplate{frame footer}{}
+  % \section{Domain decomposition}
+  %   \input{domain-decomposition.tex}
   \section{Advected subdomain}
     \input{advected-subdomain.tex}
-
-  \section{Substepping}
-    \input{substepping.tex}
-
-  \section{Final remarks}
-    \input{theend.tex}
+  %
+  % \section{Substepping}
+  %   \input{substepping.tex}
+  % %
+  % \section{Final remarks}
+  %   \input{theend.tex}
 
 \bibliographystyle{plainnat}
 \bibliography{refs}

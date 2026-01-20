@@ -60,25 +60,8 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Part-scale simulation}
-  \framesubtitle{Why?}
-
-  We've established that LPBF is extremely multiscale.
-  In a few slides, we'll see why this is a problem for
-  part-scale simulation.
-
-  Why part-scale simulation?
-  \begin{itemize}
-    \item Avoid costly experimental trial-and-error
-    \item Predict residual stresses and distortions
-    \item Predict microstructure features
-    \item Optimize process parameters
-    \item Save time and costs in the design cycle
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Multiphysics}
+  \frametitle{LPBF}
+  \framesubtitle{Multiphysics}
   \begin{figure}
     \centering
     \includegraphics[height=0.8\textheight]{bayat2021.png}
@@ -88,8 +71,26 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Problem statement}
-  \framesubtitle{Domain}
+  \frametitle{Part-scale simulation}
+  \framesubtitle{Why?}
+
+  LPBF is both \textbf{extremely multiscale} and a \textbf{multiphysics} application.
+  Despite this complexity, predictions are required at the \textbf{part scale}.
+
+  \vspace{0.5em}
+  Part-scale simulation aims to:
+  \begin{itemize}
+    \item Reduce costly experimental trial-and-error
+    \item Predict residual stresses and part distortions
+    \item Link thermal history to microstructure features
+    \item Enable process-parameter optimization
+    \item Shorten the design-to-manufacturing cycle
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Part-scale simulation}
+  \framesubtitle{Problem statement}
   \begin{figure}[ht]
     \def\svgwidth{0.9\columnwidth}
     \hspace{-6mm}
@@ -102,8 +103,8 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Problem statement}
-  \framesubtitle{PDE system}
+  \frametitle{Part-scale simulation}
+  \framesubtitle{PDE}
   {\small
   Define the extended temperature and liquid fraction fields
   \begin{equation*}
@@ -131,7 +132,8 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Discretization}
+  \frametitle{Part-scale simulation}
+  \framesubtitle{Discretization}
     Multiply \cref{eq:original_pde}
     by $\phi \in V_T(t) = H^{1}\left(\Omega(t)\right)$;
     integrate over $\Omega\dependson{t}$;
@@ -152,8 +154,8 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Discretization}
-  \framesubtitle{Element activation}
+  \frametitle{Part-scale simulation}
+  \framesubtitle{Discretization}
   \begin{figure}
     \begin{subfigure}[t]{0.30\textwidth}
       \includegraphics[width=\textwidth]{schematic_melting/0.png}
@@ -181,7 +183,8 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Discretization}
+  \frametitle{Part-scale simulation}
+  \framesubtitle{Demo video}
 
   \begin{figure}
     \video<1>[above,height=0.7,aspectratio=62/27,fit=fill,controls]
