@@ -1,4 +1,27 @@
 \begin{frame}
+  \centering
+  \begin{tikzpicture}[
+    font=\small,
+    box/.style={draw, rounded corners, align=center, inner sep=6pt},
+    arr/.style={->, thick}
+  ]
+
+  \node[box] (ms) {LPBF multiscale constraints};
+
+  \node[box, below=5mm of ms] (dd) {Domain decomposition\\(core framework)};
+
+  \node[box, below left=4mm and 4mm of dd] (as) {Advected subdomain\\\citep{slimani2024}};
+
+  \node[box, below right=4mm and 4mm of dd] (ss) {Substepping\\\citep{slimani2025}};
+
+  \draw[arr] (ms) -- (dd);
+  \draw[arr] (dd) -- (as);
+  \draw[arr] (dd) -- (ss);
+
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}
   \frametitle{Domain decomposition}
   \framesubtitle{Basics}
   We've established that the part-scale build is driven

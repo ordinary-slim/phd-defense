@@ -1,0 +1,79 @@
+\begin{frame}
+  \frametitle{Substepping}
+  \begin{figure}
+    \centering
+    \def\svgwidth{1.0\columnwidth} {\small \import{./figures/substepping/}{schematic.pdf_tex}}
+    \caption{Non-overlapping substepping decomposition. The HAZ is included in the \textbf{fast partition} $\Omega_f$.
+    The remainder of the domain belongs to the \textbf{slow partition} $\Omega_s$.}
+    \label{fig:substepping}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Substepping}
+  \framesubtitle{SOA}
+  \begin{table}[h]
+  \centering
+  \caption{Substepping references in LPBF literature.}
+  \label{tab:substepping_literature}
+  \begin{tabular}{lcccc}
+    \toprule
+    \multirow{2}{*}{\shortstack{Reference}} & \multirow{2}{*}{\shortstack{Interface \\treatment}} & \multirow{2}{*}{\shortstack{$\Delta t_f [T_{hs}]$}} & \multirow{2}{*}{\shortstack{$\Delta t_s [T_{hs}]$}} & \multirow{2}{*}{\shortstack{Reported\\speed-up}} \\
+    & & & & \\
+    \midrule
+  \cite{viguerie2022}
+  & Custom overlapping
+  & $1$ 
+  & $4$ 
+  & $\sim 2.5$ \\
+
+  \cite{hodge2021}
+  & Dirichlet 
+  & $0.02$ 
+  & $3$ 
+  & $\sim 100$ \\
+
+  \cite{puso2023}
+  & Dirichlet 
+  & $0.04$ 
+  & $7.7$ 
+  & $\sim 100$ \\
+
+  \cite{elahi2025}
+  & Overlapping, VMS-based
+  & $0.086$ 
+  & $5.5$ 
+  & -- \\
+
+  \cite{cheng2021}
+  & Dirichlet--Robin 
+  & $0.07$ 
+  & $7$ 
+  & $\sim 100$
+  \\
+    \bottomrule
+  \end{tabular}
+  \end{table}
+  Honorable mentions: \cite{soldner2019, kopp2022}.
+  \begin{itemize}
+    \item $\Delta t_s$ typically limited to a few $T_{hs}$
+    \item Large reported speed-ups are mainly driven by very fine $\Delta t_f$
+    % \item Two substepping archetypes were identified: \textit{fully staggered} and \textit{semi-monolithic}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Substepping}
+  \framesubtitle{Slimani \& al. (2025)}
+  \cite{slimani2025} (preprint)
+  \begin{itemize}
+    \item Robin-Robin substepper inspired by \cite{canuto2019}
+      with custom coefficients from \cite{chen2014robin}.\\
+      Will be referred to as \textit{Robin} substepper.
+    \item Comparison with Dirichlet substepper of \cite{hodge2021}.\\
+      Will be referred to as \textit{Dirichlet} substepper.
+    \item Realistic speedup estimates.
+    \item Tweaks and limitations of substepping.
+    \item Combination with advected subdomain.
+  \end{itemize}
+\end{frame}

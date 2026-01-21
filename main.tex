@@ -1,9 +1,9 @@
 %! TeX program = lualatex
-\documentclass[10pt, aspectratio=169, draft]{beamer}
+\documentclass[10pt, aspectratio=169]{beamer}
 
 % Draft
 \newif\ifisdraft
-\isdrafttrue
+\isdraftfalse
 
 \usepackage{beamer-reveal}
 \input{metropolis.tex}
@@ -28,11 +28,14 @@
 \usepackage{pifont}
 \usepackage{wasysym}
 
+\usepackage{bm}
+
 % PSEUDO-CODE
 \usepackage{algorithm}
 \usepackage[
   rightComments=false,
 ]{algpseudocodex}
+\colorlet{commentcolor}{gray!25}
 
 \usepackage{stackengine}
 \usepackage{changepage}
@@ -57,7 +60,7 @@
 
 \usepackage{calc}
 \usepackage{pgfplots}\pgfplotsset{compat=newest}
-\usetikzlibrary{decorations.pathreplacing,calc,positioning,spy,pgfplots.units,chains}
+\usetikzlibrary{decorations.pathreplacing,calc,positioning,spy,pgfplots.units,chains,backgrounds}
 \usepgfplotslibrary{groupplots}
 \tikzset{
   annotate box/.style={
@@ -78,11 +81,25 @@
 Mehdi Slimani \qquad \qquad
 {\footnotesize
   \begin{tabular}{rl}
-    Supervised by & Michele Chiumenti \\
-                  & Miguel Cervera
+    Supervised by & Prof. Michele Chiumenti \\
+                  & Prof. Miguel Cervera
   \end{tabular}
 }}
 \date{January 23, 2026}
+\titlegraphic{%
+  \vfill
+  {
+  \centering
+  \begin{minipage}[t]{0.3\textwidth}
+    \includegraphics[height=0.1\pageheight]{logos/UPC_Camins.png}
+  \end{minipage}%
+  \hfill
+  \begin{minipage}[t]{0.3\textwidth}
+    \hfill
+    \includegraphics[height=0.1\pageheight]{logos/_CIMNE/black/black-regular/CIMNE-black.png}%
+  \end{minipage}
+  }
+}
 
 \graphicspath{{figures/}}
 
@@ -90,60 +107,45 @@ Mehdi Slimani \qquad \qquad
 
 \begin{document}
 
+  {
+  % \usebackgroundtemplate{%
+  %   \includegraphics[width=\paperwidth,height=\paperheight]{transmission_conds/drawing.png}%
+  % }
   \begin{frame}[titleslide]
     \titlepage
   \end{frame}
+  }
 
-  \setbeamertemplate{frame footer}{\qquad Computational strategies for time-accurate simulation of part-scale \footlineHl{LPBF}}
-  \section{Introduction}
-    \subsection{LPBF}
-      \input{lpbf.tex}
-
-    \setbeamertemplate{frame footer}{Computational strategies for time-accurate \footlineHl{simulation} of \footlineHl{part-scale} LPBF}
-    \subsection{Multiscale application}
-      \input{lpbf-multiscale.tex}
-
-    \setbeamertemplate{frame footer}{Computational strategies for \footlineHl{time-accurate} simulation part-scale LPBF}
-    \subsection{Part-scale simulation}
-      \input{modeling.tex}
-
-  \setbeamertemplate{frame footer}{\footlineHl{Computational strategies for time-accurate simulation part-scale LPBF}}
-  \section{Objectives}
-    \input{objectives.tex}
-
+  % \setbeamertemplate{frame footer}{\qquad Computational strategies for time-accurate simulation of part-scale \footlineHl{LPBF}}
+  % \section{Introduction}
+  %   \subsection{LPBF}
+  %     \input{lpbf.tex}
+  %
+  %   \setbeamertemplate{frame footer}{Computational strategies for time-accurate \footlineHl{simulation} of \footlineHl{part-scale} LPBF}
+  %   \subsection{Multiscale application}
+  %     \input{lpbf-multiscale.tex}
+  %
+  %   \setbeamertemplate{frame footer}{Computational strategies for \footlineHl{time-accurate} simulation part-scale LPBF}
+  %   \subsection{Part-scale simulation}
+  %     \input{modeling.tex}
+  %
+  % \setbeamertemplate{frame footer}{\footlineHl{Computational strategies for time-accurate simulation part-scale LPBF}}
+  % \section{Objectives}
+  %   \input{objectives.tex}
+  %
   \setbeamertemplate{frame footer}{}
-  \begin{frame}
-    \centering
-    \begin{tikzpicture}[
-      font=\small,
-      box/.style={draw, rounded corners, align=center, inner sep=6pt},
-      arr/.style={->, thick}
-    ]
 
-    \node[box] (ms) {LPBF multiscale constraints};
+  % \section{Domain decomposition}
+  %   \input{domain-decomposition.tex}
 
-    \node[box, below=5mm of ms] (dd) {Domain decomposition\\(core framework)};
-
-    \node[box, below left=4mm and 4mm of dd] (as) {Advected subdomain\\\citep{slimani2024}};
-
-    \node[box, below right=4mm and 4mm of dd] (ss) {Substepping\\\citep{slimani2025}};
-
-    \draw[arr] (ms) -- (dd);
-    \draw[arr] (dd) -- (as);
-    \draw[arr] (dd) -- (ss);
-
-    \end{tikzpicture}
-  \end{frame}
-  \section{Domain decomposition}
-    \input{domain-decomposition.tex}
-  \section{Advected subdomain}
-    \input{advected-subdomain.tex}
-
+  % \section{Advected subdomain}
+  %   \input{advected-subdomain.tex}
+  %
   \section{Substepping}
     \input{substepping.tex}
-  %
-  \section{Final remarks}
-    \input{theend.tex}
+  % %
+  % \section{Final remarks}
+  %   \input{theend.tex}
 
 \bibliographystyle{plainnat}
 \renewcommand{\section}[2]{}% to suppress section headings in the references slide

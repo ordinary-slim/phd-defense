@@ -1,0 +1,146 @@
+\input{plots/substepping_pseudo_code.tex}
+
+\begin{frame}
+  \frametitle{Substepping algorithms}
+  \framesubtitle{Predictor}
+    \InsertAlgorithmNode{nohl}{0.0}{0.0}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Substepping algorithms}
+  \framesubtitle{Predictor}
+    \InsertAlgorithmNode{hlpred}{0.0}{-0.6}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Substepping}
+  \framesubtitle{Example time-step}
+  \begin{figure}
+    \begin{subfigure}[t]{0.48\textwidth}
+      \centering
+      \includegraphics[height=0.6\pageheight]{{ss_robin/prev_sol.png}}
+      \caption{$T^{n}$}
+      \label{fig:robin_prev}
+    \end{subfigure}%
+    \hfill%
+    \begin{subfigure}[t]{0.48\textwidth}
+      \centering
+      \includegraphics[height=0.6\pageheight]{{ss_robin/predictor.png}}
+      \caption{$\tilde{T}^{n+1}$ after predictor step}
+      \label{fig:robin_predictor}
+    \end{subfigure}
+    \caption{Previous solution and predictor step.}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Substepping algorithms}
+  \framesubtitle{Micro-step}
+    \InsertAlgorithmNode{hlmicro}{-2.6}{-4.0}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Substepping}
+  \framesubtitle{Example time-step}
+  \begin{figure}
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[height=0.6\pageheight]{{ss_robin/micro_step.png}}
+    \caption{\textbf{Robin}.}
+    \label{fig:robin_substep}
+  \end{subfigure}%
+  \hfill%
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[height=0.6\pageheight]{{hodge/micro_step.png}};
+    \caption{\textbf{Dirichlet}.}
+    \label{fig:hodge_substep}
+  \end{subfigure}
+  \caption{Robin and Dirichlet substeps.}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Substepping algorithms}
+  \framesubtitle{Macro-step}
+    \InsertAlgorithmNode{hlmacro}{-4.0}{-5.0}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Substepping}
+  \framesubtitle{Example time-step}
+  \begin{figure}
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \begin{tikzpicture}[
+        spy using outlines= {connect spies}
+      ]
+      \node[anchor=south west, inner sep=0] (A) {\includegraphics[height=0.6\pageheight]{{ss_robin/macro_step.png}}};
+    \begin{scope}[x={(A.south east)},y={(A.north west)}]
+      % Rectangle highlight (coordinates between 0 and 1)
+      %\draw[teal!20, step=0.05] (0,0) grid (1,1);%grid, comment out for draft
+      % unhide at second overlay
+      \only<2->{
+        \draw[red, thick, dash pattern=on 1pt off 1pt] (0.286, 0.5475) circle (0.02);
+        \draw[red, thick, dash pattern=on 1pt off 1pt] (0.286, 0.6385) circle (0.02);
+
+        \coordinate (spypointrobinex) at (0.286, 0.62);
+        \coordinate (magnifyglassrobinex) at (0.9, 0.5);
+        \spy[overlay, black, width=1cm, height=2cm, magnification=2] on (spypointrobinex) in node[fill=white] at (magnifyglassrobinex);
+      }
+      
+    \end{scope}
+    \end{tikzpicture}
+    \caption{\textbf{Robin} corrector step.}
+    \label{fig:robin_corrector}
+  \end{subfigure}
+  \hfill%
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \node[anchor=south west, inner sep=0] (A) {\includegraphics[height=0.6\pageheight]{{hodge/macro_step.png}}};
+      \only<2->{
+        \begin{scope}[x={(A.south east)},y={(A.north west)}]
+          % Rectangle highlight (coordinates between 0 and 1)
+          %\draw[teal!20, step=0.01] (0,0) grid (1,1);%grid, comment out for draft
+            \draw[red, thick, dash pattern=on 1pt off 1pt, rounded corners] (0.065, 0.4550) rectangle (0.1905, 0.4905);
+            \draw[red, thick, dash pattern=on 1pt off 1pt, rounded corners] (0.2600, 0.5605) rectangle (0.3000, 0.7000);
+        \end{scope}
+      }
+    \end{tikzpicture}
+    \caption{\textbf{Dirichlet} corrector step.}
+    \label{fig:hodge_corrector}
+  \end{subfigure}
+  \caption{Robin and Dirichlet corrector steps.}
+  \end{figure}
+\end{frame}
+
+% \begin{frame}
+%   \frametitle{Substepping}
+%   \framesubtitle{No heat source predictor}
+%
+%   \begin{figure}
+%     \begin{subfigure}[t]{0.33\textwidth}
+%       \centering
+%       \includegraphics[width=\textwidth]{hodge/to_predictor.png}
+%       \caption{Predictor step without heat input}
+%       \label{fig:to_hodge_predictor}
+%     \end{subfigure}%
+%     \hfill
+%     \begin{subfigure}[t]{0.33\textwidth}
+%       \centering
+%       \includegraphics[width=\textwidth]{hodge/to_micro_step.png}
+%       \caption{Micro-step.}
+%       \label{fig:to_hodge_micro}
+%     \end{subfigure}%
+%     \hfill
+%     \begin{subfigure}[t]{0.33\textwidth}
+%       \centering
+%       \includegraphics[width=\textwidth]{hodge/to_macro_step.png}
+%       \caption{Corrector step.}
+%       \label{fig:to_hodge_macro}
+%     \end{subfigure}
+%     \caption{Example of Dirichlet substepper step using a predictor step without including the source term.}
+%     \label{fig:to_hodge}
+%   \end{figure}
+% \end{frame}

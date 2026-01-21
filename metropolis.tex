@@ -30,36 +30,56 @@
   \textbf{\textcolor{footlineHlColor}{#1}}
 }
 
+\setbeamercolor{title page}{bg=white, fg=black}
 \defbeamertemplate*{title page}{customized}[1][]
 {
-  \usebeamerfont{title}\inserttitle\par
-  \usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par
-  \bigskip
-  \usebeamerfont{author}\insertauthor\par
-  \usebeamerfont{institute}\insertinstitute\par
-  \usebeamerfont{date}\insertdate\par
+  \centering
+
+  % --- Main title box ---
+  \begin{beamercolorbox}[
+    wd=\textwidth,
+    sep=1.2em,
+    rounded=true
+  ]{title page}
+    
+    {\usebeamerfont{title}\inserttitle\par}
+    \vspace{0.4em}
+
+    {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}
+
+    \vspace{0.8em}
+
+    {\usebeamerfont{author}\insertauthor\par}
+    {\usebeamerfont{institute}\insertinstitute\par}
+    {\usebeamerfont{date}\insertdate\par}
+
+  \end{beamercolorbox}
+
+  \vfill
+
+  % --- Logos (outside the box) ---
   \usebeamercolor[fg]{titlegraphic}\inserttitlegraphic
 }
 
 \defbeamertemplate*{footline}{customized}{%
   \leavevmode%
-  % \hbox{%
-  %   \begin{beamercolorbox}[wd=.1\textwidth,left,sep=1.5ex]{footline}%
-  %   \end{beamercolorbox}%
-  %   \begin{beamercolorbox}[wd=.8\textwidth,center,sep=1.5ex]{footline}%
-  %     \usebeamertemplate*{frame footer}%
-  %   \end{beamercolorbox}%
-  %   \begin{beamercolorbox}[wd=.1\textwidth,right,sep=1.5ex]{footline}%
-  %     \usebeamerfont{page number in head/foot}%
-  %     \hfill%
-  %     \usebeamertemplate*{frame numbering}
-  %   \end{beamercolorbox}%
-  % }%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.1\textwidth,left,sep=1.5ex]{footline}%
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.8\textwidth,center,sep=1.5ex]{footline}%
+      \usebeamertemplate*{frame footer}%
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.1\textwidth,right,sep=1.5ex]{footline}%
+      \usebeamerfont{page number in head/foot}%
+      \hfill%
+      \usebeamertemplate*{frame numbering}
+    \end{beamercolorbox}%
+  }%
 }
 \makeatletter
   \setbeamertemplate{frametitle}{%
     \begin{beamercolorbox}[%
-      wd=\paperwidth,%
+      wd=1.0\paperwidth,%
       sep=0pt,%
       leftskip=\metropolis@frametitle@padding,%
       rightskip=\metropolis@frametitle@padding,%
