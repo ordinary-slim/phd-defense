@@ -2,6 +2,35 @@
 
 # Introduction
 
+# Advected subdomain
+
+## Slide: Boolean operations
+
+- The goal here is **not** to explain the boolean operations in detail.
+- This slide exists to explain **why the advected subdomain is nontrivial to implement**.
+
+- The advected subdomain Ωₘ must be dynamically resized as a function of Δt.
+- Since Ωₘ is in motion, points may enter or leave the domain
+  at both time levels tⁿ and tⁿ⁺¹.
+
+- To solve the thermal problem at a point,
+  that point must belong to the computational domain
+  at **both** tⁿ and tⁿ⁺¹.
+
+- Ensuring this consistency requires boolean operations between meshes.
+
+- A time step proceeds as follows:
+  - Ωₘ is first resized at tⁿ by intersecting it with geometric shapes.
+  - Before advancing in time, a first intersection is performed.
+  - After advancing to tⁿ⁺¹, a second intersection is performed.
+  - At this stage, Ωₘ is ready for the next solve.
+
+- The complementary domain Ω_f is obtained by subtracting Ωₘ from the global domain Ω.
+
+- In this work, boolean operations are implemented via projections.
+  - This approach is somewhat inefficient,
+  - but it was sufficient for the purposes of this paper.
+
 # Substepping
 
 ## Slide: TOC

@@ -292,40 +292,30 @@
  & Reference & AS \\
 \midrule
 
-Total printing
+\multirow{2}{*}{\shortstack{ Total printing\\ time-steps }}
 & \multirow{2}{*}{2000}
-& \multirow{2}{*}{331} \\
-time-steps &  &  \\
+& \multirow{2}{*}{\shortstack{331\\(251/331 AS)}} \\
+&  &  \\
+
+\multirow{2}{*}{\shortstack{ Average duration \\ printing time-step [s]}}
+& \multirow{2}{*}{11.37}
+& \multirow{2}{*}{\shortstack{20.64\\(23.32 AS-only)}} \\
+ &  &  \\
 
 Total duration printing
-& \multirow{2}{*}{22733}
-& \multirow{2}{*}{6832} \\
+& \multirow{2}{*}{\textbf{22733}}
+& \multirow{2}{*}{\textbf{6832}} \\
 time-steps [s] &  &  \\
-
-Total AS
-& \multirow{2}{*}{--}
-& \multirow{2}{*}{251} \\
-time-steps &  &  \\
 
 \midrule
 
-Average DOFs
-& \multirow{2}{*}{258122}
-& \multirow{2}{*}{264168} \\
-per time-step &  &  \\
-
-Average duration printing
-& \multirow{2}{*}{11.37}
-& \multirow{2}{*}{20.64} \\
-time-step [s] &  &  \\
-
-Average duration AS
-& \multirow{2}{*}{--}
-& \multirow{2}{*}{23.32} \\
-time-step [s] &  &  \\
+Assembly [\%]           & 93.8 & 70.3\\
+Linear system solution  & 5.8  & 16.7\\
+Additional AS ops. [\%] & 0.0  & 12.6\\
 
 \bottomrule
 \end{tabular}
+\caption{Performance summary. Net speed-up of \textcolor{red}{3.33x}.}
 \end{table}
   \end{minipage}
 \end{frame}

@@ -1,0 +1,61 @@
+\tikzset{
+  hlbg/.style={
+    fill=yellow!35,
+    draw=none,
+    rounded corners=2pt
+  }
+}
+
+
+\newcommand{\InsertAlgorithmNode}[4][]{%
+% #1 = optional tikz node options (e.g. name=algNode, inner sep=0pt, etc.)
+% #2 = node name
+\begin{tikzpicture}[remember picture]
+  \node[inner sep=0pt, outer sep=0pt, anchor=north west, #1] (#2) {%
+    \begin{minipage}{\linewidth}
+        \begin{algorithmic}
+          % -------- Top: common preamble --------
+          \State $T_s^{0, n+1} \gets \tilde{T}_s^{n+1}$ from predictor step over $\Omega$ at $\Delta t_s$
+          \State $i \gets 0$
+          \Comment{Index of substepping cycle}
+          \State \textbf{while} not converged at $\Gamma_{fs}$ and $i < i_{\max}$ \textbf{do}
+          \State \hspace{2mm}  $i \gets i + 1$
+        \end{algorithmic}
+
+        \vspace{-5mm}
+        \hspace{3mm}
+        \begin{minipage}[t]{0.5\textwidth}
+          \begin{algorithmic}
+            \Statex
+            \Statex \BoxedString{Fully staggered} \hfill {\scriptsize [Cheng \& Wagner ’21; Elahi et al. ’25]}
+            \For{$m = 1, \dots, M$}
+              \State Solve for $T_f^{i, n+\frac{m}{M}}$ on $\Omega_f$ at $\Delta t_f$ with BC from 1st order interp. of $T_s$
+            \EndFor
+            \State \hspace{2mm} Solve for $T_s^{i, n+1}$ on $\Omega_s$ with BC from $T_f^{i-1, n + \frac{m}{M}}$
+          \end{algorithmic}
+        \end{minipage}%
+        \hfill%
+        \begin{minipage}[t]{0.5\textwidth}
+          \begin{algorithmic}
+            \Statex
+            \Statex \BoxedString{Semi-monolithic} \hfill {\scriptsize [Hodge et al. ’21; Viguerie et al. ’22]}
+            \For{$m = 1, \dots, M-1$}
+              \State Solve for $T_f^{i, n+\frac{m}{M}}$ on $\Omega_f$ at $\Delta t_f$ with BC from 1st order interp. of $T_s$
+            \EndFor
+            \State \hspace{2mm} Monolithic solve for $T_s^{i, n+1}$ and $T_f^{i, n+1}$.
+          \end{algorithmic}
+        \end{minipage}
+
+        \begin{algorithmic}
+          \State \textbf{end while}
+          \State {$T_s^{n+1} \longleftarrow T_s^{i, n+1}, \qquad T_f^{n+1} \longleftarrow T_f^{i, n+1}$}
+        \end{algorithmic}
+    \end{minipage}
+  };
+  % highlight BEHIND (same tikzpicture => background layer works)
+  \begin{pgfonlayer}{background}
+    \fill[yellow!35,rounded corners=2pt]
+      ($(#2.north west)+(0,#3)$) rectangle ($(#2.north east)+(0,#4)$);
+  \end{pgfonlayer}
+\end{tikzpicture}%
+}
