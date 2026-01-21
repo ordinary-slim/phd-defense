@@ -33,6 +33,22 @@
     \end{tikzpicture}
 }
 
+\newcommand{\subsectiontoc}{
+  \frame[plain,c,noframenumbering]{
+    \sectionpage
+    \begin{center}
+     \begin{columns}[t]
+        \begin{column}{.5\textwidth}
+            \tableofcontents[sections={1-3}, currentsection, currentsubsection, hideothersubsections]
+        \end{column}
+        \begin{column}{.5\textwidth}
+            \tableofcontents[sections={4-6}, currentsection, currentsubsection, hideothersubsections]
+        \end{column}
+    \end{columns}
+    \end{center}
+  }
+}
+
 \newcommand{\playthumb}[2][]{%
   \begin{tikzpicture}
     % Thumbnail image

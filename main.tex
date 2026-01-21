@@ -1,9 +1,9 @@
 %! TeX program = lualatex
-\documentclass[10pt, aspectratio=169]{beamer}
+\documentclass[10pt, aspectratio=169, draft]{beamer}
 
 % Draft
 \newif\ifisdraft
-\isdraftfalse
+\isdrafttrue
 
 \usepackage{beamer-reveal}
 \input{metropolis.tex}
@@ -138,11 +138,11 @@ Mehdi Slimani \qquad \qquad
   % \section{Domain decomposition}
   %   \input{domain-decomposition.tex}
 
-  % \section{Advected subdomain}
-  %   \input{advected-subdomain.tex}
+  \section{Advected subdomain}
+    \input{advected-subdomain/main.tex}
   %
-  \section{Substepping}
-    \input{substepping.tex}
+  % \section{Substepping}
+  %   \input{substepping/main.tex}
   % %
   % \section{Final remarks}
   %   \input{theend.tex}

@@ -1,106 +1,43 @@
 # Storyline for PhD defense slides
 
-## TITLE CARD!!!!
+# Introduction
 
-Hello everyone, the tile of my phd is Computational strategies for time-accurate simulation of part-scale LPBF
-there are many things to unpack in this sentence alone, let's start with the application
+# Substepping
 
-## LPBF as a technology
+## Slide: TOC
 
-first and foremost, what are we working on ? What is LPBF ?
+Around the time we were writing this last paper (Slimani 2024),
+Professor Hodge published a paper where they were adressing
+time-scale disparity in LPBF via a method called *substepping*,
+and they were claiming speed-ups of up to 100x.
 
-LPBF or ISO name PBF-xx is a type of metal AM. the main types of MAM are WAAM (bam!), DED and LPBF
+Recall that we did all this work and we just got a speed-up of 3
+in a somewhat favorable scenario. So when we read the paper,
+we thought we definitely had to have look.
 
-in all of these we're melting metal in-situ to build a part
-**WAAM**:  we're melting wire
-**DED**: we're melting blown powder
-**LPBF**: we place a whole powder layer above the build and then we melt it
+## Slide: Schematic
 
--- Consider including this video schematic:
-https://commons.wikimedia.org/wiki/File:Build_chamber_process_animation.webm
+Substepping (also known as multi-timestepping or subcyling),
+is again a Domain Decomposition method; the domain is partitioned
+into fast and slow partitions that employ different time-steps,
+and are glued via Domain Decomposition.
 
-## What's special about LPBF
+As shown on the schematic here, the goal is to take small time-steps
+close to the heat source and larger time-steps further away:
+since the heat source only constraints time-step
+size in its immediate vicinity, this method is very much adapted
+to the localized nature of the problem.
 
-| Parameter      | WAAM                        | DED                         | LPBF                        |
-|-------------   |-----------------------------|-----------------------------|-----------------------------|
-| Radius R       | ~2–4 mm bead radius         | ~0.5–1.5 mm track radius    | ~25–100 µm track radius      |
-| Laser speed V  | ~3–10 mm/s (torch)          | ~5–20 mm/s scan speed       | ~400–1400 mm/s scan speed   |
+## Slide: SOA
 
+We started off studying the State Of the Art; pretty much
+all the substepping references I know off in the litterature
+are recompiled in this table.
 
-So LPBF is small and fast
+The publication we were just mentioning is Puso 2023;
+they were able to print a centimer-scale cantilever part
+[...]
 
-## Part scale simulation, why
+## Slide: Big lines of Slimani (2025)
 
-Many reasons to do simulation. Many things can go wrong and many things can be improved upon
-- Part failure
-- Desirable microstructure
-- Process parameter optimization
-
-(image of build failure)
-
-Simulation can help on these things
-
-## Part scale simulation, why not
-
-Simulation is too slow, because the process is extremely ``multiscale'' (Hodge, 2021)
-
-## LPBF: extremely multiscale 1
-
-<!-- todo -->
-
-## Modelling challenge
-
-Big disparity in both *spatial* and *temporal* scales.
-
-
-|             | Spatial scale              | Temporal scales                               |
-|-------------|-------------------         |----------------------                         |
-| Heat source | 100 µm (R)                 | $T_{hs} = \frac{R}{V}$ =                        |
-|             |                            | := time it takes the heat source to move by R |
-| Part        | Decimeters (length of part) | $T_{print} := net printing time              |
-|             |                             | (cumulative laser-on time                    |
-
-
-The contrast of spatial scales can be upwards of 10⁶.
-It is similarly large in time: T_{hs} = O(10⁻⁴ s) while
-T_{print} = O(tens of minutes), so the contrast of time scales is upwards of 10⁸
-
-## Next slide
-
-### Option 1:
-Talk about challenges when modelling now 
-
-### Option 2:
-Introduce modelling first
-
-## Cube example
-
-**TODO**
-
-## 15/01/2025
-
-Notes on mock presentation:
-- [x] Larger videos + weird black margin in all videos
-- [x] Overlay manufactured play symbol with actual play / pause symbol
-- [ ] Establish better the layer / hatch nature in MAM
-  [ ]   - Maybe go part -> gcode?
-- [ ] Better transition into "Extremely multiscale" (slide 4)
-- [ ] Phase change missing!
-- [x] Slide 15 extra label
-- [x] Zoom-in slide 21 temperatures
-- [ ] Include figure for quasy-steadiness of thermal profile
-- [x] Arrow for speed in 31
-- [x] 34: Add other metric
-  [x]   - Add image for Omega_m resizing
-- [ ] 36: Zoom in
-- [ ] Two tails, superposition
-- [ ] Add slides explaining why Hodge is getting 100x
-  [ ]   - Make this into SOA slide: DD Speedup dt_f dt_s
-- [x] Zoom-in 46
-- [ ] Establish Hodge <-> Dirichlet and Robin-Robin <-> Robin
-- [x] Leave last frame at end of video
-
-## 18/01/2025
-
-- [ ] Substepping diffusion time scale: reorganize slide
-- [x] Substepping: add table
+So we set off to write a substepping paper.
