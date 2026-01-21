@@ -1,40 +1,90 @@
+% “This slide summarizes my main technical contributions; I won’t go through
+% them one by one, but they fall into three themes: moving-domain techniques,
+% substepping algorithms, and their integration for part-scale LPBF.”
+\subsection{Contributions}
 \begin{frame}
-  \frametitle{Substepping + advected subdomain}
-  \framesubtitle{Final conclusions}
+  \frametitle{Contributions}
+
   \begin{itemize}
-  \item Fast/slow DOF ratio was identified as the primary driver of
-    speed-up, with \(\Delta t_s / \Delta t_f\) playing a secondary role;
-    overly large macro-steps can enlarge the fast domain and erode gains.
-  \item The proposed Robin–Robin scheme
-    achieved accuracy comparable to
-    \cite{hodge2021}. Both clearly outperformed Dirichlet–Neumann coupling.
-  \item Extra staggered iterations in the substepping loop brought negligible accuracy benefits.
-  \item The main accuracy limiter for large macro-steps was the slow-region
-    time integrator (Backward Euler)
-  % \item Diffusion-focused predictors for the substepper improved stability and
-  %   accuracy relative to source-driven predictors, especially at large
-  %   macro-steps.
-  % \item
-  %   An enthalpy-based latent-heat treatment proved substantially more
-  %   robust than the apparent heat capacity method for powder-to-solid
-  %   transitions.
-  % \item Calibration against melt pool experiments required
-  %   an unphysical absorptivity dip, indicating that important heat-loss
-  %   physics—likely tied to melt pool flow and evaporation—is missing from
-  %   the thermal model.
-  % \item Overall, advected subdomains and substepping
-  %   together form a flexible toolbox that makes high-fidelity, part-scale
-  %   LPBF simulations more computationally feasible while retaining local
-  %   accuracy near the heat source.
-\end{itemize}
+    \item The \textbf{advected subdomain} method, introducing a moving
+    subdomain attached to the heat source in its reference frame, with
+    support for MPI distributed-memory architectures.
+
+    \item A complementary \textit{steadiness workflow} that adaptively
+    increases the time-step size based on monitored solution steadiness.
+
+    \item A synthesis of existing substepping approaches for LPBF,
+    identifying common patterns, practical guidelines, expected speed-ups,
+    accuracy trade-offs, and open challenges.
+
+    \item A novel \textbf{Robin--Robin substepping} scheme using custom
+    Robin coefficients inspired by \cite{chen2014robin, canuto2019}, achieving
+    mesh-independent convergence behavior.
+
+    \item New predictor-step strategies for substepping, motivated by
+    time-scale separation, improving accuracy for the
+    \cite{hodge2021} substepper.
+
+    \item Integration of the advected subdomain method within the
+    substepping framework, demonstrating compounded speed-ups in
+    favorable scenarios.
+  \end{itemize}
 \end{frame}
 
+\subsection{Conclusions}
 \begin{frame}
-\frametitle{Substepping + advected subdomain}
-\framesubtitle{Future works}
+  \frametitle{Thesis conclusions}
+
+  \begin{itemize}
+    \item Part-scale LPBF thermal simulation is fundamentally limited by
+    extreme local time-scale disparities; exploiting time-scale separation
+    is essential to achieve computational tractability without sacrificing
+    local accuracy.
+
+    \item The advected subdomain method bypasses time-step
+      restrictions and improves accuracy close to the heat source,
+      but it is not robust to complex scan paths
+      involving direction changes and track overlaps.
+
+    \item Substepping provides a robust and flexible framework to localize
+      temporal resolution; we believe it will become a standard tool in
+      FEM-based LPBF simulation.
+
+    \item Substepping is a staggered Domain Decomposition method
+      truncated after the first iteration;
+      as long as the underlying DD scheme is well chosen,
+      accuracy is preserved.
+
+    \item First order time integration in the slow partition
+      limits the maximum macro-step size.
+
+    \item Ballpark figures for achievable speed-ups with substepping
+      are in the range of \(2\times\) to \(5\times\)
+      for fast/slow DOF ratios between \(20\%\) and \(5\%\).
+  \end{itemize}
+\end{frame}
+
+\subsection{Future works}
+\begin{frame}
+\frametitle{Future works}
 \begin{itemize}
-  \item Improve the advected subdomain by using spatially and temporally varying advection fields (e.g.\ ALE-based fading and ramped velocities) and adaptive deactivation when thermal gradients misalign with scan direction.
-  \item Enhance substepping via better characterization of LPBF time-scales, higher-order time integration for the slow partition, improved predictors/interpolation, adaptive fast-domain definitions, and dynamic load balancing.
+  \item Improve the robustness of the advected subdomain:
+    \begin{itemize}
+      \item Smooth the transition between non-advected and advected
+      regimes via ALE.
+      \item Systematically assess when the thermal field is adapted
+      to an advected subdomain time-step.
+    \end{itemize}
+  \item Extend substepping methodologies:
+    \begin{itemize}
+      \item Improve understanding and characterization of the time-scales
+        at which the different physical processes operate.
+      \item Higher order time-integration in the slow partition.
+      \item Improve fast/slow partition to avoid heuristics (current).
+      \item Explore alternative coupling structures and time-interpolation
+        schemes within the substepping framework.
+      \item Improve parallel scalability.
+    \end{itemize}
 \end{itemize}
 
 \end{frame}
@@ -42,7 +92,7 @@
 \begin{frame}
 \frametitle{Thank you!}
   \begin{figure}
-    \video<1>[above,height=0.7,aspectratio=734/422,fit=fill,controls]
+    \video<1>[above,height=0.7,aspectratio=734/422,fit=fill,autoplay]
   at (0.5,0.18) {videos/thx.mp4}
     \vspace{0.7\pageheight+3pt}
     \videoCaption{
@@ -50,5 +100,3 @@
     }
   \end{figure}
 \end{frame}
-
-

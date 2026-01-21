@@ -86,21 +86,21 @@ Notes on mock presentation:
   [ ]   - Maybe go part -> gcode?
 - [ ] Better transition into "Extremely multiscale" (slide 4)
 - [ ] Phase change missing!
-- [ ] Slide 15 extra label
+- [x] Slide 15 extra label
 - [x] Zoom-in slide 21 temperatures
 - [ ] Include figure for quasy-steadiness of thermal profile
-- [ ] Arrow for speed in 31
-- [ ] 34: Add other metric
-  [ ]   - Add image for Omega_m resizing
+- [x] Arrow for speed in 31
+- [x] 34: Add other metric
+  [x]   - Add image for Omega_m resizing
 - [ ] 36: Zoom in
 - [ ] Two tails, superposition
 - [ ] Add slides explaining why Hodge is getting 100x
   [ ]   - Make this into SOA slide: DD Speedup dt_f dt_s
-- [ ] Zoom-in 46
+- [x] Zoom-in 46
 - [ ] Establish Hodge <-> Dirichlet and Robin-Robin <-> Robin
-- [ ] Leave last frame at end of video
+- [x] Leave last frame at end of video
 
 ## 18/01/2025
 
 - [ ] Substepping diffusion time scale: reorganize slide
-- [ ] Substepping: add table
+- [x] Substepping: add table

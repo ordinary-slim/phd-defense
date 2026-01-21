@@ -1,21 +1,41 @@
-\input{substepping-exposition.tex}
+\subsection{Introduction}
+  \input{substepping-basics.tex}
 
-\input{substepping-examples.tex}
+\subsection{Method}
+  \input{substepping-steps.tex}
 
+\subsection{Results (Slimani \& al. (2025))}
+  \input{substepping-examples.tex}
+
+\subsection{Conclusions (Slimani \& al. (2025))}
 \begin{frame}
-  \frametitle{Substepping + advected subdomain}
-  \framesubtitle{Final conclusions}
+  \frametitle{Slimani \& al. (2025)}
+  \framesubtitle{Conclusions}
   \begin{itemize}
-    \item The AS method improved HAZ accuracy and allowed much larger
-      time-steps (up to several \(T_{hs}\)), at the cost of losing SPD
-      structure and increasing per-step cost by roughly a factor of 2–3.
-    \item AS works best on long, simple tracks; direction
-      changes and overlapping tracks shear thermal tails and can severely
-      degrade accuracy, limiting applicability as a general speed-up
-      technique.
-    \item Substepping, via fast/slow domain partitioning with
-      \(\Delta t_f\) and \(\Delta t_s \gg \Delta t_f\), provided a more
-      robust and broadly applicable way to exploit time-scale disparity in
-      LPBF.
-    \end{itemize}
+    \item Advected subdomains improve steadiness and HAZ accuracy,
+    but are not robust: for realistic scan paths (direction changes,
+    overlaps), the advected subdomain pollutes the accumulated thermal
+    field from previous tracks.
+
+    \item Substepping is more robust: it is largely insensitive to scan-path
+    complexity and directly targets the localized time-scale disparity in
+    LPBF via a fast/slow partitioning.
+
+    \item The proposed fully-staggered Robin--Robin substepper achieves
+    accuracy comparable to the Dirichlet substepper of \cite{hodge2021},
+    at slightly lower computational cost.
+
+    \item The Dirichlet substepper is sensitive to predictor choice;
+    a diffusion-only predictor improves stability and accuracy at large
+    \(\Delta t_s\).
+
+    \item Substepping speed-up is controlled by the fast/slow DOF ratio:
+    increasing \(\Delta t_s\) enlarges the fast domain \(\Omega_f\),
+    which increases the number of fast DOFs and can ultimately reduce
+    the achievable speed-up despite fewer macro-steps.
+
+    \item With first-order time integration in \(\Omega_s\), it is difficult
+    to increase \(\Delta t_s\) beyond \(\sim 5\,T_{hs}\), as
+    slow-scale diffusion becomes under-resolved.
+  \end{itemize}
   \end{frame}

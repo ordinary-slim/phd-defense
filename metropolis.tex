@@ -1,6 +1,25 @@
-\usetheme[
-sectionpage=none,
-]{metropolis}
+\usetheme[]{metropolis}
+
+\AtBeginSection{
+  \frame[plain,c,noframenumbering]{
+    \sectionpage
+    \begin{center}
+      % \begin{multicols}{2}  % 2 columns, auto-balances
+      %   \raggedcolumns
+      %   \raggedright
+      %   \tableofcontents[currentsection, hideothersubsections]
+      % \end{multicols}
+     \begin{columns}[t]
+        \begin{column}{.5\textwidth}
+            \tableofcontents[sections={1-3}, currentsection, hideothersubsections]
+        \end{column}
+        \begin{column}{.5\textwidth}
+            \tableofcontents[sections={4-6}, currentsection, hideothersubsections]
+        \end{column}
+    \end{columns}
+    \end{center}
+  }
+}
 
 \setbeamerfont{page number in head/foot}{size=\tiny}
 \setbeamercolor{footline}{fg=gray!70}
@@ -24,18 +43,18 @@ sectionpage=none,
 
 \defbeamertemplate*{footline}{customized}{%
   \leavevmode%
-  \hbox{%
-    \begin{beamercolorbox}[wd=.1\textwidth,left,sep=1.5ex]{footline}%
-    \end{beamercolorbox}%
-    \begin{beamercolorbox}[wd=.8\textwidth,center,sep=1.5ex]{footline}%
-      \usebeamertemplate*{frame footer}%
-    \end{beamercolorbox}%
-    \begin{beamercolorbox}[wd=.1\textwidth,right,sep=1.5ex]{footline}%
-      \usebeamerfont{page number in head/foot}%
-      \hfill%
-      \usebeamertemplate*{frame numbering}
-    \end{beamercolorbox}%
-  }%
+  % \hbox{%
+  %   \begin{beamercolorbox}[wd=.1\textwidth,left,sep=1.5ex]{footline}%
+  %   \end{beamercolorbox}%
+  %   \begin{beamercolorbox}[wd=.8\textwidth,center,sep=1.5ex]{footline}%
+  %     \usebeamertemplate*{frame footer}%
+  %   \end{beamercolorbox}%
+  %   \begin{beamercolorbox}[wd=.1\textwidth,right,sep=1.5ex]{footline}%
+  %     \usebeamerfont{page number in head/foot}%
+  %     \hfill%
+  %     \usebeamertemplate*{frame numbering}
+  %   \end{beamercolorbox}%
+  % }%
 }
 \makeatletter
   \setbeamertemplate{frametitle}{%

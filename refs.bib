@@ -239,3 +239,30 @@ URL = { https://doi.org/10.1080/10407789608913782 },
 eprint = { https://doi.org/10.1080/10407789608913782 },
 abstract = { An improved computational analysis is presented for the detailed prediction of heat transfer, phase change, and fluid flow during welding with a moving heat source. The governing equations are formulated in a reference frame attached to the heat source. A special feature in the formulation is that the primary unknown velocity is the convective velocity of the fluid with the motion of the heat source, resulting in additional source terms in the equations. The equations are solved using a control-volume-based computational method. The temperature and velocity fields and the time-temperature data are presented for two welding velocities to demonstrate the results using the new technique. }
 }
+@article{chen2014robin,
+ ISSN = {02549409, 19917139},
+ URL = {http://www.jstor.org/stable/43693819},
+ abstract = {In this work, we solve a long-standing open problem: Is it true that the convergence rate of the Lions' Robin-Robin nonoverlapping domain decomposition (DD) method can be constant, independent of the mesh size h? We closed this old problem with a positive answer. Our theory is also verified by numerical tests.},
+ author = {Wenbin Chen and Xuejun Xu and Shangyou Zhang},
+ journal = {Journal of Computational Mathematics},
+ number = {4},
+ pages = {456--475},
+ publisher = {Institute of Computational Mathematics and Scientific/Engineering Computing},
+ title = {{On the optimal convergence rate of a Robin-Robin domain decomposition method}},
+ urldate = {2025-03-10},
+ volume = {32},
+ year = {2014}
+}
+@article{canuto2019,
+title = {A multi-timestep {R}obin–{R}obin domain decomposition method for time dependent advection-diffusion problems},
+journal = {Applied Mathematics and Computation},
+volume = {363},
+pages = {124596},
+year = {2019},
+issn = {0096-3003},
+doi = {https://doi.org/10.1016/j.amc.2019.124596},
+url = {https://www.sciencedirect.com/science/article/pii/S0096300319305880},
+author = {Claudio Canuto and Andrea {Lo Giudice}},
+keywords = {Multi-timesteps, Multiscale problems, Predictor-corrector methods, Advection-diffusion equations, Finite volumes, OpenFOAM},
+abstract = {Many physical processes present separated evolution time scales in different regions, such as windblown sand in the desert. The evolution of bed-surface locally affects the sandy-wind flow, which erodes the sand in turns, while few meters higher from the ground the airflow is almost stationary. This and other applications suggest to improve the overall computational efficiency by locally adapting the time advancing step to the evolution in each region. We propose a multi-timestep Robin-Robin domain decomposition method, which uses mutually proportional time steps, based on a predictor-corrector strategy, coupled with linear interpolation in time. The resulting algorithm is completely segregated. Several numerical tests, obtained by the finite volume code OpenFOAM, are reported to show its stability and convergence properties.}
+}

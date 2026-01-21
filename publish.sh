@@ -1,1 +1,1 @@
-beamer-reveal.pl main --pdf-directory build --html-directory website
+beamer-reveal.pl main --pdf-directory build --output-directory website

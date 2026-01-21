@@ -224,10 +224,10 @@
   $$
   i.e. the net printing time plus cooling.
   The time scale disparity requires again \cref{eq:num_elements_uniform_mesh} time-steps
-  \begin{gather}
+  \begin{gather*}
     \label{eq:num_timesteps_uniform_mesh}
-    \text{\# time-steps} > \frac{T_{print}}{T_{hs}} = \mathcal{O}\left(\frac{L^3}{R^3}\right)\\
-  \end{gather}
+    \text{\# time-steps} > \frac{T_{print}}{T_{hs}} = \mathcal{O}\left(\frac{L^3}{R^3}\right)
+  \end{gather*}
   when discretizing with \textbf{uniform time-steps}.
 \end{frame}
 
@@ -237,9 +237,9 @@
   Intuitively, if we don't respect the constraint
   \begin{equation}
     \label{eq:origconstraint}
-    \Delta t \leq T_{hs}
+    \Delta t \leq T_{hs},
   \end{equation}
-  , we won't resolve the motion of the heat source.\\
+  we won't resolve the motion of the heat source.\\
   In practice, that's indeed what happens:
   if the time-step is larger than $T_{hs}$ i.e. the heat source
   travels more than $1 R$ per time-step,
