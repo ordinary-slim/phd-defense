@@ -1,47 +1,80 @@
+\begin{frame}
+  \frametitle{Substepping workflow}
+  \begin{minipage}[t]{0.48\textwidth}
+    \begin{figure}
+      \centering
+      \def\svgwidth{0.4\paperwidth}
+      \only<1>{\import{./figures/ss_robin/schematic_partition_tn/}{original.pdf_tex}}
+      \only<2->{
+        \hspace{-1mm}
+        \import{./figures/ss_robin/schematic_partition_tn/}{drawing.pdf_tex}
+      }
+      \caption{
+        \only<1>{Temperature field at time $t^n$, \enskip $T^n$.}
+        \only<2->{Partitioned domain $\Omega = \Omega_f \sqcup \Omega_s, \enskip \partial \Omega_f \cap \partial \Omega_s = \Gamma$.}
+      }
+    \end{figure}
+  \end{minipage}%
+  \hfill
+  \begin{minipage}[t]{0.5\textwidth}
+    \only<1>{Let's go over the substepping workflow step by step!}
+    \only<2->{
+      The solution is advanced to $t^{n+1} = t^n + \Delta t_s$
+      via a \textbf{substepping cycle}.
+
+      $\Delta t_s$ is subdivided into $M$ substeps
+      \[
+      \Delta t_f = \frac{\Delta t_s}{M}, \enskip 
+      \]
+      defining the intermediate times
+      \begin{gather*}
+      t^{n+\frac{m}{M}} = t^n + m\,\Delta t_f,
+      \qquad m = 1,\dots,M.\\[6pt]
+      T_f^{i, n+\frac{m}{M}}, \enskip  T_s^{i, n+\frac{m}{M}}
+      \end{gather*}
+      denote the fast and slow solutions at time $t^{n+\frac{m}{M}}$ for the $i$-th substepping iteration.
+
+      Within a single time-step $[t^n,t^{n+1}]$, the full substepping cycle
+      may be repeated(!).
+    }
+  \end{minipage}
+  
+\end{frame}
+
 \input{plots/substepping_pseudo_code.tex}
 
 \begin{frame}
-  \frametitle{Substepping algorithms}
-  \framesubtitle{Predictor}
+  \frametitle{Substepping workflow}
     \InsertAlgorithmNode{nohl}{0.0}{0.0}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Substepping algorithms}
+  \frametitle{Substepping workflow}
   \framesubtitle{Predictor}
     \InsertAlgorithmNode{hlpred}{0.0}{-0.6}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Substepping}
-  \framesubtitle{Example time-step}
+  \frametitle{Substepping workflow}
+  \framesubtitle{Predictor}
   \begin{figure}
-    \begin{subfigure}[t]{0.48\textwidth}
-      \centering
-      \includegraphics[height=0.6\pageheight]{{ss_robin/prev_sol.png}}
-      \caption{$T^{n}$}
-      \label{fig:robin_prev}
-    \end{subfigure}%
-    \hfill%
-    \begin{subfigure}[t]{0.48\textwidth}
-      \centering
-      \includegraphics[height=0.6\pageheight]{{ss_robin/predictor.png}}
-      \caption{$\tilde{T}^{n+1}$ after predictor step}
-      \label{fig:robin_predictor}
-    \end{subfigure}
-    \caption{Previous solution and predictor step.}
+    \centering
+    \includegraphics[height=0.6\pageheight]{{ss_robin/predictor.png}}
+    \caption{$\tilde{T}^{n+1}$ after predictor step}
+    \label{fig:robin_predictor}
+    \caption{Predictor step, same for both substeppers.}
   \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Substepping algorithms}
+  \frametitle{Substepping workflow}
   \framesubtitle{Micro-step}
     \InsertAlgorithmNode{hlmicro}{-2.6}{-4.0}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Substepping}
-  \framesubtitle{Example time-step}
+  \frametitle{Substepping workflow}
+  \framesubtitle{Micro-step}
   \begin{figure}
   \begin{subfigure}[t]{0.48\textwidth}
     \centering
@@ -61,14 +94,14 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Substepping algorithms}
+  \frametitle{Substepping workflow}
   \framesubtitle{Macro-step}
     \InsertAlgorithmNode{hlmacro}{-4.0}{-5.0}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Substepping}
-  \framesubtitle{Example time-step}
+  \frametitle{Substepping workflow}
+  \framesubtitle{Macro-step}
   \begin{figure}
   \begin{subfigure}[t]{0.48\textwidth}
     \centering
