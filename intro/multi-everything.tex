@@ -1,0 +1,76 @@
+\begin{frame}
+  \frametitle{LPBF}
+  \framesubtitle{Extremely multiscale}
+  LPBF is an \textit{extremely multiscale} application \citep{hodge2021}.\\
+  Let's quantify this statement:
+  \begin{itemize}
+    \item The \textbf{smallest} spatial and temporal \textbf{scales} are governed by the
+      \textbf{heat source}, characterized by its radius $\mathbf{R}$ and by
+      the time it takes to travel one radius,
+      \[
+        \mathbf{T_{hs}} := \frac{R}{V}.
+      \]
+    \item The \textbf{largest} spatial and temporal \textbf{scales} are set
+      by the \textbf{part} and the printer.
+      We choose here the characteristic part length $\mathbf{L_{part}}$ and
+      the net printing time $\mathbf{T_{print}}$, i.e. the cumulative
+      laser-on time.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{LPBF}
+  \framesubtitle{Extremely multiscale}
+  \centering
+  \begin{minipage}{0.59\textwidth}
+    \begin{figure}[ht]
+      \def\svgwidth{0.84\columnwidth}
+      \import{./figures/cube-example}{cube-scan-schematic.pdf_tex}
+      \caption{Cube scan path of \textbf{side length} $L$, \textbf{layer thickness} $t$
+      and \textbf{hatch spacing} $h$.}
+    \end{figure}
+  \end{minipage}%
+  \hfill%
+  \begin{minipage}{0.38\textwidth}
+    \textbf{Space}:
+    \begin{gather*}
+      \text{Length scale ratio} = \frac{L}{R}\\
+      \Large\Downarrow\\
+      \alert<2>{\text{Volume scale ratio} = \frac{L^3}{R^3}}
+    \end{gather*}
+    \textbf{Time}:
+    Assuming $h$ and $t$ are equal to $R$ for simplicity,
+    \begin{gather*}
+      T_{print} = \frac{L^3}{R^2 V}, \quad T_{hs} = \frac{R}{V}\\
+      \Large\Downarrow\\
+      \alert<2>{\text{Time scale ratio} = \frac{T_{print}}{T_{hs}} = \frac{L^3}{R^3}}
+    \end{gather*}
+  \end{minipage}
+\end{frame}
+
+% \begin{frame}
+%   \frametitle{LPBF}
+%   \framesubtitle{Extremely multiscale}
+%   For this simple geometry, the net print time is
+%   \begin{gather*}
+%     T_{print} = N_{hatches} \cdot T_{hatch} = N_{layers} \cdot N_{hatches/layer} \cdot T_{hatch}\\
+%     T_{hatch} = \frac{L}{V}\\
+%     \implies
+%     T_{print} = \frac{L}{R} \cdot \frac{L}{R} \cdot \frac{L}{V} = \frac{L^2}{R^2} \cdot \frac{L}{V} = \frac{L^3}{R^2 V}
+%   \end{gather*}
+%   Therefore, the time scale disparity is
+%   $$
+%   \frac{T_{print}}{T_{hs}} = \frac{L^3}{R^2 V} \cdot \frac{V}{R} = \left(\frac{L}{R}\right)^3
+%   $$
+% \end{frame}
+
+\begin{frame}
+  \frametitle{LPBF}
+  \framesubtitle{Multiphysics}
+  \begin{figure}
+    \centering
+    \includegraphics[height=0.8\textheight]{bayat2021.png}
+    \caption{Relevant physics at melt-pool and part scales \citep{bayat2021}.}
+    \label{fig:bayat2021}
+  \end{figure}
+\end{frame}

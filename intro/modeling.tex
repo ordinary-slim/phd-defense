@@ -1,0 +1,228 @@
+\begin{frame}
+  \frametitle{Part-scale simulation}
+  \framesubtitle{Why?}
+
+  LPBF is both \textbf{extremely multiscale} and a \textbf{multiphysics} application.
+  Despite this complexity, predictions are required at the \textbf{part scale}.
+
+  \vspace{0.5em}
+  Part-scale simulation aims to:
+  \begin{itemize}
+    \item Reduce costly experimental trial-and-error
+    \item Predict residual stresses and part distortions
+    \item Link thermal history to microstructure features
+    \item Enable process-parameter optimization
+    \item Shorten the design-to-manufacturing cycle
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Part-scale simulation}
+  \framesubtitle{Problem statement}
+  \begin{figure}[ht]
+    \def\svgwidth{0.9\columnwidth}
+    \hspace{-6mm}
+    \import{./figures/lpbf_schematic}{schematic.pdf_tex}
+    \caption{Schematic of the LPBF computational domain 
+    $\Omega(t)$, encompassing the bulk (part and substrate) and powder bed regions,
+    together with the applied heat source and convective/radiative heat losses.
+  }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Part-scale simulation}
+  \framesubtitle{PDE}
+  {\small
+  Define the extended temperature and liquid fraction fields
+  \begin{equation*}
+    T_e\dependson{\mathbf{x}, t} =
+    \begin{cases}
+      T\dependson{\mathbf{x}, t} & \mathbf{x} \in \overline{\Omega}(t)\\
+      T_{dep} & \mathbf{x} \in \overline{\Omega}(t_{final}) \setminus \overline{\Omega}(t)
+    \end{cases}
+    \qquad
+    f_{l,\; e}\dependson{\mathbf{x}, t} = f_l(T_e\dependson{\mathbf{x}, t})
+  \end{equation*}
+  where $T_{dep}$ is the deposition temperature.\\
+  Find $T : \Omega(t) \times [0, T_{\text{final}}] \to \mathbb{R}$ such that
+  \begin{align}
+    \label{eq:original_pde}
+    \rho c_p \partial_t T_e + \rho L \partial_t f_{l,\; e} - k \Delta T
+    &= r\dependson{\mathbf{x}, t} &&\forall \mathbf{x} \in \Omega(t)\\
+    \notag
+    - k \partial_n T &= h_{conv} (T - T_{\text{env}}) + \varepsilon \sigma (T^4 - T_{\text{env}}^4) &&\forall \mathbf{x} \in \partial \Omega(t)\\
+    \notag
+    T\dependson{\mathbf{x}, 0} &= T_0 \qquad &&\forall \mathbf{x} \in \Omega(0)
+  \end{align}
+  }
+    \todo{Comment on phase change treatment here}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Part-scale simulation}
+  \framesubtitle{Discretization}
+    Source-based latent heat treatment of \cite{celentano1994}:
+    $f_l(T)$ is directly discretized in time.
+    \begin{figure}
+      \centering
+      \begin{subfigure}[t]{0.33\textwidth}
+        \begin{tikzpicture}
+        \begin{axis}[
+            xmin=-0.1, xmax=1.1,
+            ymin=+0, ymax=1.1,
+            axis lines=center,
+            axis on top=true,
+            ytick={0, 1},
+            xtick={0.05, 0.95},
+            xticklabels={$T_s$, $T_l$},
+            domain=-0.1:1.1,
+            ylabel=$f_l$,
+            xlabel=$T$,
+            %legend style={at={(0.03,0.5)},anchor=west},
+            height=0.4\pageheight
+            ]
+
+            \def\Ts{0.05}
+            \def\Tl{0.95}
+            \newcommand{\flalpha}[1]{2*#1/(\Tl - \Ts)}
+            \newcommand{\fl}[1]{
+              0.5*(tanh(\flalpha{#1}*(\x - 0.5))+1)
+            }
+            \addplot+ [mark=none, ultra thick, smooth] {\fl{1}};
+            \addplot+ [mark=none, ultra thick, smooth] {\fl{2}};
+            \addplot+ [mark=none, ultra thick, smooth] {\fl{4}};
+            
+            %% Add the asymptotes
+            \draw [blue, dotted, thick] (axis cs:+1.1,+1)-- (axis cs:0,+1);
+        \end{axis}
+        \end{tikzpicture}
+      \end{subfigure}%
+      \hfill
+      \begin{subfigure}[t]{0.33\textwidth}
+        \begin{tikzpicture}
+        \begin{axis}[
+            xmin=-0.1, xmax=1.1,
+            ymin=+0, ymax=4.5,
+            axis lines=center,
+            axis on top=true,
+            ytick={0},
+            xtick={0.05, 0.95},
+            xticklabels={$T_s$, $T_l$},
+            domain=-0.1:1.1,
+            ylabel=$f_l'$,
+            legend style={at={(0.7,0.8)},anchor=west},
+            height=0.4\pageheight
+            ]
+
+            \def\Ts{0.05}
+            \def\Tl{0.95}
+            \newcommand{\flalpha}[1]{2*#1/(\Tl - \Ts)}
+            \newcommand{\flp}[1]{
+              \flalpha{#1}/2*(1 - (tanh(\flalpha{#1}*(\x - 0.5)))^2)
+            }
+            \addplot+ [mark=none, ultra thick, smooth] {\flp{1}};
+            \addlegendentry{$S = 1$}                
+            \addplot+ [mark=none, ultra thick, smooth] {\flp{2}};
+            \addlegendentry{$S = 2$}                
+            \addplot+ [mark=none, ultra thick, smooth] {\flp{4}};
+            \addlegendentry{$S = 4$}
+            
+        \end{axis}
+        \end{tikzpicture}
+      \end{subfigure}%
+      \hfill
+      \begin{subfigure}[t]{0.33\textwidth}
+        \begin{tikzpicture}
+        \begin{axis}[
+            xmin=-0.1, xmax=1.1,
+            ymin=-4, ymax=4,
+            axis lines=center,
+            axis on top=true,
+            ytick={0},
+            xtick={0.05, 0.95},
+            xticklabels={$T_s$, $T_l$},
+            domain=-0.1:1.1,
+            ylabel=$f_l''$,
+            height=0.4\pageheight
+            ]
+
+            \def\Ts{0.05}
+            \def\Tl{0.95}
+            \newcommand{\flalpha}[1]{2*#1/(\Tl - \Ts)}
+            \newcommand{\flpp}[1]{
+              \flalpha{#1}^2*tanh(\flalpha{#1}*(\x - 0.5))*((tanh(\flalpha{#1}*(\x - 0.5)))^2 - 1)
+            }
+            \addplot+ [mark=none, ultra thick, smooth] {\flpp{1}};
+            \addplot+ [mark=none, ultra thick, smooth] {\flpp{2}};
+            \addplot+ [mark=none, ultra thick, smooth] {\flpp{4}};
+            
+        \end{axis}
+        \end{tikzpicture}
+      \end{subfigure}
+      \caption{Liquid fraction $f_l$ and derivatives.}
+      \label{fig:fl_fld_fldd}
+    \end{figure}
+    Multiply \cref{eq:original_pde}
+    by $\phi \in V_T(t) = H^{1}\left(\Omega(t)\right)$;
+    integrate over $\Omega\dependson{t}$;
+    apply integration by parts on the diffusion term; insert BCs;
+    apply BDF1
+    {\small
+    \begin{gather*}
+      \label{eq:weak_heat}
+      \int_{\Omega} \phi \rho \left({c_p \frac{T^{n+1} - T^n}{\Delta t} + L \frac{f_l(T^{n+1}) - f_l(T^n)}{\Delta t}}\right)
+      + \int_{\Omega} \nabla \phi \cdot \left(k \nabla T\right)\\
+      \notag
+      \forall \phi \in V_T(t) \hspace{1cm}
+      \;=\; \int_{\Omega} \phi r
+      + \int_{\partial \Omega} \phi \left({h_{\text{conv}} \left( T - T_{\text{env}} \right)
+      + \varepsilon \sigma \left( {T}^4 - T_{\text{env}}^4 \right)}\right)
+    \end{gather*}
+    }
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Part-scale simulation}
+  \framesubtitle{Discretization}
+  \begin{figure}
+    \begin{subfigure}[t]{0.33\textwidth}
+      \includegraphics[height=0.35\pageheight]{schematic_melting/0.png}
+      \caption{Bare substrate below an inactive powder layer.}
+      \label{fig:refModelBareSubstrate}
+    \end{subfigure}\hfill%
+    \begin{subfigure}[t]{0.33\textwidth}
+      \includegraphics[height=0.35\pageheight]{schematic_melting/1.png}
+      \caption{A powder layer is activated during a recoating step.}
+      \label{fig:powderLayer}
+    \end{subfigure}\hfill%
+    \begin{subfigure}[t]{0.33\textwidth}
+      \includegraphics[height=0.35\pageheight]{schematic_melting/2.png}
+      \caption{After a heating step, elements whose average temperature
+      surpasses $T_m$ are set to bulk.}
+      \label{fig:activPhaseChange3}
+    \end{subfigure}\hfill%
+    \caption{Illustration of deposition and melting processes.\qquad
+      \legendpowderbulk{}
+    }
+    \label{fig:activPhaseChange}.
+  \end{figure}
+  Same treatment of phase change as in \citep{kollmannsberger2018}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Part-scale simulation}
+  \framesubtitle{Demo video}
+
+  \begin{figure}
+    \video<1>[above,height=0.7,aspectratio=62/27,fit=fill,controls]
+  at (0.5,0.18) {videos/2dlpbf_2d_lpbf_ref.mp4}
+    \vspace{0.7\pageheight+3pt}
+    \videoCaption{
+      Demo simulation of 2D LPBF with element activation.\\
+      Wireframe elements (\;\wireframeTriangle{}) correspond to powder region.
+    }
+  \end{figure}
+
+\end{frame}

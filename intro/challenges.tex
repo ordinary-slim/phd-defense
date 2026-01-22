@@ -1,5 +1,87 @@
 \begin{frame}
   \frametitle{Part-scale simulation}
+  \framesubtitle{Impossible}
+  Previous slide: ``uniform'' mesh in part and powder region.
+  Recall the volume scale ratio;
+  In 3D, we would need
+  \begin{equation}
+    \label{eq:num_elements_uniform_mesh}
+    \text{\# elements} = \mathcal{O}\left(\frac{L^3}{R^3}\right)
+  \end{equation}
+  to resolve the heat source throughout the print.
+
+  In practice, no one uses uniform meshes for LPBF simulation;
+  \textbf{AMR} is regarded as the \textbf{de facto standard}.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Part-scale simulation}
+  \framesubtitle{Impossible}
+  But what about time-steps?
+  The interval of interest is $]0, T_{final}[$ with
+  $$
+  T_{final} = T_{print} + T_{cool}
+  $$
+  i.e. the net printing time plus cooling.
+  The time scale disparity requires again \cref{eq:num_elements_uniform_mesh} time-steps
+  \begin{gather*}
+    \label{eq:num_timesteps_uniform_mesh}
+    \text{\# time-steps} > \frac{T_{print}}{T_{hs}} = \mathcal{O}\left(\frac{L^3}{R^3}\right)
+  \end{gather*}
+  when discretizing with \textbf{uniform time-steps}.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Part-scale simulation}
+  \framesubtitle{Impossible}
+  Intuitively, if we don't respect the constraint
+  \begin{equation}
+    \label{eq:origconstraint}
+    \Delta t \leq T_{hs},
+  \end{equation}
+  we won't resolve the motion of the heat source.\\
+  In practice, that's indeed what happens:
+  if the time-step is larger than $T_{hs}$ i.e. the heat source
+  travels more than $1 R$ per time-step,
+  it skips over parts of the domain,
+  and generates artificial temperature spikes.
+  \begin{figure}
+    \begin{subfigure}[t]{0.49\textwidth}
+      \includegraphics[width=\textwidth]{timestep-2ths/1R.png}
+      \caption{$\Delta t = 1 T_{hs}$}
+      \label{fig:spots1R}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.49\textwidth}
+      \includegraphics[width=\textwidth]{timestep-2ths/2R.png}
+      \caption{$\Delta t = 2 T_{hs}$}
+      \label{fig:spots2R}
+    \end{subfigure}
+    % \caption{2D heating track example with admissible and inadmissible
+    % time-step sizes according to inequality \eqref{eq:origconstraint}.}
+    % \label{fig:spots}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Part-scale simulation}
+  \framesubtitle{Impossible}
+  So \eqref{eq:num_timesteps_uniform_mesh} is indeed a \textbf{lower bound} on the number of time-steps
+  when using uniform time-stepping.
+
+  \underline{Bad news:}
+  \begin{itemize}
+    \item \textbf{Uniform time-stepping} is the \textbf{de facto standard} in LPBF simulation.
+    \item Some references require time-steps much smaller than $T_{hs}$
+      to ensure stability and accuracy \citep{hodge2014, hodge2021, elahi2025}.
+  \end{itemize}
+  There are basically 4 (!) groups in the world that can run simulations in the order of \textbf{centimeters}:
+  Pittsburgh, Northwestern, LLNL, TUM.\\
+  \textbf{Decimeter}-scale parts are currently unfeasible.
+  \todo{Expand}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Part-scale simulation}
   \framesubtitle{Lumped heat source}
   
   What do you do if you don't have a cluster or a nice GPU ?
