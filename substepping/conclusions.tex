@@ -2,30 +2,24 @@
   \frametitle{Slimani \& al. (2025)}
   \framesubtitle{Conclusions}
   \begin{itemize}
-    \item Advected subdomains improve steadiness and HAZ accuracy,
-    but are not robust: for realistic scan paths (direction changes,
-    overlaps), the advected subdomain pollutes the accumulated thermal
-    field from previous tracks.
+    \item \textbf{Advected subdomain can't handle realistic scan paths}.
 
-    \item Substepping is more robust: it is largely insensitive to scan-path
-    complexity and directly targets the localized time-scale disparity in
-    LPBF via a fast/slow partitioning.
+    \item The proposed \textbf{fully-staggered Robin--Robin substepper}
+      achieves \textbf{accuracy comparable} to the
+      \textbf{Dirichlet substepper of \cite{hodge2021}},
+      at \textbf{slightly lower computational cost}.
 
-    \item The proposed fully-staggered Robin--Robin substepper achieves
-    accuracy comparable to the Dirichlet substepper of \cite{hodge2021},
-    at slightly lower computational cost.
+    \item \textbf{Dirichlet substepper is sensitive to predictor choice};
+      a \textbf{diffusion-only predictor improves stability and accuracy} at large
+      \(\Delta t_s\).
 
-    \item The Dirichlet substepper is sensitive to predictor choice;
-    a diffusion-only predictor improves stability and accuracy at large
-    \(\Delta t_s\).
+    \item \textbf{Substepping speed-up is controlled by the fast/slow DOF ratio}:
+      increasing \(\Delta t_s\) enlarges the fast domain \(\Omega_f\),
+      which increases the number of fast DOFs and can ultimately reduce
+      the achievable speed-up despite fewer macro-steps.
 
-    \item Substepping speed-up is controlled by the fast/slow DOF ratio:
-    increasing \(\Delta t_s\) enlarges the fast domain \(\Omega_f\),
-    which increases the number of fast DOFs and can ultimately reduce
-    the achievable speed-up despite fewer macro-steps.
-
-    \item With first-order time integration in \(\Omega_s\), it is difficult
-    to increase \(\Delta t_s\) beyond \(\sim 5\,T_{hs}\), as
-    slow-scale diffusion becomes under-resolved.
+    \item With \textbf{first-order time integration} in \(\Omega_s\), it is
+      \textbf{difficult to increase} \(\Delta t_s\) \textbf{beyond}
+      \(\sim 5\,T_{hs}\), as slow-scale \textbf{diffusion becomes under-resolved}.
   \end{itemize}
   \end{frame}

@@ -56,14 +56,27 @@
     T\dependson{\mathbf{x}, 0} &= T_0 \qquad &&\forall \mathbf{x} \in \Omega(0)
   \end{align}
   }
-    \todo{Comment on phase change treatment here}
 \end{frame}
+
+\def\Ts{0.05}
+\def\Tl{0.95}
+\newcommand{\flalpha}[1]{2*#1/(\Tl - \Ts)}
+\newcommand{\fl}[1]{
+  0.5*(tanh(\flalpha{#1}*(\x - 0.5))+1)
+}
+\newcommand{\flp}[1]{
+  \flalpha{#1}/2*(1 - (tanh(\flalpha{#1}*(\x - 0.5)))^2)
+}
+\newcommand{\flpp}[1]{
+  \flalpha{#1}^2*tanh(\flalpha{#1}*(\x - 0.5))*((tanh(\flalpha{#1}*(\x - 0.5)))^2 - 1)
+}
 
 \begin{frame}
   \frametitle{Part-scale simulation}
   \framesubtitle{Discretization}
     Source-based latent heat treatment of \cite{celentano1994}:
     $f_l(T)$ is directly discretized in time.
+    \vspace{-6mm}
     \begin{figure}
       \centering
       \begin{subfigure}[t]{0.33\textwidth}
@@ -83,12 +96,6 @@
             height=0.4\pageheight
             ]
 
-            \def\Ts{0.05}
-            \def\Tl{0.95}
-            \newcommand{\flalpha}[1]{2*#1/(\Tl - \Ts)}
-            \newcommand{\fl}[1]{
-              0.5*(tanh(\flalpha{#1}*(\x - 0.5))+1)
-            }
             \addplot+ [mark=none, ultra thick, smooth] {\fl{1}};
             \addplot+ [mark=none, ultra thick, smooth] {\fl{2}};
             \addplot+ [mark=none, ultra thick, smooth] {\fl{4}};
@@ -98,7 +105,7 @@
         \end{axis}
         \end{tikzpicture}
       \end{subfigure}%
-      \hfill
+      \qquad
       \begin{subfigure}[t]{0.33\textwidth}
         \begin{tikzpicture}
         \begin{axis}[
@@ -111,16 +118,10 @@
             xticklabels={$T_s$, $T_l$},
             domain=-0.1:1.1,
             ylabel=$f_l'$,
-            legend style={at={(0.7,0.8)},anchor=west},
+            legend style={at={(0.8,0.6)},anchor=west},
             height=0.4\pageheight
             ]
 
-            \def\Ts{0.05}
-            \def\Tl{0.95}
-            \newcommand{\flalpha}[1]{2*#1/(\Tl - \Ts)}
-            \newcommand{\flp}[1]{
-              \flalpha{#1}/2*(1 - (tanh(\flalpha{#1}*(\x - 0.5)))^2)
-            }
             \addplot+ [mark=none, ultra thick, smooth] {\flp{1}};
             \addlegendentry{$S = 1$}                
             \addplot+ [mark=none, ultra thick, smooth] {\flp{2}};
@@ -131,38 +132,33 @@
         \end{axis}
         \end{tikzpicture}
       \end{subfigure}%
-      \hfill
-      \begin{subfigure}[t]{0.33\textwidth}
-        \begin{tikzpicture}
-        \begin{axis}[
-            xmin=-0.1, xmax=1.1,
-            ymin=-4, ymax=4,
-            axis lines=center,
-            axis on top=true,
-            ytick={0},
-            xtick={0.05, 0.95},
-            xticklabels={$T_s$, $T_l$},
-            domain=-0.1:1.1,
-            ylabel=$f_l''$,
-            height=0.4\pageheight
-            ]
-
-            \def\Ts{0.05}
-            \def\Tl{0.95}
-            \newcommand{\flalpha}[1]{2*#1/(\Tl - \Ts)}
-            \newcommand{\flpp}[1]{
-              \flalpha{#1}^2*tanh(\flalpha{#1}*(\x - 0.5))*((tanh(\flalpha{#1}*(\x - 0.5)))^2 - 1)
-            }
-            \addplot+ [mark=none, ultra thick, smooth] {\flpp{1}};
-            \addplot+ [mark=none, ultra thick, smooth] {\flpp{2}};
-            \addplot+ [mark=none, ultra thick, smooth] {\flpp{4}};
-            
-        \end{axis}
-        \end{tikzpicture}
-      \end{subfigure}
-      \caption{Liquid fraction $f_l$ and derivatives.}
+      % \hfill
+      % \begin{subfigure}[t]{0.33\textwidth}
+      %   \begin{tikzpicture}
+      %   \begin{axis}[
+      %       xmin=-0.1, xmax=1.1,
+      %       ymin=-4, ymax=4,
+      %       axis lines=center,
+      %       axis on top=true,
+      %       ytick={0},
+      %       xtick={0.05, 0.95},
+      %       xticklabels={$T_s$, $T_l$},
+      %       domain=-0.1:1.1,
+      %       ylabel=$f_l''$,
+      %       height=0.4\pageheight
+      %       ]
+      %
+      %       \addplot+ [mark=none, ultra thick, smooth] {\flpp{1}};
+      %       \addplot+ [mark=none, ultra thick, smooth] {\flpp{2}};
+      %       \addplot+ [mark=none, ultra thick, smooth] {\flpp{4}};
+      %
+      %   \end{axis}
+      %   \end{tikzpicture}
+      % \end{subfigure}
+      \caption{Hyperbolic tangent $f_l$ and derivative \citep{kollmannsberger2018}.}
       \label{fig:fl_fld_fldd}
     \end{figure}
+    \vspace{-5mm}
     Multiply \cref{eq:original_pde}
     by $\phi \in V_T(t) = H^{1}\left(\Omega(t)\right)$;
     integrate over $\Omega\dependson{t}$;
@@ -171,7 +167,7 @@
     {\small
     \begin{gather*}
       \label{eq:weak_heat}
-      \int_{\Omega} \phi \rho \left({c_p \frac{T^{n+1} - T^n}{\Delta t} + L \frac{f_l(T^{n+1}) - f_l(T^n)}{\Delta t}}\right)
+      \int_{\Omega} \phi \rho \left({c_p \frac{T^{n+1} - T^{n}}{\Delta t} + L \frac{f_l(T^{n+1}) - f_l(T^{n})}{\Delta t}}\right)
       + \int_{\Omega} \nabla \phi \cdot \left(k \nabla T\right)\\
       \notag
       \forall \phi \in V_T(t) \hspace{1cm}
@@ -185,7 +181,7 @@
 
 \begin{frame}
   \frametitle{Part-scale simulation}
-  \framesubtitle{Discretization}
+  \framesubtitle{Phase change}
   \begin{figure}
     \begin{subfigure}[t]{0.33\textwidth}
       \includegraphics[height=0.35\pageheight]{schematic_melting/0.png}
@@ -203,12 +199,16 @@
       surpasses $T_m$ are set to bulk.}
       \label{fig:activPhaseChange3}
     \end{subfigure}\hfill%
+    \vspace{-4mm}
     \caption{Illustration of deposition and melting processes.\qquad
       \legendpowderbulk{}
     }
     \label{fig:activPhaseChange}.
   \end{figure}
-  Same treatment of phase change as in \citep{kollmannsberger2018}
+  \vspace{-11mm}
+  Phase change approach of \cite{kollmannsberger2018}.
+  Bulk and powder properties are thermally dependent
+  and identical above melting point.
 \end{frame}
 
 \begin{frame}
