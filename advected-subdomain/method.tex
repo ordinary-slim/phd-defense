@@ -104,48 +104,47 @@
   % $$
 \end{frame}
 
-\begin{frame}
-  \frametitle{Advected subdomain}
-  \framesubtitle{Workflow}
-  \begin{columns}
-    \begin{column}{0.4\textwidth}
-      \begin{itemize}
-      \item Dynamic resizing of $\Omega_m$\\
-        $\longrightarrow$ background mesh
-      \item $\Omega_m(t^n),\Omega_m(t^{n+1})\subset\Omega$\\
-        $\longrightarrow$ \texttt{intersect} at $t^n$ and $t^{n+1}$
-      \item Sizing of $\Omega_m$:
-        \begin{itemize}
-          \item Front and side lengths larger than $2 R$
-            to contain support of heat source.
-          \item Back length larger than $V \cdot \Delta t$
-            to not skip regions of domain.
-        \end{itemize}
-      \end{itemize}
-    \end{column}%
-    \begin{column}{0.6\textwidth}
-      \begin{figure}
-        \begin{subfigure}[t]{0.49\columnwidth}
-          \includegraphics[height=0.34\pageheight]{2d_meshing_example/afterShaping.png}
-          \caption{$\mathcal{T}^m \leftarrow \texttt{shapeSubdomain}(\mathcal{T}^m_{bg})$ at $t^n$}
-        \end{subfigure}%
-        \hfill%
-        \begin{subfigure}[t]{0.49\columnwidth}
-          \includegraphics[height=0.34\pageheight]{2d_meshing_example/after_intersec1.png}
-          \caption{$\mathcal{T}^m \leftarrow \texttt{intersect}\big(\mathcal{T}^m, \mathcal{T}^f\big) \textrm{ at } t^n$}
-        \end{subfigure}\\
-        \begin{subfigure}[t]{0.49\columnwidth}
-          \includegraphics[height=0.34\pageheight]{2d_meshing_example/after_intersec2.png}
-          \caption{$\mathcal{T}^m \leftarrow \texttt{intersect}\big(\mathcal{T}^m, \mathcal{T}^f\big) \textrm{ at } t^{n+1}$}
-        \end{subfigure}%
-        \hfill%
-        \begin{subfigure}[t]{0.49\columnwidth}
-          \includegraphics[height=0.34\pageheight]{2d_meshing_example/dd.png}
-          \caption{$\mathcal{T}^f \leftarrow \texttt{subtract}\big(\mathcal{T}^f, \mathcal{T}^m\big) \textrm{ at } t^{n+1}$}
-        \end{subfigure}
-        \label{fig:2d_meshing_example}
-      \end{figure}
-    \end{column}%
-  \end{columns}
-\end{frame}
-
+% \begin{frame}
+%   \frametitle{Advected subdomain}
+%   \framesubtitle{Workflow}
+%   \begin{columns}
+%     \begin{column}{0.4\textwidth}
+%       \begin{itemize}
+%       \item Dynamic resizing of $\Omega_m$\\
+%         $\longrightarrow$ background mesh
+%       \item $\Omega_m(t^n),\Omega_m(t^{n+1})\subset\Omega$\\
+%         $\longrightarrow$ \texttt{intersect} at $t^n$ and $t^{n+1}$
+%       \item Sizing of $\Omega_m$:
+%         \begin{itemize}
+%           \item Front and side lengths larger than $2 R$
+%             to contain support of heat source.
+%           \item Back length larger than $V \cdot \Delta t$
+%             to not skip regions of domain.
+%         \end{itemize}
+%       \end{itemize}
+%     \end{column}%
+%     \begin{column}{0.6\textwidth}
+%       \begin{figure}
+%         \begin{subfigure}[t]{0.49\columnwidth}
+%           \includegraphics[height=0.34\pageheight]{2d_meshing_example/afterShaping.png}
+%           \caption{$\mathcal{T}^m \leftarrow \texttt{shapeSubdomain}(\mathcal{T}^m_{bg})$ at $t^n$}
+%         \end{subfigure}%
+%         \hfill%
+%         \begin{subfigure}[t]{0.49\columnwidth}
+%           \includegraphics[height=0.34\pageheight]{2d_meshing_example/after_intersec1.png}
+%           \caption{$\mathcal{T}^m \leftarrow \texttt{intersect}\big(\mathcal{T}^m, \mathcal{T}^f\big) \textrm{ at } t^n$}
+%         \end{subfigure}\\
+%         \begin{subfigure}[t]{0.49\columnwidth}
+%           \includegraphics[height=0.34\pageheight]{2d_meshing_example/after_intersec2.png}
+%           \caption{$\mathcal{T}^m \leftarrow \texttt{intersect}\big(\mathcal{T}^m, \mathcal{T}^f\big) \textrm{ at } t^{n+1}$}
+%         \end{subfigure}%
+%         \hfill%
+%         \begin{subfigure}[t]{0.49\columnwidth}
+%           \includegraphics[height=0.34\pageheight]{2d_meshing_example/dd.png}
+%           \caption{$\mathcal{T}^f \leftarrow \texttt{subtract}\big(\mathcal{T}^f, \mathcal{T}^m\big) \textrm{ at } t^{n+1}$}
+%         \end{subfigure}
+%         \label{fig:2d_meshing_example}
+%       \end{figure}
+%     \end{column}%
+%   \end{columns}
+% \end{frame}

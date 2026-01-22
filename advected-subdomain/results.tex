@@ -1,67 +1,5 @@
 \begin{frame}
   \frametitle{Advected subdomain}
-  Analytical validation with 3D welding example
-  \citep{nguyen1999,vanelsen2007}
-  and Ti64-like material properties.
-  \vspace{-5mm}
-  \begin{figure}[]
-      \centering
-      \begin{tabular}{cc}
-  \begin{subfigure}[t]{0.49\linewidth}
-    \centering
-    \includegraphics[width=\textwidth]{3d_weldingLpbf/analytical.png}
-    \caption{Analytical}
-  \end{subfigure} &
-  \addtocounter{subfigure}{2}
-  \begin{subfigure}[t]{0.49\linewidth}
-    \centering
-    \includegraphics[width=\textwidth]{3d_weldingLpbf/allContours.png}
-    \definecolor{referenceColor}{HTML}{1762FB}
-    \definecolor{proposedColor}{HTML}{00AA00}
-    \vspace{-0.7cm}
-    \caption{
-         ({\color{black} \rule[-1.5 pt]{8 pt}{8 pt}}) Analytical \;\;
-         ({\color{proposedColor} \rule[-1.5 pt]{8 pt}{8 pt}}) AS \;\;
-         ({\color{referenceColor} \rule[-1.5 pt]{8 pt}{8 pt}}) Reference \;\;
-         \\
-      Isothermals and position of maximum temperature.
-    }
-    \label{fig:3dweldallcontours}
-  \end{subfigure} \\
-  \addtocounter{subfigure}{-3}
-  \begin{subfigure}[t]{0.49\linewidth}
-    \centering
-    \includegraphics[width=\textwidth]{3d_weldingLpbf/coupled_elsPerRad8.png}
-    \caption{Advected subdomain (AS), $\Delta t = 2\,T_{hs}$}
-    \label{fig:3dweldcontourprop}
-  \end{subfigure} & 
-  \addtocounter{subfigure}{2}
-  \begin{subfigure}[t]{0.49\linewidth}
-    \centering
-    \includegraphics[width=\textwidth]{3d_weldingLpbf/err_coupled_elsPerRad8.png}
-    \caption{Pointwise error of \ref{fig:3dweldcontourprop}. Max error is $\approx \mathbf{12}$}
-  \end{subfigure} \\
-  \addtocounter{subfigure}{-3}
-  \begin{subfigure}[t]{0.49\linewidth}
-    \centering
-    \includegraphics[width=\textwidth]{3d_weldingLpbf/reference_elsPerRad8_tstepsPerRad4.png}
-    \caption{Reference method, $\Delta t = 0.25\,T_{hs}$}
-    \label{fig:3dweldcontourref}
-  \end{subfigure} & 
-  \addtocounter{subfigure}{2}
-  \begin{subfigure}[t]{0.49\linewidth}
-    \centering
-    \includegraphics[width=\textwidth]{3d_weldingLpbf/err_reference_elsPerRad8_tstepsPerRad4.png}
-    \caption{Pointwise error of \ref{fig:3dweldcontourref}. Max error is $\approx \mathbf{263}$}
-    \label{fig:3dweldpointwiseref}
-  \end{subfigure} \\
-      \end{tabular}
-    \caption{Solution (left) and error (right) contour at steady-state.}
-  \end{figure}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Advected subdomain}
   \framesubtitle{2D welding example}
     \begin{figure}
       \centering
@@ -183,6 +121,68 @@
     }
   \end{minipage}
   
+\end{frame}
+
+\begin{frame}
+  \frametitle{Advected subdomain}
+  Analytical validation with 3D welding example
+  \citep{nguyen1999,vanelsen2007}
+  and Ti64-like material properties.
+  \vspace{-5mm}
+  \begin{figure}[]
+      \centering
+      \begin{tabular}{cc}
+  \begin{subfigure}[t]{0.49\linewidth}
+    \centering
+    \includegraphics[width=\textwidth]{3d_weldingLpbf/analytical.png}
+    \caption{Analytical}
+  \end{subfigure} &
+  \addtocounter{subfigure}{2}
+  \begin{subfigure}[t]{0.49\linewidth}
+    \centering
+    \includegraphics[width=\textwidth]{3d_weldingLpbf/allContours.png}
+    \definecolor{referenceColor}{HTML}{1762FB}
+    \definecolor{proposedColor}{HTML}{00AA00}
+    \vspace{-0.7cm}
+    \caption{
+         ({\color{black} \rule[-1.5 pt]{8 pt}{8 pt}}) Analytical \;\;
+         ({\color{proposedColor} \rule[-1.5 pt]{8 pt}{8 pt}}) AS \;\;
+         ({\color{referenceColor} \rule[-1.5 pt]{8 pt}{8 pt}}) Reference \;\;
+         \\
+      Isothermals and position of maximum temperature.
+    }
+    \label{fig:3dweldallcontours}
+  \end{subfigure} \\
+  \addtocounter{subfigure}{-3}
+  \begin{subfigure}[t]{0.49\linewidth}
+    \centering
+    \includegraphics[width=\textwidth]{3d_weldingLpbf/coupled_elsPerRad8.png}
+    \caption{Advected subdomain (AS), $\Delta t = 2\,T_{hs}$}
+    \label{fig:3dweldcontourprop}
+  \end{subfigure} & 
+  \addtocounter{subfigure}{2}
+  \begin{subfigure}[t]{0.49\linewidth}
+    \centering
+    \includegraphics[width=\textwidth]{3d_weldingLpbf/err_coupled_elsPerRad8.png}
+    \caption{Pointwise error of \ref{fig:3dweldcontourprop}. Max error is $\approx \mathbf{12}$}
+  \end{subfigure} \\
+  \addtocounter{subfigure}{-3}
+  \begin{subfigure}[t]{0.49\linewidth}
+    \centering
+    \includegraphics[width=\textwidth]{3d_weldingLpbf/reference_elsPerRad8_tstepsPerRad4.png}
+    \caption{Reference method, $\Delta t = 0.25\,T_{hs}$}
+    \label{fig:3dweldcontourref}
+  \end{subfigure} & 
+  \addtocounter{subfigure}{2}
+  \begin{subfigure}[t]{0.49\linewidth}
+    \centering
+    \includegraphics[width=\textwidth]{3d_weldingLpbf/err_reference_elsPerRad8_tstepsPerRad4.png}
+    \caption{Pointwise error of \ref{fig:3dweldcontourref}. Max error is $\approx \mathbf{263}$}
+    \label{fig:3dweldpointwiseref}
+  \end{subfigure} \\
+      \end{tabular}
+    \caption{Solution (left) and error (right) contour at steady-state.}
+  \end{figure}
 \end{frame}
 
 \begin{frame}
