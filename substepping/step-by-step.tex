@@ -148,32 +148,34 @@
   \end{figure}
 \end{frame}
 
-% \begin{frame}
-%   \frametitle{Substepping}
-%   \framesubtitle{No heat source predictor}
-%
-%   \begin{figure}
-%     \begin{subfigure}[t]{0.33\textwidth}
-%       \centering
-%       \includegraphics[width=\textwidth]{hodge/to_predictor.png}
-%       \caption{Predictor step without heat input}
-%       \label{fig:to_hodge_predictor}
-%     \end{subfigure}%
-%     \hfill
-%     \begin{subfigure}[t]{0.33\textwidth}
-%       \centering
-%       \includegraphics[width=\textwidth]{hodge/to_micro_step.png}
-%       \caption{Micro-step.}
-%       \label{fig:to_hodge_micro}
-%     \end{subfigure}%
-%     \hfill
-%     \begin{subfigure}[t]{0.33\textwidth}
-%       \centering
-%       \includegraphics[width=\textwidth]{hodge/to_macro_step.png}
-%       \caption{Corrector step.}
-%       \label{fig:to_hodge_macro}
-%     \end{subfigure}
-%     \caption{Example of Dirichlet substepper step using a predictor step without including the source term.}
-%     \label{fig:to_hodge}
-%   \end{figure}
-% \end{frame}
+\begin{frame}
+  \frametitle{Substepping}
+  \framesubtitle{No heat source predictor}
+
+  Accuracy of Dirichlet substepper is improved by \textbf{exclusion of source
+  term from predictor}: note the absence of the heat spots.
+  \begin{figure}
+    \begin{subfigure}[t]{0.33\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{hodge/to_predictor.png}
+      \caption{Predictor step without heat input}
+      \label{fig:to_hodge_predictor}
+    \end{subfigure}%
+    \hfill
+    \begin{subfigure}[t]{0.33\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{hodge/to_micro_step.png}
+      \caption{Micro-step.}
+      \label{fig:to_hodge_micro}
+    \end{subfigure}%
+    \hfill
+    \begin{subfigure}[t]{0.33\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{hodge/to_macro_step.png}
+      \caption{Corrector step.}
+      \label{fig:to_hodge_macro}
+    \end{subfigure}
+    \caption{Dirichlet substepper with no-heating predictor.}
+    \label{fig:to_hodge}
+  \end{figure}
+\end{frame}

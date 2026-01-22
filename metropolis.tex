@@ -35,25 +35,29 @@
 {
   \centering
 
-  % --- Main title box ---
-  \begin{beamercolorbox}[
-    wd=\textwidth,
-    sep=1.2em,
-    rounded=true
-  ]{title page}
-    
-    {\usebeamerfont{title}\inserttitle\par}
-    \vspace{0.4em}
+% --- Main title box ---
+\begin{tcolorbox}[
+  width=\textwidth,
+  boxrule=1.2pt,
+  arc=3mm,
+  colback=white,
+  standard jigsaw,
+  opacityback=0.5,  % transparent background
+  left=1.2em, right=1.2em, top=1.2em, bottom=1.2em,
+]
 
-    {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}
+  {\usebeamerfont{title}\inserttitle\par}
+  \vspace{0.4em}
 
-    \vspace{0.8em}
+  {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}
 
-    {\usebeamerfont{author}\insertauthor\par}
-    {\usebeamerfont{institute}\insertinstitute\par}
-    {\usebeamerfont{date}\insertdate\par}
+  \vspace{0.8em}
 
-  \end{beamercolorbox}
+  {\usebeamerfont{author}\insertauthor\par}
+  {\usebeamerfont{institute}\insertinstitute\par}
+  {\usebeamerfont{date}\insertdate\par}
+
+\end{tcolorbox}
 
   \vfill
 

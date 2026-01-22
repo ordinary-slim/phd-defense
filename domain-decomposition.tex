@@ -1,4 +1,6 @@
 \begin{frame}
+  \frametitle{Domain decomposition}
+  \framesubtitle{Core tool}
   \centering
   \begin{tikzpicture}[
     font=\small,
@@ -6,9 +8,9 @@
     arr/.style={->, thick}
   ]
 
-  \node[box] (ms) {LPBF multiscale constraints};
+  \node[box] (ms) {LPBF localized driver \\ i.e. part-scale governed by melt-pool scale};
 
-  \node[box, below=5mm of ms] (dd) {Domain decomposition\\(core framework)};
+  \node[box, below=5mm of ms] (dd) {Domain decomposition\\(core mathematical tool)};
 
   \node[box, below left=4mm and 4mm of dd] (as) {Advected subdomain\\\citep{slimani2024}};
 
@@ -21,30 +23,30 @@
   \end{tikzpicture}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Domain decomposition}
-  \framesubtitle{Basics}
-  We've established that the part-scale build is driven
-  by the motion of a very localized heat source.
-
-  What if we treat differently this region aka the Heat Affected Zone (HAZ)?
-
-  We will do so via \textbf{domain decomposition} (DD).
-
-  Let $\Omega_1$ and $\Omega_2$ be a non-overlapping decomposition of
-  the domain $\Omega = \Omega_1 \sqcup \Omega_2$ such that
-  $\Omega_1$ contains the HAZ;
-  we will pose different problems in $\Omega_1$ and $\Omega_2$
-  and enforce \textbf{transmission conditions} at the interface
-  $\Gamma = \partial \Omega_1 \cap \partial \Omega_2$
-\end{frame}
+% \begin{frame}
+%   \frametitle{Domain decomposition}
+%   \framesubtitle{Basics}
+%   We've established that the part-scale build is driven
+%   by the motion of a very localized heat source.
+%
+%   What if we treat differently this region aka the Heat Affected Zone (HAZ)?
+%
+%   We will do so via \textbf{domain decomposition} (DD).
+%
+%   Let $\Omega_1$ and $\Omega_2$ be a non-overlapping decomposition of
+%   the domain $\Omega = \Omega_1 \sqcup \Omega_2$ such that
+%   $\Omega_1$ contains the HAZ;
+%   we will pose different problems in $\Omega_1$ and $\Omega_2$
+%   and enforce \textbf{transmission conditions} at the interface
+%   $\Gamma = \partial \Omega_1 \cap \partial \Omega_2$
+% \end{frame}
 
 \begin{frame}
   \frametitle{Domain decomposition}
   \framesubtitle{Basics}
 \begin{figure}
   \centering
-  \def\svgwidth{0.9\columnwidth}
+  \def\svgwidth{0.8\columnwidth}
   \import{figures/transmission_conds/}{drawing.pdf_tex}
   \caption{Non-overlapping DD schematic for a welding problem. $\Omega_1$ and $\Omega_2$
   cover the HAZ and underlying substrate, respectively. Transmission conditions

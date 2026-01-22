@@ -1,19 +1,20 @@
 \begin{frame}
 \frametitle{Future works}
 \begin{itemize}
-  \item Improve the robustness of the advected subdomain:
+  \item<1-> \textbf{Development of methods to} increase time-step size and \textbf{bypass} $\Delta t \leq 1 T_{hs}$:
+  \item<2-> \textbf{Improve} the \textbf{robustness} of the \textbf{advected subdomain}:
     \begin{itemize}
       \item Smooth the transition between non-advected and advected
       regimes via ALE.
       \item Systematically assess when the thermal field is adapted
       to an advected subdomain time-step.
     \end{itemize}
-  \item Extend substepping methodologies:
+  \item<3-> \textbf{Extend substepping} methodologies:
     \begin{itemize}
       \item Improve understanding and characterization of the time-scales
         at which the different physical processes operate.
-      \item Higher order time-integration in the slow partition.
-      \item Improve fast/slow partition to avoid heuristics (current).
+      \item \textbf{Higher order time-integration in the slow partition}.
+      % \item Improve fast/slow partition to avoid heuristics (current).
       \item Explore alternative coupling structures and time-interpolation
         schemes within the substepping framework.
       \item Improve parallel scalability.

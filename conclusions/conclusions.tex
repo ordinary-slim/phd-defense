@@ -2,22 +2,31 @@
   \frametitle{Thesis conclusions}
 
   \begin{itemize}
-    \item \textbf{Main bottleneck} in \textbf{part-scale LPBF} simulation is
-      extreme \textbf{time-scale disparity}; exploiting time-scale separation
-      is essential to achieve computational tractability without sacrificing
-      local accuracy.
 
-    \item The \textbf{advected subdomain} method \textbf{bypasses time-step
-      restrictions} and \textbf{improves accuracy close to the heat source},
-      but it is \textbf{not robust} to complex scan paths
-      involving direction changes and track overlaps.
+    % Overlay 1
+    \item<1-> \textbf{Substepping} provides a \textbf{robust} and \textbf{flexible}
+    framework to localize temporal resolution, yielding substantial
+    computational savings while preserving local accuracy.
 
-    \item \textbf{Substepping} provides a \textbf{robust} and \textbf{flexible}
-      framework to localize temporal resolution;
-      we believe it \textbf{will become a standard tool in FEM-based LPBF simulation}.
+    \item<1-> \textbf{Higher-order time integration} in the slow partition
+    could further increase the allowable macro time step.
 
-    \item \textbf{First order time} integration in the \textbf{slow partition}
-      \textbf{limits the maximum macro-step size}.
+    % Overlay 2
+    \item<2-> \textbf{Substepping alone is insufficient}:
+    even with reduced cost per step, \textbf{decimeter-scale parts still require
+    hundreds of billions of time steps} under the classical constraint
+    \[
+      \Delta t \;\le\; 1 T_{hs}
+    \]
+
+    % Overlay 3
+    \item<3-> The \textbf{advected subdomain} method \textbf{bypasses this constraint},
+    enabling time steps up to $\mathcal{O}(10)\,T_{\mathrm{hs}}$,
+    but it \textbf{lacks robustness} for general scan paths.
+
+    % Overlay 4
+    \item<4-> \textbf{Decimeter-scale LPBF simulations
+    remain out of reach}.
+
   \end{itemize}
 \end{frame}
-

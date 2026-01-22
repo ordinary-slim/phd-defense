@@ -2,23 +2,23 @@
   \frametitle{Contributions}
 
   \begin{itemize}
-    \item \textbf{Advected subdomain} method: moving
+    \item<1-> \textbf{Advected subdomain} method: moving
       subdomain attached to the heat source in its reference frame, with
       support for MPI distributed-memory architectures.
 
-    \item Steadiness workflow to
+    \item<1-> Steadiness workflow to
       \textbf{grow the time-step} size based on monitored \textbf{solution steadiness}.
 
-    \item \textbf{Synthesis} of \textbf{existing substepping approaches} for \textbf{LPBF}:
+    \item<2-> \textbf{Synthesis} of \textbf{existing substepping approaches} for \textbf{LPBF}:
       common patterns, practical guidelines, expected speed-ups, accuracy trade-offs, and open challenges.
 
-    \item \textbf{Robin--Robin substepping} scheme using custom
+    \item<2-> \textbf{Robin--Robin substepping} scheme using custom
       Robin coefficients from \cite{chen2014robin}.
 
-    \item \textbf{Alternative predictor-step strategies} which increase accuracy of
+    \item<2-> \textbf{Alternative predictor-step strategies} which increase accuracy of
       substepper of \cite{hodge2021}.
 
-    \item Integration of the \textbf{advected subdomain} method \textbf{within} the
+    \item<3-> Integration of the \textbf{advected subdomain} method \textbf{within} the
       \textbf{substepping} framework, compounding their benefits in favorable scenarios.
   \end{itemize}
 \end{frame}

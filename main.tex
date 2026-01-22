@@ -74,6 +74,7 @@
     line width=.4pt,
   },
 }
+\usepackage[most]{tcolorbox}
 
 \title{Computational strategies for time-accurate simulation of part-scale LPBF}
 \subtitle{Time scale disparity in moving heat source problems}
@@ -91,10 +92,17 @@ Mehdi Slimani \qquad \qquad
   {
   \centering
   \begin{minipage}[t]{0.3\textwidth}
+    \vfill
     \includegraphics[height=0.1\pageheight]{logos/UPC_Camins.png}
   \end{minipage}%
-  \hfill
   \begin{minipage}[t]{0.3\textwidth}
+    \centering
+    \footnotesize
+    Doctoral Degree in Structural Analysis\\[0.5cm]
+    Thesis submitted as a compendium of publications
+  \end{minipage}%
+  \begin{minipage}[t]{0.3\textwidth}
+    \vfill
     \hfill
     \includegraphics[height=0.1\pageheight]{logos/CIMNE-black.png}%
   \end{minipage}
@@ -108,9 +116,9 @@ Mehdi Slimani \qquad \qquad
 \begin{document}
 
   {
-  % \usebackgroundtemplate{%
-  %   \includegraphics[width=\paperwidth,height=\paperheight]{transmission_conds/drawing.png}%
-  % }
+  \usebackgroundtemplate{%
+    \includegraphics[width=\paperwidth,height=\paperheight]{transmission_conds/drawing.png}%
+  }
   \begin{frame}[titleslide]
     \titlepage
   \end{frame}
@@ -122,15 +130,15 @@ Mehdi Slimani \qquad \qquad
   % \setbeamertemplate{frame footer}{\footlineHl{Computational strategies for time-accurate simulation part-scale LPBF}}
   % \section{Objectives}
   %   \input{objectives.tex}
-  %
+
   % \setbeamertemplate{frame footer}{}
-  %
+
   % \section{Domain decomposition}
   %   \input{domain-decomposition.tex}
-  %
-  \section{Advected subdomain}
-    \input{advected-subdomain/main.tex}
 
+  % \section{Advected subdomain}
+  %   \input{advected-subdomain/main.tex}
+  %
   % \section{Substepping}
   %   \input{substepping/main.tex}
   %
