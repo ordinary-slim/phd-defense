@@ -66,7 +66,7 @@ jobs:
           cpanm --notest --local-lib="$HOME/perl5" local::lib
           eval "$(perl -I "$HOME/perl5/lib/perl5" -Mlocal::lib)"
 
-          cpanm --notest BeamerReveal
+          cpanm --notest WDAEMS/BeamerReveal-20260130.1210.tar.gz
 
           # Persist the effective env to later steps
           echo "$HOME/perl5/bin" >> "$GITHUB_PATH"
